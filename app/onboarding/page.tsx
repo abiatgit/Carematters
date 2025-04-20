@@ -65,7 +65,7 @@ export default function OnboardingPage() {
       {/* Form Section */}
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
       <h1 className="text-4xl font-bold mb-6">{`Welcome ${user?.firstName}`}</h1>
-        <h1 className="text-4xl font-bold mb-6">Create your organizaiton</h1>
+        <h1 className="text-4xl font-bold mb-6">Create your organisation</h1>
         <form onSubmit={handleSubmit} className="max-w-lg w-full space-y-6 bg-white p-6 rounded-lg shadow-md">
           <div>
             <label htmlFor="careHomeName" className="block text-sm font-medium text-gray-700">

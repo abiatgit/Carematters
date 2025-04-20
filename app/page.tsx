@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { useEffect } from "react";
+import { Rabbit } from 'lucide-react';
 
 
 export default function Home() {
@@ -28,13 +29,17 @@ export default function Home() {
     return null; // Prevent showing landing page to signed-in users
   }
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-sky-100 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-gradient-to-br from-blue-400 to-sky-100 flex items-center justify-center px-4">
       <div className="max-w-4xl w-full flex flex-col md:flex-row items-center justify-between gap-12 py-16">
         {/* Left Content */}
         <div className="flex-1 space-y-6 text-center md:text-left">
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight">
-            Care that <span className="text-blue-600">Matters</span> — for every resident, every day.
+          <div className="flex bg-amber-300 rounded-full p-4 shadow-2xl items-center justify-center">
+          <h1 className=" ms-5 text-4xl md:text-5xl font-bold text-slate-900 leading-tight">
+              <span className="text-blue-600 font-bold">CareMatters </span>
           </h1>
+
+          <Rabbit size={52}className="text-blue-600"/>
+          </div>
           <p className="text-lg text-slate-600">
             CareMatters helps managers, nurses, and assistants stay on top of care plans, medication, and daily reports — all in one secure, easy-to-use platform.
           </p>
