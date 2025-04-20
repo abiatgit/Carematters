@@ -1,0 +1,18 @@
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model CareHome{
+  id String @id @default(uuid())  
+  name String
+  address String
+  totalRooms Int
+  createdBy Int
+  createdAt DateTime
+}

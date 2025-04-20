@@ -20,9 +20,10 @@
 /app
   /auth
   /dashboard
-    /manager
-    /nurse
-    /assistant
+    /manager(Pilot)
+    /nurse(Lead)
+    /assistant(Hero)
+    /onboarding
 /components
 /lib
 /hooks
