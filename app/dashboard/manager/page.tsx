@@ -5,7 +5,7 @@ import { UserButton } from "@clerk/nextjs";
 
 const Page = () => {
   return (
-    <div>
+    <div className="mt-9">
       <UserButton />
       Welcome Manager
     </div>
