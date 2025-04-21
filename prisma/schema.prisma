@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
   output   = "../lib/generated/prisma"
@@ -8,11 +7,66 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model CareHome{
-  id String @id @default(uuid())  
-  name String
-  address String
+
+model CareHome {
+  id         String   @id @default(uuid())
+  name       String
+  address    String
   totalRooms Int
-  createdBy Int
-  createdAt DateTime
+  createdBy  String
+  createdAt  DateTime @default(now())
+
+  units    Unit[]
+  managers Manager[]
+}
+
+model Unit {
+  id         String   @id @default(uuid())
+  name       String
+  careHomeId String
+  careHome   CareHome @relation(fields: [careHomeId], references: [id])
+
+  nurses    Nurse[]
+  residents Resident[]
+  careStaff CareStaff[]
+}
+
+model Manager {
+  id     String @id @default(uuid())
+  userId String
+  name   String
+
+  careHomeId String
+  careHome   CareHome @relation(fields: [careHomeId], references: [id])
+}
+
+model Nurse {
+  id       String @id @default(uuid())
+  name     String
+  email    String
+  password String
+
+  unitId String
+  unit   Unit   @relation(fields: [unitId], references: [id])
+}
+
+model CareStaff {
+  id       String @id @default(uuid())
+  name     String
+  email    String
+  password String
+
+  unitId String
+  unit   Unit   @relation(fields: [unitId], references: [id])
+}
+
+model Resident {
+  id          String @id @default(uuid())
+  name        String
+  dateOfBirth String
+  roomNumber  Int
+  nextOfKin   String
+
+  unitId String
+  unit   Unit   @relation(fields: [unitId], references: [id])
 }
