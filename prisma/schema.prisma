@@ -1,11 +1,15 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id   String @id @default(uuid())
+  name String
 }
 
 model CareHome {
@@ -32,9 +36,10 @@ model Unit {
 }
 
 model Manager {
-  id     String @id @default(uuid())
-  userId String
-  name   String
+  id        String @id @default(uuid())
+  firstName String
+  lastName  String
+  role      String
 
   careHomeId String
   careHome   CareHome @relation(fields: [careHomeId], references: [id])
