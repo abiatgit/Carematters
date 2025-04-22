@@ -1,4 +1,5 @@
 "use client";
+import Sidebar from "@/components/dashboard/Sidebar";
 import { UserButton, useUser } from "@clerk/nextjs";
 export default function DashboardLayout({
   children,
@@ -17,7 +18,10 @@ export default function DashboardLayout({
           <UserButton />
         </div>
       </header>
-      <main className="m-9">{children}</main>
+      <div className="flex h-screen">
+        <Sidebar/>
+        {children}
+        </div>
     </div>
   );
 }
