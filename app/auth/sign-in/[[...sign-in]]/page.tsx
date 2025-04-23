@@ -16,7 +16,7 @@ export default function SignInPage() {
       if (!hasOnboardingDone) {
         router.push("/onboarding");
       } else {
-        router.push("/dashboard/manager");
+        router.push("/manager");
       }
     }
   }, [isSignedIn, user, isLoaded, router]);

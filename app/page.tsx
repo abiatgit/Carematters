@@ -20,7 +20,7 @@ export default function Home() {
       if (!hasOnboardingDone) {
         router.push("/onboarding");
       } else {
-        router.push("/dashboard/manager"); // or based on role
+        router.push("/manager"); // or based on role
       }
     }
   }, [isSignedIn, user, isLoaded, router]);

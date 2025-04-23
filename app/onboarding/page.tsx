@@ -35,7 +35,7 @@ const OnBoardingPage = () => {
          })
      })
      if(response.ok){
-            router.push("/dashboard/manager")
+            router.push("/manager")
      }else{
       console.log("Failed to create")
      }

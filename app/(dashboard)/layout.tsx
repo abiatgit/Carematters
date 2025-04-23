@@ -18,9 +18,11 @@ export default function DashboardLayout({
           <UserButton />
         </div>
       </header>
-      <div className="flex h-screen">
+      <div className=" flex-grow flex h-screen">
         <Sidebar/>
-        {children}
+  
+       {children}
+
         </div>
     </div>
   );
