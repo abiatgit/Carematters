@@ -60,7 +60,7 @@ export default function ResidentListPage() {
   });
 
   return (
-    <div className="p-6">
+    <div className="">
       {/* Top Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <h1 className="text-xl font-semibold">Resident List</h1>

@@ -40,7 +40,7 @@ export default function StaffPage() {
   });
 
   return (
-    <div className="p-6">
+    <div className="">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
         <h1 className="text-xl font-semibold">Staff List</h1>
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">

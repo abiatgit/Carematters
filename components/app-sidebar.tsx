@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Handshake, Mail, Pill,UserRoundCheck, UsersRound } from "lucide-react";
+import { Handshake, House, Mail, Pill,UserRoundCheck, UsersRound } from "lucide-react";
 import { HouseSwitcher } from "./HouseSwitcher";
 import {
   Sidebar,
@@ -14,30 +14,38 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { NavUser } from "./NavUser";
+import Link from "next/link";
 const items = [
   {
+    title: "Home",
+    url: "/manager",
+    icon: House,
+    
+  },
+  {
     title: "Resident",
-    url: "#",
+    url: "/list/resident",
     icon: UsersRound,
+    
   },
   {
     title: "Staff",
-    url: "#",
+    url: "/list/staff",
     icon: UserRoundCheck,
   },
   {
     title: "Handover",
-    url: "#",
+    url: "/list/handover",
     icon: Handshake,
   },
   {
     title: "Medication",
-    url: "#",
+    url: "/list/medication",
     icon: Pill,
   },
   {
     title: "Messages",
-    url: "#",
+    url: "/list/messages",
     icon: Mail,
   },
 ]
@@ -206,10 +214,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

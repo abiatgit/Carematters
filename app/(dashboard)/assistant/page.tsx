@@ -1,7 +1,7 @@
-const CareAssistantDashboard = () => {
+const SupportWorkerDashboard = () => {
   return (
     <div>CareAssistantDashboard</div>
   );
 };
 
-export default CareAssistantDashboard;
+export default SupportWorkerDashboard
