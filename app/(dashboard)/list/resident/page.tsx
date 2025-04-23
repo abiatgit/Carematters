@@ -1,119 +1,138 @@
 "use client";
-
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Plus, Eye } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Plus, Eye,  } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
-const dummyStaff = [
-  { name: "Alice Mathew", unit: "Ceridwen" },
-  { name: "John Benny", unit: "Comgal" },
-  { name: "Maria Philip", unit: "Ceridwen" },
-  { name: "Tom Sebastian", unit: "Comgal" },
-  { name: "Liya Jose", unit: "Ceridwen" },
-  { name: "Robert Zach", unit: "Comgal" },
+const dummyResidents = [
+  {
+    name: "Annie Mathew",
+    room: "101",
+    age: 78,
+    gender: "female",
+    unit: "Unit 1",
+    photo:
+      "https://e7.pngegg.com/pngimages/436/585/png-clipart-computer-icons-user-account-graphics-account-icon-vector-icons-silhouette.png",
+  },
+  {
+    name: "George John",
+    room: "102",
+    age: 83,
+    gender: "male",
+    unit: "Unit 2",
+    photo: "/residents/george.jpg",
+  },
+  {
+    name: "Sara Thomas",
+    room: "103",
+    age: 75,
+    gender: "female",
+    unit: "Unit 3",
+    photo: "/residents/sara.jpg",
+  },
+  // Add more residents as needed
 ];
 
-export default function StaffPage() {
+export default function ResidentListPage() {
+  const [search, setSearch] = useState("");
+  const [genderFilter, setGenderFilter] = useState("");
+  const [unitFilter, setUnitFilter] = useState("");
+
+  const filteredResidents = dummyResidents.filter((resident) => {
+    const matchesSearch = resident.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const matchesGender = genderFilter
+      ? resident.gender === genderFilter
+      : true;
+    const matchesUnit = unitFilter ? resident.unit === unitFilter : true;
+    return matchesSearch && matchesGender && matchesUnit;
+  });
+
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-semibold">Staff List</h1>
-        <Button variant="default" className="flex items-center gap-2">
-          <Plus size={16} />
-          Add Staff
-        </Button>
+    <div className="p-6">
+      {/* Top Controls */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <h1 className="text-xl font-semibold">Resident List</h1>
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+          <Input
+            placeholder="Search by name"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full sm:w-[200px]"
+          />
+          <Select onValueChange={setGenderFilter}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Filter by Gender" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="male">Male</SelectItem>
+              <SelectItem value="female">Female</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select onValueChange={setUnitFilter}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Select Unit" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="Unit 1">Unit 1</SelectItem>
+              <SelectItem value="Unit 2">Unit 2</SelectItem>
+              <SelectItem value="Unit 3">Unit 3</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="default" className="flex items-center gap-2">
+            <Plus size={16} />
+            Add Resident
+          </Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-            <div>
-              <h2 className="text-sm font-medium">{dummyStaff[0].name}</h2>
-              <p className="text-xs text-muted-foreground">
-                {dummyStaff[0].unit}
-              </p>
-            </div>
-            <Button variant="ghost" size="icon">
-              <Eye size={18} />
-            </Button>
-          </CardHeader>
-          <CardContent />
-        </Card>
+      {/* Resident Cards */}
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        {filteredResidents.map((resident, index) => (
+          <Card
+            key={index}
+            className="relative hover:shadow-md transition-shadow"
+          >
+        
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-            <div>
-              <h2 className="text-sm font-medium">{dummyStaff[1].name}</h2>
-              <p className="text-xs text-muted-foreground">
-                {dummyStaff[1].unit}
-              </p>
-            </div>
-            <Button variant="ghost" size="icon">
-              <Eye size={18} />
-            </Button>
-          </CardHeader>
-          <CardContent />
-        </Card>
+            <CardHeader className="flex flex-col items-center p-4 pb-2 gap-2">
+              <Image
+                src="https://e7.pngegg.com/pngimages/436/585/png-clipart-computer-icons-user-account-graphics-account-icon-vector-icons-silhouette.png"
+                alt={resident.name}
+                width={80}
+                height={80}
+                className="rounded-full object-cover"
+              />
+              <div className="text-center">
+                <h2 className="text-md font-medium">{resident.name}</h2>
+                <p className="text-sm text-muted-foreground">
+                  Room {resident.room} • Age {resident.age}
+                </p>
+              </div>
+            </CardHeader>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-            <div>
-              <h2 className="text-sm font-medium">{dummyStaff[2].name}</h2>
-              <p className="text-xs text-muted-foreground">
-                {dummyStaff[2].unit}
-              </p>
-            </div>
-            <Button variant="ghost" size="icon">
-              <Eye size={18} />
-            </Button>
-          </CardHeader>
-          <CardContent />
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-            <div>
-              <h2 className="text-sm font-medium">{dummyStaff[3].name}</h2>
-              <p className="text-xs text-muted-foreground">
-                {dummyStaff[3].unit}
-              </p>
-            </div>
-            <Button variant="ghost" size="icon">
-              <Eye size={18} />
-            </Button>
-          </CardHeader>
-          <CardContent />
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-            <div>
-              <h2 className="text-sm font-medium">{dummyStaff[4].name}</h2>
-              <p className="text-xs text-muted-foreground">
-                {dummyStaff[4].unit}
-              </p>
-            </div>
-            <Button variant="ghost" size="icon">
-              <Eye size={18} />
-            </Button>
-          </CardHeader>
-          <CardContent />
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-            <div>
-              <h2 className="text-sm font-medium">{dummyStaff[5].name}</h2>
-              <p className="text-xs text-muted-foreground">
-                {dummyStaff[5].unit}
-              </p>
-            </div>
-            <Button variant="ghost" size="icon">
-              <Eye size={18} />
-            </Button>
-          </CardHeader>
-          <CardContent />
-        </Card>
+            <CardContent className="flex justify-center">
+              <Button variant="ghost" size="icon">
+                <Link href={`/list/resident/${index}`}>
+                  <Eye size={18} />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   );

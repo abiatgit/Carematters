@@ -7,7 +7,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "media.product.which.co.uk",
         pathname: "/**",
+       
       },
+      {
+        hostname :"e7.pngegg.com" 
+      }
     ],
   },
 };

@@ -11,7 +11,7 @@ import Link from 'next/link';
 
 const Sidebar = () => {
   return (
-    <div className="h-screen bg-gradient-to-r from-blue-500 to-indigo-600 text-white w-16 hover:w-64 transition-all duration-300 ease-in-out flex flex-col items-center py-8">
+    <div className="h-screen bg-gray-400 text-white w-16 hover:w-64 transition-all duration-300 ease-in-out flex flex-col items-center py-8">
       <div className="space-y-6 w-full group">
         
         {/* Dashboard */}
@@ -47,7 +47,7 @@ const Sidebar = () => {
         {/* Medications */}
         <div className="flex items-center justify-center hover:bg-gray-700 p-2 rounded-full w-full cursor-pointer group-hover:justify-start">
           <Pill className="ml-2" />
-          <span className="ml-4 text-sm hidden group-hover:block"><Link href={"/list/messages"}>Messages</Link></span>
+          <span className="ml-4 text-sm hidden group-hover:block"><Link href={"/list/medicine"}>Medicine</Link></span>
         </div>
       </div>
     </div>
