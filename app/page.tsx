@@ -2,32 +2,9 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
-import { useEffect } from "react";
 import { Rabbit } from 'lucide-react';
 
-
 export default function Home() {
-  const { isSignedIn, isLoaded, user } = useUser();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoaded) return;
-
-    if (isSignedIn && user) {
-      const hasOnboardingDone = Boolean(user?.publicMetadata?.careHome);
-      if (!hasOnboardingDone) {
-        router.push("/onboarding");
-      } else {
-        router.push("/manager"); // or based on role
-      }
-    }
-  }, [isSignedIn, user, isLoaded, router]);
-
-  if (!isLoaded || isSignedIn) {
-    return null; // Prevent showing landing page to signed-in users
-  }
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-400 to-sky-100 flex items-center justify-center px-4">
       <div className="max-w-4xl w-full flex flex-col md:flex-row items-center justify-between gap-12 py-16">
@@ -37,7 +14,6 @@ export default function Home() {
           <h1 className=" ms-5 text-4xl md:text-5xl font-bold text-slate-900 leading-tight">
               <span className="text-blue-600 font-bold">CareMatters </span>
           </h1>
-
           <Rabbit size={52}className="text-blue-600"/>
           </div>
           <p className="text-lg text-slate-600">
@@ -56,7 +32,6 @@ export default function Home() {
             </Link>
           </div>
         </div>
-
         {/* Right Illustration */}
         <div className="flex-1">
           <Image
@@ -70,4 +45,5 @@ export default function Home() {
       </div>
     </main>
   );
+
 }
