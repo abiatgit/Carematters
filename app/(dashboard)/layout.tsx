@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SiteHeader } from "@/components/site-header";
+import { SidebarInset, SidebarProvider} from "@/components/ui/sidebar";
 
 export default function Layout({
   children,
@@ -13,8 +14,11 @@ export default function Layout({
           <AppSidebar />
         </div>
         <div className="flex-1 overflow-y-auto">
-          <SidebarTrigger />
+        <SidebarInset>
+        <SiteHeader />
+          {/* <SidebarTrigger /> if you want open the side bar apply here */} 
           <main className="p-6">{children}</main>
+          </SidebarInset>
         </div>
       </div>
     </SidebarProvider>
