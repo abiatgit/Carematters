@@ -30,48 +30,114 @@ model Unit {
   careHomeId String
   careHome   CareHome @relation(fields: [careHomeId], references: [id])
 
-  nurses    Nurse[]
-  residents Resident[]
-  careStaff CareStaff[]
+  teamLead      TeamLead[]
+  residents     Resident[]
+  supportWorker SupportWorker[]
+  appoinment    Appoinment[]
+  incident      Incident[]
 }
 
 model Manager {
-  id        String @id @default(uuid())
+  id        String  @id @default(uuid())
   firstName String
   lastName  String
   role      String
+  photo     String?
 
   careHomeId String
   careHome   CareHome @relation(fields: [careHomeId], references: [id])
 }
 
-model Nurse {
-  id       String @id @default(uuid())
+model TeamLead {
+  id       String  @id @default(uuid())
   name     String
   email    String
   password String
+  photo    String?
+  gender   Gender
 
   unitId String
   unit   Unit   @relation(fields: [unitId], references: [id])
+
+  residents Resident[]
 }
 
-model CareStaff {
-  id       String @id @default(uuid())
+model SupportWorker {
+  id       String  @id @default(uuid())
   name     String
+  gender   Gender
   email    String
   password String
+  photo    String?
+  mobile   Int
 
   unitId String
   unit   Unit   @relation(fields: [unitId], references: [id])
 }
 
 model Resident {
-  id          String @id @default(uuid())
+  id          String  @id @default(uuid())
   name        String
   dateOfBirth String
   roomNumber  Int
   nextOfKin   String
+  photo       String?
+  gender      Gender
+
+  teamLeadId String
+  teamLead   TeamLead @relation(fields: [teamLeadId], references: [id])
 
   unitId String
   unit   Unit   @relation(fields: [unitId], references: [id])
+
+  appoinment Appoinment[]
+  incident   Incident[]
+  medication Medication[]
+}
+
+model Appoinment {
+  id    String   @id @default(uuid())
+  where String
+  date  DateTime
+  time  DateTime
+  with  String
+
+  residentId String
+  resident   Resident @relation(fields: [residentId], references: [id])
+
+  unitId String
+  unit   Unit   @relation(fields: [unitId], references: [id])
+}
+
+model Incident {
+  id          String   @id @default(uuid())
+  status     Status
+  title      String
+  description String
+  date        DateTime
+  time        DateTime
+  residentId  String
+  resident    Resident @relation(fields: [residentId], references: [id])
+
+  unitId String
+  unit   Unit   @relation(fields: [unitId], references: [id])
+}
+model Medication {
+  id String @id @default( uuid())
+  title String
+  time DateTime
+  residentId String
+  resident Resident @relation(fields: [residentId],references: [id])
+}
+
+enum Status {
+  serious
+  medium
+  low
+}
+
+enum Gender {
+  male
+  female
+  other
 }

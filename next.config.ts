@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
       },
       {
         hostname :"e7.pngegg.com" 
+      },
+      {
+        hostname:"randomuser.me"
       }
     ],
   },

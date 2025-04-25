@@ -1,0 +1,169 @@
+import { Handshake, House, Mail, Pill, UserRoundCheck, UsersRound } from "lucide-react";
+
+export const residents = [
+    {
+      id: "1d24bfae-1a2e-4cde-9e9d-a1f842b4f021",
+      name: "Alice Mathews",
+      dateOfBirth: "1942-08-15",
+      roomNumber: 101,
+      nextOfKin: "John Mathews",
+      imge: "https://randomuser.me/api/portraits/women/21.jpg",
+      unitId: "unit-001"
+    },
+    {
+      id: "32fc86f7-348e-4e29-a3f2-4c8cfbe09a29",
+      name: "George Brown",
+      dateOfBirth: "1938-05-03",
+      roomNumber: 102,
+      nextOfKin: "Mary Brown",
+      imge: "https://randomuser.me/api/portraits/men/35.jpg",
+      unitId: "unit-001"
+    },
+    {
+      id: "52c4b72d-51fd-4cfa-bff5-daa45de3eb29",
+      name: "Margaret Smith",
+      dateOfBirth: "1945-12-11",
+      roomNumber: 103,
+      nextOfKin: "Henry Smith",
+      imge: "https://randomuser.me/api/portraits/women/42.jpg",
+      unitId: "unit-002"
+    },
+    {
+      id: "b1c2d79e-f214-4e68-9c26-cb0a48c99d63",
+      name: "Albert White",
+      dateOfBirth: "1939-02-22",
+      roomNumber: 104,
+      nextOfKin: "Ellen White",
+      imge: "https://randomuser.me/api/portraits/men/41.jpg",
+      unitId: "unit-002"
+    },
+    {
+      id: "6c56c6f4-66e9-4664-93f5-502a1f1fbbaf",
+      name: "Dorothy Williams",
+      dateOfBirth: "1944-10-09",
+      roomNumber: 105,
+      nextOfKin: "Grace Williams",
+      imge: "https://randomuser.me/api/portraits/women/37.jpg",
+      unitId: "unit-003"
+    },
+    {
+      id: "a5e05ef0-e805-4c80-938e-f58d463b2ac7",
+      name: "Edward Johnson",
+      dateOfBirth: "1941-07-18",
+      roomNumber: 106,
+      nextOfKin: "Sarah Johnson",
+      imge: "https://randomuser.me/api/portraits/men/22.jpg",
+      unitId: "unit-003"
+    },
+    {
+      id: "7f812c36-1fcd-40b4-a50d-9d634d5b48a0",
+      name: "Betty Harris",
+      dateOfBirth: "1943-03-25",
+      roomNumber: 107,
+      nextOfKin: "Laura Harris",
+      imge: "https://randomuser.me/api/portraits/women/50.jpg",
+      unitId: "unit-004"
+    },
+    {
+      id: "f3b19a67-4c72-41a4-8214-1ffcf126c3b3",
+      name: "Frank Thompson",
+      dateOfBirth: "1940-09-01",
+      roomNumber: 108,
+      nextOfKin: "Emma Thompson",
+      imge: "https://randomuser.me/api/portraits/men/50.jpg",
+      unitId: "unit-004"
+    },
+    {
+      id: "9d8f6a53-114f-4892-81d7-d0740b2a828e",
+      name: "Helen Walker",
+      dateOfBirth: "1946-11-20",
+      roomNumber: 109,
+      nextOfKin: "Paul Walker",
+      imge: "https://randomuser.me/api/portraits/women/12.jpg",
+      unitId: "unit-005"
+    },
+    {
+      id: "4a9d8b17-7f01-4e68-8b5b-6b2f9ef5a871",
+      name: "Charles Lewis",
+      dateOfBirth: "1937-06-30",
+      roomNumber: 110,
+      nextOfKin: "Rachel Lewis",
+      imge: "https://randomuser.me/api/portraits/men/11.jpg",
+      unitId: "unit-005"
+    }
+  ];
+  export const incidentData = [
+    {
+      id: "1",
+      photo: "https://randomuser.me/api/portraits/women/21.jpg",
+      name: "Alice Mathews",
+      incidentNature: "Fall in bathroom",
+      date: "2025-04-20",
+      house: "Rose Villa"
+    },
+    {
+      id: "2",
+      photo: "https://randomuser.me/api/portraits/men/35.jpg",
+      name: "George Brown",
+      incidentNature: "Missed medication",
+      date: "2025-04-21",
+      house: "Maple Cottage"
+    },
+    {
+      id: "3",
+      photo: "https://randomuser.me/api/portraits/women/42.jpg",
+      name: "Margaret Smith",
+      incidentNature: "Aggressive behavior",
+      date: "2025-04-19",
+      house: "Willow House"
+    },
+    {
+      id: "4",
+      photo: "https://randomuser.me/api/portraits/men/41.jpg",
+      name: "Albert White",
+      incidentNature: "Wandering at night",
+      date: "2025-04-18",
+      house: "Rose Villa"
+    },
+    {
+      id: "5",
+      photo: "https://randomuser.me/api/portraits/women/37.jpg",
+      name: "Dorothy Williams",
+      incidentNature: "Refused food",
+      date: "2025-04-22",
+      house: "Maple Cottage"
+    }
+  ];
+  export const items = [
+    {
+      title: "Home",
+      url: "/manager",
+      icon: House,
+    },
+    {
+      title: "Resident",
+      url: "/list/resident",
+      icon: UsersRound,
+    },
+    {
+      title: "Staff",
+      url: "/list/staff",
+      icon: UserRoundCheck,
+    },
+    {
+      title: "Handover",
+      url: "/list/handover",
+      icon: Handshake,
+    },
+    {
+      title: "Medication",
+      url: "/list/medication",
+      icon: Pill,
+    },
+    {
+      title: "Messages",
+      url: "/list/messages",
+      icon: Mail,
+    },
+  ];
+  export const houses= [{name:"Ceridwen"}, {name:"Comgal"}, {name:"Betheny"}]

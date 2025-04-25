@@ -13,15 +13,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export function SectionCards() {
   return (
-    <div className="*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
-      <Card className="@container/card">
+    <div className=" @5xl/main:grid-cols-2 @7xl/main:grid-cols-4 grid grid-cols-1 gap-2 px-4 lg:px-6">
+      <Card className="@container/card border border-dashed">
         <CardHeader className="relative">
           <CardDescription>Total Residents</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
             48
           </CardTitle>
           <div className="absolute right-4 top-4">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
+          <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
               20 male
               <Separator
                 orientation="vertical"
@@ -41,11 +41,11 @@ export function SectionCards() {
             </div>
           </div>
           <div>
-            <Button>See all</Button>
+            <Button className="bg-green-700 hover:bg-green-600" >See all</Button>
           </div>
         </CardFooter>
       </Card>
-      <Card className="@container/card">
+      <Card className="@container/card border border-dashed">
         <CardHeader className="relative">
           <CardDescription>Total Staff</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
@@ -70,11 +70,11 @@ export function SectionCards() {
             <div className="text-muted-foreground">6 on probation period</div>
           </div>
           <div>
-            <Button>See all</Button>
+            <Button className="bg-green-700 hover:bg-green-600">See all</Button>
           </div>
         </CardFooter>
       </Card>
-      <Card className="@container/card">
+      <Card className="@container/card border border-dashed">
         <CardHeader className="relative">
           <CardDescription>Acitive Houses</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
@@ -89,11 +89,11 @@ export function SectionCards() {
             <div className="text-muted-foreground">you can create 7 more</div>
           </div>
           <div>
-            <Button>Create One</Button>
+            <Button className="bg-green-700 hover:bg-green-600">Create One</Button>
           </div>
         </CardFooter>
       </Card>
-      <Card className="@container/card">
+      <Card className="@container/card border border-dashed">
         <CardHeader className="relative">
           <CardDescription>Upcoming Appoinments</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
@@ -122,7 +122,7 @@ export function SectionCards() {
             </Avatar>
           </div>
           <div>
-            <Button>See All</Button>
+            <Button className="bg-green-700 hover:bg-green-600">See All</Button>
           </div>
         </CardFooter>
       </Card>

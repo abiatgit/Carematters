@@ -13,14 +13,18 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
+ 
+type houseProp={
+  name:string
+}
 export function HouseSwitcher({
   houses,
   defaultHouse,
 }: {
-  houses: string[]
-  defaultHouse: string
+  houses: houseProp[]
+  defaultHouse: houseProp
 }) {
-  const [selectedVersion, setSelectedVersion] = React.useState(defaultHouse)
+  const [selectedVersion, setSelectedVersion] = React.useState(defaultHouse.name)
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -30,7 +34,7 @@ export function HouseSwitcher({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <div className=" bg-green-700 flex aspect-square size-8 items-center justify-center rounded-lg  text-sidebar-primary-foreground">
                 <GalleryVerticalEnd className="size-4" />
               </div>
               <div className="flex flex-col gap-0.5 leading-none">
@@ -47,10 +51,10 @@ export function HouseSwitcher({
             {houses.map((house,index) => (
               <DropdownMenuItem
                 key={index}
-                onSelect={() => setSelectedVersion(house)}
+                onSelect={() => setSelectedVersion(house.name)}
               >
-                {house}{" "}
-                {house === selectedVersion && <Check className="ml-auto" />}
+                {house.name}{" "}
+                {house.name === selectedVersion && <Check className="ml-auto" />}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
