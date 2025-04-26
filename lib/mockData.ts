@@ -166,4 +166,22 @@ export const residents = [
       icon: Mail,
     },
   ];
-  export const houses= [{name:"Ceridwen"}, {name:"Comgal"}, {name:"Betheny"}]
+  export const houses= [{name:"All Houses"},{name:"ceridwen"}, {name:"comgal"}, {name:"betheny"}]
+  
+ export const userManager = {
+    id: "a1b2c3d4-e5f6-7890-abcd-1234567890ef",
+    firstName: "Abi",
+    lastName: "George",
+    role: "manager",
+    house:"ceridwen",
+    photo: "https://randomuser.me/api/portraits/men/32.jpg", // or null if optional
+  };
+  
+  export const userTeamlead = {
+    id: "a1b2c3d4-e5f6-7890-abcd-1234567890ef",
+    firstName: "Aaron",
+    lastName: "Stokes",
+    role: "teamleader",
+    photo: "https://randomuser.me/api/portraits/men/33.jpg", 
+    house:"ceridwen"
+  };

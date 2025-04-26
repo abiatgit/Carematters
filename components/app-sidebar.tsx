@@ -1,5 +1,5 @@
 import * as React from "react";
-import {items,houses} from "@/lib/mockData"
+import {items,houses,userManager} from "@/lib/mockData"
 import { HouseSwitcher } from "./HouseSwitcher";
 
 import {
@@ -18,11 +18,11 @@ import { NavUser } from "./NavUser";
 import Link from "next/link";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const role:"nurse"|"manager" = "nurse"
+  const role:"nurse"|"manager" = "manager"
   return (
     <Sidebar {...props} collapsible="icon">
       <SidebarHeader>
-        <HouseSwitcher houses={houses} defaultHouse={houses[0]} />
+        <HouseSwitcher houses={houses} defaultHouse={houses[0].name} />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -49,7 +49,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={"abi"} />
+        <NavUser user={userManager} />
       </SidebarFooter>
     </Sidebar>
   );
