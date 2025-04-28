@@ -83,7 +83,7 @@ export default function ResidentListPage() {
           </Select>
           <Select onValueChange={setUnitFilter}>
             <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Select Unit" />
+              <SelectValue placeholder="All" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>

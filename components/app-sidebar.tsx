@@ -18,7 +18,7 @@ import { NavUser } from "./NavUser";
 import Link from "next/link";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const role:"nurse"|"manager" = "manager"
+  const role:"TeamLeader"|"Manager" = "Manager"
   return (
     <Sidebar {...props} collapsible="icon">
       <SidebarHeader>
@@ -30,9 +30,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
-                if(item.title==="Staff" && role !== "manager"){
+                if(item.title==="Staff" && role !== "Manager" ||item.title==="Houses" && role !== "Manager" ){
                   return
                 }
+               
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild className="h-10 px-6 text-md">

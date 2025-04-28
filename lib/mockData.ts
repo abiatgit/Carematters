@@ -1,4 +1,4 @@
-import { Handshake, House, Mail, Pill, UserRoundCheck, UsersRound } from "lucide-react";
+import { Handshake,  Mail, Pill,House, UserRoundCheck, UsersRound ,NotebookPen} from "lucide-react";
 
 export const residents = [
     {
@@ -160,11 +160,23 @@ export const residents = [
       url: "/list/medication",
       icon: Pill,
     },
+    
+    {
+      title: "Appoinments",
+      url: "/list/appoinments",
+      icon:NotebookPen,
+    },
     {
       title: "Messages",
       url: "/list/messages",
       icon: Mail,
     },
+    {
+      title: "Houses",
+      url: "/list/houses",
+      icon: House,
+    }
+    
   ];
   export const houses= [{name:"All Houses"},{name:"ceridwen"}, {name:"comgal"}, {name:"betheny"}]
   
@@ -185,3 +197,102 @@ export const residents = [
     photo: "https://randomuser.me/api/portraits/men/33.jpg", 
     house:"ceridwen"
   };
+  export const staff = [
+    {
+      name: "Alice Johnson",
+      gender: "FEMALE",
+      email: "alice.johnson@example.com",
+      password: "hashedpassword1", // Replace with hashed version
+      mobile: 7011123456,
+      role: "teamLead",
+      photo: "https://randomuser.me/api/portraits/women/10.jpg",
+      unitId: "Ceridwen",
+    },
+    {
+      name: "Daniel Smith",
+      gender: "MALE",
+      email: "daniel.smith@example.com",
+      password: "hashedpassword2",
+      mobile: 7011123457,
+      role: "supportWorker",
+      photo: "https://randomuser.me/api/portraits/men/11.jpg",
+      gende: "MALE",
+      unitId: "Comgal",
+    },
+    {
+      name: "Olivia Brown",
+      gender: "FEMALE",
+      email: "olivia.brown@example.com",
+      password: "hashedpassword3",
+      mobile: 7011123458,
+      role: "supportWorker",
+      photo: "https://randomuser.me/api/portraits/women/12.jpg",
+      gende: "FEMALE",
+      unitId: "Bethany",
+    },
+    {
+      name: "Liam Wilson",
+      gender: "MALE",
+      email: "liam.wilson@example.com",
+      password: "hashedpassword4",
+      mobile: 7011123459,
+      role: "teamLead",
+      photo: "https://randomuser.me/api/portraits/men/13.jpg",
+      gende: "MALE",
+      unitId: "Betheny",
+    },
+    {
+      name: "Sophia Davis",
+      gender: "FEMALE",
+      email: "sophia.davis@example.com",
+      password: "hashedpassword5",
+      mobile: 7011123460,
+      role: "supportWorker",
+      photo: "https://randomuser.me/api/portraits/women/14.jpg",
+      gende: "FEMALE",
+      unitId: "Comgal",
+    },
+    {
+      name: "Noah Taylor",
+      gender: "MALE",
+      email: "noah.taylor@example.com",
+      password: "hashedpassword6",
+      mobile: 7011123461,
+      role: "supportWorker",
+      photo: "https://randomuser.me/api/portraits/men/15.jpg",
+      gende: "MALE",
+      unitId: "Ceridwen",
+    },
+    {
+      name: "Emily Moore",
+      gender: "FEMALE",
+      email: "emily.moore@example.com",
+      password: "hashedpassword7",
+      mobile: 7011123462,
+      role: "teamLead",
+      photo: "https://randomuser.me/api/portraits/women/16.jpg",
+      gende: "FEMALE",
+      unitId: "Betheny",
+    },
+    {
+      name: "Benjn Clark",
+      gender: "MALE",
+      email: "benjamin.clark@example.com",
+      password: "hashedpassword8",
+      mobile: 7011123463,
+      role: "supportWorker",
+      photo: "https://randomuser.me/api/portraits/men/17.jpg",
+      gende: "MALE",
+      unitId: "Ceridwen",
+    },
+    {
+      name: "Grace Lewis",
+      gender: "FEMALE",
+      email: "grace.lewis@example.com",
+      password: "hashedpassword9",
+      mobile: 7011123464,
+      role: "supportWorker",
+      photo: "https://randomuser.me/api/portraits/women/18.jpg",
+      gende: "FEMALE",
+      unitId: "Comgal",
+    }]

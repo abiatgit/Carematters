@@ -76,8 +76,8 @@ export function NavUser({ user }: { user: user }) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
+              <DropdownMenuItem  className="text-violet-600">
+                <Sparkles className="text-violet-600"/>
                 Upgrade to Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>

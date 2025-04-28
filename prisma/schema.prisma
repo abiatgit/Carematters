@@ -54,7 +54,8 @@ model TeamLead {
   email    String
   password String
   photo    String?
-  gender   Gender
+  role  Role
+  gende Gender
 
   unitId String
   unit   Unit   @relation(fields: [unitId], references: [id])
@@ -70,6 +71,8 @@ model SupportWorker {
   password String
   photo    String?
   mobile   Int
+  role     Role
+  gende    Gender
 
   unitId String
   unit   Unit   @relation(fields: [unitId], references: [id])
@@ -111,8 +114,8 @@ model Appoinment {
 
 model Incident {
   id          String   @id @default(uuid())
-  status     Status
-  title      String
+  status      Status
+  title       String
   description String
   date        DateTime
   time        DateTime
@@ -122,12 +125,13 @@ model Incident {
   unitId String
   unit   Unit   @relation(fields: [unitId], references: [id])
 }
+
 model Medication {
-  id String @id @default( uuid())
-  title String
-  time DateTime
+  id         String   @id @default(uuid())
+  title      String
+  time       DateTime
   residentId String
-  resident Resident @relation(fields: [residentId],references: [id])
+  resident   Resident @relation(fields: [residentId], references: [id])
 }
 
 enum Status {
@@ -140,4 +144,9 @@ enum Gender {
   male
   female
   other
+}
+
+enum Role {
+  teamLead
+  supportWorker
 }
