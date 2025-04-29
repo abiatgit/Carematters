@@ -14,7 +14,8 @@ const nextConfig: NextConfig = {
       },
       {
         hostname:"randomuser.me"
-      }
+      },
+      {hostname:"upload.wikimedia.org"}
     ],
   },
 };

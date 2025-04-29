@@ -1,120 +1,144 @@
 "use client";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ChartLegendContent } from "@/components/ui/chart";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Eye,  } from "lucide-react";
+import { Building, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import React, { useState } from "react";
 
-const dummyResidents = [
-  {
-    name: "Annie Mathew",
-    room: "101",
-    age: 78,
-    gender: "female",
-    unit: "Unit 1",
-    photo:
-      "https://e7.pngegg.com/pngimages/436/585/png-clipart-computer-icons-user-account-graphics-account-icon-vector-icons-silhouette.png",
-  },
-  {
-    name: "George John",
-    room: "102",
-    age: 83,
-    gender: "male",
-    unit: "Unit 2",
-    photo: "/residents/george.jpg",
-  },
-  {
-    name: "Sara Thomas",
-    room: "103",
-    age: 75,
-    gender: "female",
-    unit: "Unit 3",
-    photo: "/residents/sara.jpg",
-  },
-  // Add more residents as needed
-];
-
-export default function ResidentListPage() {
+const Page = () => {
   const [search, setSearch] = useState("");
-  const [genderFilter, setGenderFilter] = useState("");
-  const [unitFilter, setUnitFilter] = useState("");
-
-  const filteredResidents = dummyResidents.filter((resident) => {
-    const matchesSearch = resident.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchesGender = genderFilter
-      ? resident.gender === genderFilter
-      : true;
-    const matchesUnit = unitFilter ? resident.unit === unitFilter : true;
-    return matchesSearch && matchesGender && matchesUnit;
-  });
-
   return (
-    <div className="">
-      {/* Top Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+    <div>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/manager">Dashboard</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/list/resident/">Resident</BreadcrumbLink>
+          </BreadcrumbItem>
+          
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
         <h1 className="text-xl font-semibold">Resident List</h1>
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
           <Input
-            placeholder="Search by name"
+            type="text"
+            placeholder="Search staff by name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full sm:w-[200px]"
+            className="max-w-sm"
           />
-          <Select onValueChange={setGenderFilter}>
-            <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Filter by Gender" />
+          <Select>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="find by Houses" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="male">Male</SelectItem>
-              <SelectItem value="female">Female</SelectItem>
+              <SelectGroup>
+                <SelectLabel>Select a house</SelectLabel>
+                <SelectItem value="ceridewen">Ceridwen</SelectItem>
+                <SelectItem value="comgal">Comgal</SelectItem>
+                <SelectItem value="betheny">Betheny</SelectItem>
+              </SelectGroup>
             </SelectContent>
           </Select>
-          <Select onValueChange={setUnitFilter}>
-            <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="All" />
+          <Select>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Gender" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="Unit 1">Unit 1</SelectItem>
-              <SelectItem value="Unit 2">Unit 2</SelectItem>
-              <SelectItem value="Unit 3">Unit 3</SelectItem>
+              <SelectGroup>
+                <SelectLabel>Select a Gender</SelectLabel>
+                <SelectItem value="ceridewen">Male</SelectItem>
+                <SelectItem value="comgal">Female</SelectItem>
+                <SelectItem value="betheny">Other</SelectItem>
+              </SelectGroup>
             </SelectContent>
           </Select>
-          <Button variant="default" className="flex items-center gap-2">
-            <Plus size={16} />
+          <Button
+            variant="default"
+            className="flex items-center gap-2 bg-green-700 hover:bg-green-500"
+          >
+            <Plus size={16} className="" />
             Add Resident
           </Button>
         </div>
       </div>
 
-      {/* Resident Cards */}
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {filteredResidents.map((resident, index) => (
+      <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <Link href={"/list/resident/302"}>
+          <Card>
+            <div className="w-5 h-12 rounded-sm  relative overflow-hidden">
+              <Image
+                alt=""
+                src={"https://randomuser.me/api/portraits/women/14.jpg"}
+                fill
+                className="object-cover"
+              ></Image>
+            </div>
+            <CardContent>
+              <CardTitle>Name</CardTitle>
+            </CardContent>
+            <CardFooter>405</CardFooter>
+          </Card>
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export default Page;
+
+{
+  /* Resident Cards */
+}
+// <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+{
+  /* {filteredResidents.map((resident, index) => (
           <Card
             key={index}
-            className="relative hover:shadow-md transition-shadow"
+            className="relative hover:shadow-md transition-shadow p-2"
           >
         
 
-            <CardHeader className="flex flex-col items-center p-4 pb-2 gap-2">
+            <CardHeader className="flex  flex-col items-center p-2 pb-2 gap-2">
               <Image
-                src="https://e7.pngegg.com/pngimages/436/585/png-clipart-computer-icons-user-account-graphics-account-icon-vector-icons-silhouette.png"
+                src="https://upload.wikimedia.org/wikipedia/commons/c/ce/HH_Polizeihauptmeister_MZ.jpg"
                 alt={resident.name}
                 width={80}
                 height={80}
-                className="rounded-full object-cover"
+                className="rounded-lg object-cover"
               />
               <div className="text-center">
                 <h2 className="text-md font-medium">{resident.name}</h2>
@@ -132,8 +156,5 @@ export default function ResidentListPage() {
               </Button>
             </CardContent>
           </Card>
-        ))}
-      </div>
-    </div>
-  );
+        ))} */
 }

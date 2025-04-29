@@ -4,6 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Download, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 const SinglepageStaff = () => {
   const staff = {
@@ -19,6 +27,22 @@ const SinglepageStaff = () => {
   };
 
   return (
+    <>
+    <Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+      <BreadcrumbLink href="/manager">Dashboard</BreadcrumbLink>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbLink href="/list/staff/">Staff</BreadcrumbLink>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbPage>id</BreadcrumbPage>
+    </BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       {/* Header */}
       <Card>
@@ -60,6 +84,7 @@ const SinglepageStaff = () => {
         </Button>
       </div>
     </div>
+    </>
   );
 };
 

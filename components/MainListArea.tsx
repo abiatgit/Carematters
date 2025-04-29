@@ -17,8 +17,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import AppoinmentCards from "./appoinments/AppoinmentCards";
-import { appointments } from "./appoinments/data";
+import AppoinmentCards from "./appoinmentsCard/AppoinmentCards";
+import { appointments } from "./appoinmentsCard/data";
 
 export function MainListArea() {
   return (

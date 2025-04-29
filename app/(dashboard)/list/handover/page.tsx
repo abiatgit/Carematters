@@ -3,7 +3,13 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
 
@@ -14,8 +20,7 @@ const dummyHandover = Array.from({ length: 10 }, (_, i) => {
     id: i,
     date: format(date, "yyyy-MM-dd"),
     unit: i % 2 === 0 ? "Ceridwen" : "Comgal",
-    text:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus tincidunt nisi, non porta justo volutpat non. Nulla facilisi. Sed blandit mi vitae lacinia tristique. Proin euismod, ligula eget aliquam finibus, magna dolor facilisis orci, vitae ultrices arcu massa vel enim.",
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus rhoncus tincidunt nisi, non porta justo volutpat non. Nulla facilisi. Sed blandit mi vitae lacinia tristique. Proin euismod, ligula eget aliquam finibus, magna dolor facilisis orci, vitae ultrices arcu massa vel enim.",
   };
 });
 
@@ -33,8 +38,8 @@ export default function HandoverPage() {
   const selectedNote = dummyHandover.find((item) => item.id === selectedId);
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6">
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
+    <div className="">
+      <div className=" mb-6 flex flex-col sm:flex-row gap-4 justify-between items-center">
         <h1 className="text-xl font-semibold">Handover Notes</h1>
         <div className="flex flex-wrap gap-4 w-full sm:w-auto">
           <Input
