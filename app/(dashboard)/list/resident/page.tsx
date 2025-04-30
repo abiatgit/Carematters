@@ -5,21 +5,14 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import {
   Card,
-  CardAction,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
-import { ChartLegendContent } from "@/components/ui/chart";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -29,10 +22,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Building, Plus } from "lucide-react";
-import Image from "next/image";
+import { Plus } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Page = () => {
   const [search, setSearch] = useState("");
@@ -47,7 +40,6 @@ const Page = () => {
           <BreadcrumbItem>
             <BreadcrumbLink href="/list/resident/">Resident</BreadcrumbLink>
           </BreadcrumbItem>
-          
         </BreadcrumbList>
       </Breadcrumb>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
@@ -95,22 +87,132 @@ const Page = () => {
           </Button>
         </div>
       </div>
-
-      <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <Link href={"/list/resident/302"}>
-          <Card>
-            <div className="w-5 h-12 rounded-sm  relative overflow-hidden">
-              <Image
-                alt=""
-                src={"https://randomuser.me/api/portraits/women/14.jpg"}
-                fill
-                className="object-cover"
-              ></Image>
-            </div>
+          <Card className="flex flex-row gap-18 ">
+            <CardHeader>
+              <Avatar className="h-[80] w-[80]">
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </CardHeader>
             <CardContent>
-              <CardTitle>Name</CardTitle>
+              <p>Name: Abi</p>
+              <p>Unit: Ceridwen</p>
+              <p>Room: 301</p>
             </CardContent>
-            <CardFooter>405</CardFooter>
+          </Card>
+        </Link>
+        <Link href={"/list/resident/302"}>
+          <Card className="flex flex-row gap-18 ">
+            <CardHeader>
+              <Avatar className="h-[80] w-[80]">
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </CardHeader>
+            <CardContent>
+              <p>Name: Abi</p>
+              <p>Unit: Ceridwen</p>
+              <p>Room: 301</p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href={"/list/resident/302"}>
+          <Card className="flex flex-row gap-18 ">
+            <CardHeader>
+              <Avatar className="h-[80] w-[80]">
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </CardHeader>
+            <CardContent>
+              <p>Name: Abi</p>
+              <p>Unit: Ceridwen</p>
+              <p>Room: 301</p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href={"/list/resident/302"}>
+          <Card className="flex flex-row gap-18 ">
+            <CardHeader>
+              <Avatar className="h-[80] w-[80]">
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </CardHeader>
+            <CardContent>
+              <p>Name: Abi</p>
+              <p>Unit: Ceridwen</p>
+              <p>Room: 301</p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href={"/list/resident/302"}>
+          <Card className="flex flex-row gap-18 ">
+            <CardHeader>
+              <Avatar className="h-[80] w-[80]">
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </CardHeader>
+            <CardContent>
+              <p>Name: Abi</p>
+              <p>Unit: Ceridwen</p>
+              <p>Room: 301</p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href={"/list/resident/302"}>
+          <Card className="flex flex-row gap-18 ">
+            <CardHeader>
+              <Avatar className="h-[80] w-[80]">
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </CardHeader>
+            <CardContent>
+              <p>Name: Abi</p>
+              <p>Unit: Ceridwen</p>
+              <p>Room: 301</p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href={"/list/resident/302"}>
+          <Card className="flex flex-row gap-18 ">
+            <CardHeader>
+              <Avatar className="h-[80] w-[80]">
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </CardHeader>
+            <CardContent>
+              <p>Name: Abi</p>
+              <p>Unit: Ceridwen</p>
+              <p>Room: 301</p>
+            </CardContent>
           </Card>
         </Link>
       </div>
@@ -119,42 +221,3 @@ const Page = () => {
 };
 
 export default Page;
-
-{
-  /* Resident Cards */
-}
-// <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-{
-  /* {filteredResidents.map((resident, index) => (
-          <Card
-            key={index}
-            className="relative hover:shadow-md transition-shadow p-2"
-          >
-        
-
-            <CardHeader className="flex  flex-col items-center p-2 pb-2 gap-2">
-              <Image
-                src="https://upload.wikimedia.org/wikipedia/commons/c/ce/HH_Polizeihauptmeister_MZ.jpg"
-                alt={resident.name}
-                width={80}
-                height={80}
-                className="rounded-lg object-cover"
-              />
-              <div className="text-center">
-                <h2 className="text-md font-medium">{resident.name}</h2>
-                <p className="text-sm text-muted-foreground">
-                  Room {resident.room} • Age {resident.age}
-                </p>
-              </div>
-            </CardHeader>
-
-            <CardContent className="flex justify-center">
-              <Button variant="ghost" size="icon">
-                <Link href={`/list/resident/${index}`}>
-                  <Eye size={18} />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        ))} */
-}

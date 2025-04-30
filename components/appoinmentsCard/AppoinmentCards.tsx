@@ -23,9 +23,9 @@ const AppoinmentCards = ({ data }: AppoinmentCardsProp) => {
       {data.map((item, index) => (
         <Card
           key={index}
-          className="flex flex-row  justify-between p-5 items-center"
+          className="flex flex-row  justify-between p-5  items-center"
         >
-          <div className="flex gap-3 ">
+          <div className="flex  ">
             <Image
               alt="user"
               className="rounded-2xl"
@@ -34,7 +34,7 @@ const AppoinmentCards = ({ data }: AppoinmentCardsProp) => {
               src={item.avatar}
             />
 
-            <div className="">
+            <div className="mx-3">
               <p className="text-sm font-medium leading-none">
                 {item.residentId}
               </p>
