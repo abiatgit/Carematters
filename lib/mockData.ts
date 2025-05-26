@@ -172,7 +172,7 @@ export const residents = [
       icon: Mail,
     },
     {
-      title: "Houses",
+      title: "All Houses",
       url: "/list/houses",
       icon: House,
     }

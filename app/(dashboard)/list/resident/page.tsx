@@ -22,13 +22,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus } from "lucide-react";
+import { Plus, } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Sheet,  SheetTrigger } from "@/components/ui/sheet";
+import CreateResidentForm from "@/components/forms/Residents/CreateResidentForm";
 
 const Page = () => {
   const [search, setSearch] = useState("");
+ const [unitFilter,setUnitFilter]=useState("all")
+ const [genderFilter,setGenderFilter]=useState("all")
+
+ const filteredResident= residednt.filter((singleResident)=>{
+        const searchMatchResident= singleResident.name
+        .toLowerCase()
+        .includes(search.toLowerCase())
+        const unitMatchResident=
+        unitFilter==="all" || singleResident.unitId=== unitFilter
+ })
   return (
     <div>
       <Breadcrumb>
@@ -78,143 +90,48 @@ const Page = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
+          <Sheet>
+          <SheetTrigger asChild>
           <Button
+          
             variant="default"
             className="flex items-center gap-2 bg-green-700 hover:bg-green-500"
           >
             <Plus size={16} className="" />
             Add Resident
           </Button>
+          </SheetTrigger>
+          <CreateResidentForm/>
+          </Sheet>
         </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        <Link href={"/list/resident/302"}>
-          <Card className="flex flex-row gap-18 ">
-            <CardHeader>
-              <Avatar className="h-[80] w-[80]">
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </CardHeader>
-            <CardContent>
-              <p>Name: Abi</p>
-              <p>Unit: Ceridwen</p>
-              <p>Room: 301</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href={"/list/resident/302"}>
-          <Card className="flex flex-row gap-18 ">
-            <CardHeader>
-              <Avatar className="h-[80] w-[80]">
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </CardHeader>
-            <CardContent>
-              <p>Name: Abi</p>
-              <p>Unit: Ceridwen</p>
-              <p>Room: 301</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href={"/list/resident/302"}>
-          <Card className="flex flex-row gap-18 ">
-            <CardHeader>
-              <Avatar className="h-[80] w-[80]">
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </CardHeader>
-            <CardContent>
-              <p>Name: Abi</p>
-              <p>Unit: Ceridwen</p>
-              <p>Room: 301</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href={"/list/resident/302"}>
-          <Card className="flex flex-row gap-18 ">
-            <CardHeader>
-              <Avatar className="h-[80] w-[80]">
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </CardHeader>
-            <CardContent>
-              <p>Name: Abi</p>
-              <p>Unit: Ceridwen</p>
-              <p>Room: 301</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href={"/list/resident/302"}>
-          <Card className="flex flex-row gap-18 ">
-            <CardHeader>
-              <Avatar className="h-[80] w-[80]">
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </CardHeader>
-            <CardContent>
-              <p>Name: Abi</p>
-              <p>Unit: Ceridwen</p>
-              <p>Room: 301</p>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href={"/list/resident/302"}>
-          <Card className="flex flex-row gap-18 ">
-            <CardHeader>
-              <Avatar className="h-[80] w-[80]">
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </CardHeader>
-            <CardContent>
-              <p>Name: Abi</p>
-              <p>Unit: Ceridwen</p>
-              <p>Room: 301</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href={"/list/resident/302"}>
-          <Card className="flex flex-row gap-18 ">
-            <CardHeader>
-              <Avatar className="h-[80] w-[80]">
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </CardHeader>
-            <CardContent>
-              <p>Name: Abi</p>
-              <p>Unit: Ceridwen</p>
-              <p>Room: 301</p>
-            </CardContent>
-          </Card>
-        </Link>
+     {/* {filteredResident.map((resident) => {
+            return (
+              <Card className="px-6" key={staff.name}>
+                <div className="flex gap-5 items-center">
+                  <div className="w-15 h-15 rounded-full relative overflow-hidden ">
+                    <Image
+                      alt=" "
+                      src={"https://github.com/shadcn.png"}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <CardContent className="px-0">
+                      <CardTitle>Name: {staff.name}</CardTitle>
+                      <h1>House: {staff.unitId}</h1>
+                      <h1>Position: {staff.role}</h1>
+                    </CardContent>
+                  </div>
+                </div>
+                <CardFooter className="px-0 ">
+                  <Button variant="outline" className="text-red-600">Delete</Button>
+                </CardFooter>
+              </Card>
+            );
+          })} */}
       </div>
     </div>
   );

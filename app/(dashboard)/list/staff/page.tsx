@@ -1,9 +1,15 @@
 "use client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import Image from "next/image";
 import { staff } from "@/lib/mockData";
 import {
@@ -12,7 +18,7 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from "@/components/ui/breadcrumb";
 import {
   Select,
   SelectContent,
@@ -23,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { SelectLabel } from "@radix-ui/react-select";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function StaffPage() {
   const [search, setSearch] = useState("");
@@ -44,7 +51,7 @@ export default function StaffPage() {
 
   return (
     <div className="">
-        <Breadcrumb>
+      <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/manager">Dashboard</BreadcrumbLink>
@@ -71,11 +78,11 @@ export default function StaffPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-              <SelectLabel>Select a Position</SelectLabel>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="teamLead">Team Leader</SelectItem>
-              <SelectItem value="supportWorker">Support Worker</SelectItem>
-              {/* <SelectItem value="Comgal">Support Worker</SelectItem> */}
+                <SelectLabel>Select a Position</SelectLabel>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="teamLead">Team Leader</SelectItem>
+                <SelectItem value="supportWorker">Support Worker</SelectItem>
+                {/* <SelectItem value="Comgal">Support Worker</SelectItem> */}
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -100,35 +107,34 @@ export default function StaffPage() {
         </div>
       </div>
       <Link href={"/list/staff/32"}>
-      <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filteredStaff.map((staff) => {
-          return (
-            <Card
-              key={staff.name}
-              className=" flex  hover:scale-105 shadow-lg transition-all transform hover:shadow-xl cursor-pointer"
-            >
-              <CardHeader className="">
-                <Image
-                  className="rounded-2xl object-cover"
-                  alt=""
-                  src={staff.photo}
-                  width={100}
-                  height={200}
-                ></Image>
-              </CardHeader>
-              <CardContent className="">
-                <h2 className="text-lg font-semibold tracking-tight">
-                  {staff.name}
-                </h2>
-                <p className="leading-7">{staff.unitId}</p>
-                <p className="leading-7  text-sm text-green-700">
-                  {staff.role}
-                </p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredStaff.map((staff) => {
+            return (
+              <Card className="px-6" key={staff.name}>
+                <div className="flex gap-5 items-center">
+                  <div className="w-15 h-15 rounded-full relative overflow-hidden ">
+                    <Image
+                      alt=" "
+                      src={"https://github.com/shadcn.png"}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <CardContent className="px-0">
+                      <CardTitle>Name: {staff.name}</CardTitle>
+                      <h1>House: {staff.unitId}</h1>
+                      <h1>Position: {staff.role}</h1>
+                    </CardContent>
+                  </div>
+                </div>
+                <CardFooter className="px-0 ">
+                  <Button variant="outline" className="text-red-600">Delete</Button>
+                </CardFooter>
+              </Card>
+            );
+          })}
+        </div>
       </Link>
     </div>
   );
