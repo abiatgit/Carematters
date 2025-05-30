@@ -1,6 +1,6 @@
 const SupportWorkerDashboard = () => {
   return (
-    <div>CareAssistantDashboard</div>
+    <div>Supportworker Dashboard</div>
   );
 };
 

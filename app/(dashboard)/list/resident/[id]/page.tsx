@@ -13,7 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import MedsTable from "@/components/medsTable/MedsTable";
 import { IncidetnChart } from "@/components/incidentChart/incidentChart";
 import { Button } from "@/components/ui/button";
-import { Folder, Plus } from "lucide-react";
+import { Folder, Pencil, Plus } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -75,8 +75,27 @@ const SingelResidentPage = () => {
         {/* Left*/}
         <div className="w-full xl:w-1/3 space-y-6">
           {/*User badges*/}
-          <div className="border border-dashed p-4 rounded-l-lg flex-row space-y-2">
-            <h1 className="text-xl font-semibold">Name : {"Mr.John Doe"}</h1>
+          <div className="border border-dashed p-4 rounded-l-lg flex-row space-y-2 ">
+         <div className="flex items-center justify-between">
+             <h1 className="text-xl font-semibold">Name : {"Mr.John Doe"}</h1>
+            <Sheet>
+              <SheetTrigger>
+                <Button variant={"outline"} size={"icon"}>
+                  <Pencil></Pencil>
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Are you absolutely sure?</SheetTitle>
+                  <SheetDescription>
+                    This action cannot be undone. This will permanently delete
+                    your account and remove your data from our servers.
+                  </SheetDescription>
+                </SheetHeader>
+              </SheetContent>
+            </Sheet>
+         </div>
+
             <p className="text-foreground text-sm">
               Date of Birth : {"13/03/1965"}
             </p>
@@ -132,6 +151,7 @@ const SingelResidentPage = () => {
           <div className="border border-dashed flex gap-4 p-4 rounded-l-lg">
             <Button>Daily Reoprt</Button>
             <Button>Incidet Reoprt</Button>
+            <Button>Food & Fluid</Button>
             <Button>Body Map</Button>
             <Button>
               Care Plan <Folder />

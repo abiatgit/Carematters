@@ -1,13 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import Image from "next/image";
@@ -29,7 +23,15 @@ import {
 } from "@/components/ui/select";
 import { SelectLabel } from "@radix-ui/react-select";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import CreateStaffForm from "@/components/forms/Staff/CreateStaffForm";
 
 export default function StaffPage() {
   const [search, setSearch] = useState("");
@@ -97,20 +99,28 @@ export default function StaffPage() {
               <SelectItem value="Betheny">Betheny</SelectItem>
             </SelectContent>
           </Select>
-          <Button
-            variant="default"
-            className="flex items-center gap-2 bg-green-700 hover:bg-green-500"
-          >
-            <Plus size={16} className="" />
-            Add Staff
-          </Button>
+          <Dialog>
+            <DialogTrigger>
+              <Button
+                variant="default"
+                className="flex items-center gap-2 bg-green-700 hover:bg-green-500"
+              >
+                <Plus size={16} className="" />
+                Add Staff
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <CreateStaffForm />
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
-      <Link href={"/list/staff/32"}>
-        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredStaff.map((staff) => {
-            return (
-              <Card className="px-6" key={staff.name}>
+
+      <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {filteredStaff.map((staff) => {
+          return (
+            <Card className="px-6" key={staff.name}>
+              <Link href={"/list/staff/32"}>
                 <div className="flex gap-5 items-center">
                   <div className="w-15 h-15 rounded-full relative overflow-hidden ">
                     <Image
@@ -128,14 +138,28 @@ export default function StaffPage() {
                     </CardContent>
                   </div>
                 </div>
-                <CardFooter className="px-0 ">
-                  <Button variant="outline" className="text-red-600">Delete</Button>
-                </CardFooter>
-              </Card>
-            );
-          })}
-        </div>
-      </Link>
+              </Link>
+              <CardFooter className="px-0 ">
+                <Dialog>
+                  <DialogTrigger>
+                    <Button variant="outline" className="text-red-600">
+                      Delete
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="flex items-center justify-center">
+                    <DialogHeader>
+                      <DialogTitle>Are you absolutely sure to delete?</DialogTitle>
+                      <DialogDescription className="flex items-center justify-center mt-3">
+                      <Button variant={"destructive"}>yes</Button>
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+              </CardFooter>
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 }

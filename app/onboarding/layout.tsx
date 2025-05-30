@@ -1,13 +1,10 @@
 "use client";
-
-import { UserButton, useUser } from "@clerk/nextjs";
-
 export default function OnboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user } = useUser();
+
 
   return (
     <div className="grid sm:grid-cols-12 min-h-screen bg-gradient-to-tr from-sky-100 via-blue-100 to-indigo-100">
@@ -15,10 +12,9 @@ export default function OnboardLayout({
       <header className="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 sm:col-span-6 md:col-span-5 flex flex-col items-start p-4 sm:p-6 shadow-2xl rounded-bl-4xl sm:rounded-bl-none sm:rounded-tr-4xl rounded-br-4xl w-full text-white">
         <div className="mt-6 mb-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
           <div>
-            <h2 className="text-base sm:text-lg font-semibold">{`Welcome ${user?.firstName}`}</h2>
+            <h2 className="text-base sm:text-lg font-semibold">{`Welcome ${"abi"}`}</h2>
             <p className="font-light text-sm">Manager</p>
           </div>
-          <UserButton />
         </div>
 
         <div className="w-full mt-9 p-9">

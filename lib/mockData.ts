@@ -5,10 +5,10 @@ export const residents = [
       id: "1d24bfae-1a2e-4cde-9e9d-a1f842b4f021",
       name: "Alice Mathews",
       dateOfBirth: "1942-08-15",
-      roomNumber: 101,
+      roomNumber: "comgal",
       nextOfKin: "John Mathews",
       imge: "https://randomuser.me/api/portraits/women/21.jpg",
-      unitId: "unit-001"
+      unitId: "comgal"
     },
     {
       id: "32fc86f7-348e-4e29-a3f2-4c8cfbe09a29",
@@ -80,7 +80,8 @@ export const residents = [
       roomNumber: 109,
       nextOfKin: "Paul Walker",
       imge: "https://randomuser.me/api/portraits/women/12.jpg",
-      unitId: "unit-005"
+      unitId: "betheny"
+      , sex:"female"
     },
     {
       id: "4a9d8b17-7f01-4e68-8b5b-6b2f9ef5a871",
@@ -89,7 +90,8 @@ export const residents = [
       roomNumber: 110,
       nextOfKin: "Rachel Lewis",
       imge: "https://randomuser.me/api/portraits/men/11.jpg",
-      unitId: "unit-005"
+      unitId: "ceridewen",
+      sex:"male"
     }
   ];
   export const incidentData = [
@@ -180,6 +182,9 @@ export const residents = [
   ];
   export const houses= [{name:"All Houses"},{name:"ceridwen"}, {name:"comgal"}, {name:"betheny"}]
   
+  export const houseList=[
+    {name:"ceridwen",Residents:1,staff:20}, {name:"comgal",Residents:1,staff:20}, {name:"betheny",Residents:1,staff:20},
+  ]
  export const userManager = {
     id: "a1b2c3d4-e5f6-7890-abcd-1234567890ef",
     firstName: "Abi",

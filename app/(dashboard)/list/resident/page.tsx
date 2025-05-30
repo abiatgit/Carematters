@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,11 +8,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -22,25 +19,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, } from "lucide-react";
-import Link from "next/link";
+import { Plus } from "lucide-react";
 import React, { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Sheet,  SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import CreateResidentForm from "@/components/forms/Residents/CreateResidentForm";
-
+import { residents } from "@/lib/mockData";
+import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 const Page = () => {
   const [search, setSearch] = useState("");
- const [unitFilter,setUnitFilter]=useState("all")
- const [genderFilter,setGenderFilter]=useState("all")
+  const [unitFilter, setUnitFilter] = useState("all");
+  const [genderFilter, setGenderFilter] = useState("all");
 
- const filteredResident= residednt.filter((singleResident)=>{
-        const searchMatchResident= singleResident.name
-        .toLowerCase()
-        .includes(search.toLowerCase())
-        const unitMatchResident=
-        unitFilter==="all" || singleResident.unitId=== unitFilter
- })
+  const filteredResident = residents.filter((singleResident) => {
+    const searchMatchResident = singleResident.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const unitMatchResident =
+      unitFilter === "all" || singleResident.unitId === unitFilter;
+    const genderMatchResident =
+      genderFilter === "all" || singleResident.sex === genderFilter;
+    return searchMatchResident && unitMatchResident && genderMatchResident;
+  });
   return (
     <div>
       <Breadcrumb>
@@ -64,51 +71,53 @@ const Page = () => {
             onChange={(e) => setSearch(e.target.value)}
             className="max-w-sm"
           />
-          <Select>
+          <Select onValueChange={setUnitFilter}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="find by Houses" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Select a house</SelectLabel>
+                <SelectItem value="all">all</SelectItem>
                 <SelectItem value="ceridewen">Ceridwen</SelectItem>
                 <SelectItem value="comgal">Comgal</SelectItem>
                 <SelectItem value="betheny">Betheny</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Select>
+          <Select onValueChange={setGenderFilter}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Gender" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Select a Gender</SelectLabel>
-                <SelectItem value="ceridewen">Male</SelectItem>
-                <SelectItem value="comgal">Female</SelectItem>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
                 <SelectItem value="betheny">Other</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
           <Sheet>
-          <SheetTrigger asChild>
-          <Button
-          
-            variant="default"
-            className="flex items-center gap-2 bg-green-700 hover:bg-green-500"
-          >
-            <Plus size={16} className="" />
-            Add Resident
-          </Button>
-          </SheetTrigger>
-          <CreateResidentForm/>
+            <SheetTrigger asChild>
+              <Button
+                variant="default"
+                className="flex items-center gap-2 bg-green-700 hover:bg-green-500"
+              >
+                <Plus size={16} className="" />
+                Add Resident
+              </Button>
+            </SheetTrigger>
+            <CreateResidentForm />
           </Sheet>
         </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-     {/* {filteredResident.map((resident) => {
-            return (
-              <Card className="px-6" key={staff.name}>
+        {filteredResident.map((resident) => {
+          return (
+            <Card className="px-6" key={resident.name}>
+              <Link href={"/list/resident/32"}>
                 <div className="flex gap-5 items-center">
                   <div className="w-15 h-15 rounded-full relative overflow-hidden ">
                     <Image
@@ -120,18 +129,34 @@ const Page = () => {
                   </div>
                   <div>
                     <CardContent className="px-0">
-                      <CardTitle>Name: {staff.name}</CardTitle>
-                      <h1>House: {staff.unitId}</h1>
-                      <h1>Position: {staff.role}</h1>
+                      <CardTitle>Name: {resident.name}</CardTitle>
+                      <h1>House: {resident.unitId}</h1>
                     </CardContent>
                   </div>
                 </div>
-                <CardFooter className="px-0 ">
-                  <Button variant="outline" className="text-red-600">Delete</Button>
-                </CardFooter>
-              </Card>
-            );
-          })} */}
+              </Link>
+              <CardFooter className="px-0 ">
+                <Dialog>
+                  <DialogTrigger>
+                    <Button variant="outline" className="text-red-600">
+                      Delete
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="flex items-center justify-center">
+                    <DialogHeader>
+                      <DialogTitle>
+                        Are you absolutely sure to delete?
+                      </DialogTitle>
+                      <DialogDescription className="flex items-center justify-center mt-3">
+                        <Button variant={"destructive"}>yes</Button>
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+              </CardFooter>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

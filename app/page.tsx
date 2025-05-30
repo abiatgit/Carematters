@@ -1,49 +1,43 @@
-"use client"
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { Rabbit } from 'lucide-react';
+"use client";
 
+import { Button } from "@/components/ui/button";
+
+import { MoveRight, Rabbit } from "lucide-react";
+import Link from "next/link";
 export default function Home() {
-  return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-400 to-sky-100 flex items-center justify-center px-4">
-      <div className="max-w-4xl w-full flex flex-col md:flex-row items-center justify-between gap-12 py-16">
-        {/* Left Content */}
-        <div className="flex-1 space-y-6 text-center md:text-left">
-          <div className="flex bg-amber-300 rounded-full p-4 shadow-2xl items-center justify-center">
-          <h1 className=" ms-5 text-4xl md:text-5xl font-bold text-slate-900 leading-tight">
-              <span className="text-blue-600 font-bold">CareMatters </span>
-          </h1>
-          <Rabbit size={52}className="text-blue-600"/>
+  return(
+  <div className="w-full">
+    <div className="container mx-auto">
+      <div className="flex gap-8 py-20 lg:py-40 items-center justify-center flex-col">
+        <div className="text-2xl">
+          <Link href="/" className="flex items-center gap-2 self-center font-medium">
+          <div >
+            <Rabbit className="text-green-700"></Rabbit>
           </div>
-          <p className="text-lg text-slate-600">
-            CareMatters helps managers, nurses, and assistants stay on top of care plans, medication, and daily reports — all in one secure, easy-to-use platform.
-          </p>
-          <div className="flex flex-col md:flex-row items-center gap-4 justify-center md:justify-start">
-            <Link href="auth/sign-up">
-              <Button size="lg" className="w-48">
-                Get Started
-              </Button>
-            </Link>
-            <Link href="auth/sign-in">
-              <Button variant="outline" size="lg" className="w-48">
-                Sign In
-              </Button>
-            </Link>
-          </div>
+          Care Matters
+        </Link>
         </div>
-        {/* Right Illustration */}
-        <div className="flex-1">
-          <Image
-            src={"https://media.product.which.co.uk/prod/images/original/gm-e9d7e41c-8910-443c-8107-5f6b42eaef5e-carehomealternativesmain.jpeg"}
-            alt="Care Team"
-            className="w-full max-w-md mx-auto rounded-3xl"
-            width={400}
-            height={400}
-          />
+        <div className="flex gap-4 flex-col">
+          <h1 className="text-5xl md:text-7xl max-w-2xl tracking-tighter text-center font-regular">
+            This is the start of something new
+          </h1>
+          <p className="text-lg md:text-xl leading-relaxed tracking-tight text-muted-foreground max-w-2xl text-center">
+            Running a care home is already challenging. Don’t let outdated systems slow you down. CareMatters simplifies care management, empowering teams to deliver better care with less hassle. From staff coordination to resident tracking — everything you need, all in one place.
+          </p>
+        </div>
+        <div className="flex flex-row gap-3">
+         <Link href={"/auth/sign-in"}>
+          <Button size="lg" className="gap-4" variant="outline">
+           Sign In 
+          </Button>
+         </Link>
+         <Link href={"/auth/sign-up"}>
+          <Button size="lg" className="gap-4 bg-green-700">
+            Sign up  <MoveRight className="w-4 h-4" />
+          </Button>
+          </Link>
         </div>
       </div>
-    </main>
-  );
-
+    </div>
+  </div>);
 }
