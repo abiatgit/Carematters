@@ -19,9 +19,9 @@ export function SignUpForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardTitle className="text-xl">Welcome to CareMatters</CardTitle>
           <CardDescription>
-            Login with your Apple or Google account
+            SignUp with your Google account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -36,7 +36,7 @@ export function SignUpForm({
                       fill="currentColor"
                     />
                   </svg>
-                  Login with Google
+                  SignUp with Google
                 </Button>
               </div>
               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
