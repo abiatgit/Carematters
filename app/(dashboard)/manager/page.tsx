@@ -1,12 +1,12 @@
 import { MainListArea } from "@/components/MainListArea";
 import { SectionCards } from "@/components/section-cards";
-// import { auth } from "@/lib/auth";
-// import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import React from "react";
 
 async function Page () {
-  // const session = await auth()
-  // if(!session) redirect("/auth/sign-in")
+  const session = await auth()
+  if(!session) redirect("/auth/sign-in")
   return (
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2">
