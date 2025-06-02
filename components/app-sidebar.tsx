@@ -17,7 +17,9 @@ import {
 import { NavUser } from "./NavUser";
 import Link from "next/link";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
   const role:"TeamLeader"|"Manager" = "Manager"
   return (
     <Sidebar {...props} collapsible="icon">

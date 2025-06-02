@@ -1,11 +1,18 @@
 "use client";
+
+import { signOut } from "next-auth/react";
+
+
+
 export default function OnboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
 
-
+const handleSignOut = async () => {
+     await signOut()
+  };
   return (
     <div className="grid sm:grid-cols-12 min-h-screen bg-gradient-to-tr from-sky-100 via-blue-100 to-indigo-100">
       {/* Left Panel - Header */}
@@ -14,6 +21,7 @@ export default function OnboardLayout({
           <div>
             <h2 className="text-base sm:text-lg font-semibold">{`Welcome ${"abi"}`}</h2>
             <p className="font-light text-sm">Manager</p>
+            <button onClick={handleSignOut}>Logout</button>
           </div>
         </div>
 

@@ -25,6 +25,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { signOut } from "next-auth/react";
+
 type user = {
   id: string;
   firstName: string;
@@ -35,7 +37,9 @@ type user = {
 
 export function NavUser({ user }: { user: user }) {
   const { isMobile } = useSidebar();
-
+ const handleSignOut = async () => {
+     await signOut({ callbackUrl: "/" })
+  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -97,8 +101,8 @@ export function NavUser({ user }: { user: user }) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
+            <DropdownMenuItem onClick={handleSignOut}>
+              <LogOut  />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
