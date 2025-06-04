@@ -1,5 +1,5 @@
 "use client";
-
+console.log("Loaded auth.ts");
 import { Button } from "@/components/ui/button";
 
 import { MoveRight, Rabbit } from "lucide-react";

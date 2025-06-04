@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card"
 
 import Link from "next/link"
+import CredentialsForm from "./CredentialsForm"
 
 export function SignUpForm({
   className,
@@ -44,7 +45,7 @@ export function SignUpForm({
                 </span>
               </div>
               <div className="grid gap-6">
-             
+             <CredentialsForm />
               </div>
               <div className="text-center text-sm">
                 Already have an account?{" "}

@@ -1,28 +1,32 @@
-import bcrypt  from "bcrypt";
+"use server";
+
 import { prisma } from "../db";
 import { executeAction } from "../executeAction";
-const saltRounds = 10;
 
-export const signUp=async (formdata:FormData)=>{
-     return executeAction(
-{
-  actionFn:async()=>{
-    const data = Object.fromEntries(formdata.entries());
-  const email = data.email as string;
-  const password = data.password as string;
- const hashedPassword= await  bcrypt.hash(password,saltRounds)
- try{
-  const user = await prisma.user.create({
-    data: {
-      email:email.toLowerCase(),
-      password:hashedPassword,
+export const signUp = async (formdata: FormData) => {
+  const data = Object.fromEntries(formdata);
+
+  if(!data){
+    throw new Error("data required")
+  }
+  const password = data.password as string
+  const email = data.email as string
+
+  return executeAction({
+    actionFn: async () => {
+      try {
+        const user = await prisma.user.create({
+          data: {
+            email,
+            password,
+          },
+        });
+ 
+        return user;
+      } catch (err) {
+       console.log("failed to create ",err)
+      }
     },
   });
-    return user;
- }catch(err){
-    throw new Error("Failed to create user: " + (err as Error).message);
- }
-  }
-}
-     )
-}
+};
+

@@ -1,3 +1,4 @@
+console.log("Loaded sign-up.ts");
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +10,7 @@ const CredentialsForm = () => {
   return (
     <form action={async(formdata)=>{
       "use server"
+      console.log("Form data from form",formdata)
       const res=await signUp(formdata)
       if(res.success){
         redirect("/auth/sign-in")
@@ -16,7 +18,7 @@ const CredentialsForm = () => {
     }}>
       <div className="grid gap-3">
         <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" placeholder="m@example.com" required />
+        <Input id="email" name="email" type="email" placeholder="m@example.com" required />
       </div>
       <div className="grid gap-3">
         <div className="flex items-center">
@@ -28,7 +30,7 @@ const CredentialsForm = () => {
             Forgot your password?
           </a>
         </div>
-        <Input id="password" type="password" required />
+        <Input id="password" name="password" type="password" required />
       </div>
       <Button type="submit" className="w-full bg-green-700 ">
         Sign Up

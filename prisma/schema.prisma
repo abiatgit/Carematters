@@ -13,14 +13,18 @@ model User {
   email         String          @unique
   password      String?
   emailVerified DateTime?
+  role          Role            @default(SUPPORT_WORKER)
   image         String?
   accounts      Account[]
   sessions      Session[]
-  // Optional for WebAuthn support
   Authenticator Authenticator[]
+  unitId        String?
+  unit          Unit?           @relation(fields: [unitId], references: [id])
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deletedAt     DateTime?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  CareHome CareHome[]
 }
 
 model Account {
@@ -35,9 +39,8 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -49,9 +52,9 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
 }
 
 model VerificationToken {
@@ -71,8 +74,7 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, credentialID])
 }
@@ -83,120 +85,83 @@ model CareHome {
   address    String
   totalRooms Int
   createdBy  String
+  manager    User     @relation(fields: [createdBy], references: [id])
   createdAt  DateTime @default(now())
+  deletedAt  DateTime?
 
-  units    Unit[]
-  managers Manager[]
+  units Unit[]
 }
 
 model Unit {
-  id         String   @id @default(uuid())
+  id         String       @id @default(uuid())
   name       String
   careHomeId String
-  careHome   CareHome @relation(fields: [careHomeId], references: [id])
-
-  teamLead      TeamLead[]
-  residents     Resident[]
-  supportWorker SupportWorker[]
-  appoinment    Appoinment[]
-  incident      Incident[]
-}
-
-model Manager {
-  id        String  @id @default(uuid())
-  firstName String
-  lastName  String
-  role      String
-  photo     String?
-
-  careHomeId String
-  careHome   CareHome @relation(fields: [careHomeId], references: [id])
-}
-
-model TeamLead {
-  id       String  @id @default(uuid())
-  name     String
-  email    String
-  password String
-  photo    String?
-  role     Role
-  gende    Gender
-
-  unitId String
-  unit   Unit   @relation(fields: [unitId], references: [id])
-
-  residents Resident[]
-}
-
-model SupportWorker {
-  id       String  @id @default(uuid())
-  name     String
-  gender   Gender
-  email    String
-  password String
-  photo    String?
-  mobile   Int
-  role     Role
-  gende    Gender
-
-  unitId String
-  unit   Unit   @relation(fields: [unitId], references: [id])
+  careHome   CareHome     @relation(fields: [careHomeId], references: [id])
+  staff      User[]
+  residents  Resident[]
+  appoinment Appoinment[]
+  incident   Incident[]
+  deletedAt  DateTime?
 }
 
 model Resident {
-  id          String  @id @default(uuid())
+  id          String       @id @default(uuid())
   name        String
-  dateOfBirth String
+  dateOfBirth DateTime
   roomNumber  Int
   nextOfKin   String
   photo       String?
   gender      Gender
-
-  teamLeadId String
-  teamLead   TeamLead @relation(fields: [teamLeadId], references: [id])
-
-  unitId String
-  unit   Unit   @relation(fields: [unitId], references: [id])
-
-  appoinment Appoinment[]
-  incident   Incident[]
-  medication Medication[]
+  unitId      String
+  unit        Unit         @relation(fields: [unitId], references: [id])
+  appoinment  Appoinment[]
+  incident    Incident[]
+  medication  Medication[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
 }
 
 model Appoinment {
-  id    String   @id @default(uuid())
-  where String
-  date  DateTime
-  time  DateTime
-  with  String
-
+  id         String    @id @default(uuid())
+  where      String
+  date       DateTime
+  time       DateTime
+  with       String
   residentId String
-  resident   Resident @relation(fields: [residentId], references: [id])
-
-  unitId String
-  unit   Unit   @relation(fields: [unitId], references: [id])
+  resident   Resident  @relation(fields: [residentId], references: [id])
+  unitId     String
+  unit       Unit      @relation(fields: [unitId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
 }
 
 model Incident {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   status      Status
   title       String
   description String
   date        DateTime
   time        DateTime
   residentId  String
-  resident    Resident @relation(fields: [residentId], references: [id])
-
-  unitId String
-  unit   Unit   @relation(fields: [unitId], references: [id])
+  resident    Resident  @relation(fields: [residentId], references: [id])
+  unitId      String
+  unit        Unit      @relation(fields: [unitId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 }
 
 model Medication {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   title      String
   time       DateTime
   residentId String
-  resident   Resident @relation(fields: [residentId], references: [id])
+  resident   Resident  @relation(fields: [residentId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
 }
 
 enum Status {
@@ -212,6 +177,7 @@ enum Gender {
 }
 
 enum Role {
-  teamLead
-  supportWorker
+  MANAGER
+  TEAM_LEAD
+  SUPPORT_WORKER
 }
