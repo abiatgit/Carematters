@@ -2,28 +2,23 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
- import { signIn } from "next-auth/react";
-
-import { executeAction } from "@/lib/executeAction";
+import { signIn } from "next-auth/react";
 
 export function CredentialsForm() {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const credentials = Object.fromEntries(formData.entries());
+
+    await signIn("credentials", {
+      email: credentials.email as string,
+      password: credentials.password as string,
+      redirect: true,
+      callbackUrl: "/manager",
+    });
+  }
   return (
-    <form
-      action={async (formData: FormData) => {
-        await executeAction({
-          actionFn: async () => {
-            const credentials = Object.fromEntries(formData.entries());
-            await signIn("credentials", {
-              email: credentials.email,
-              password: credentials.password,
-              redirect: true,
-              callbackUrl: "/manager",
-            });
-          },
-        });
-      }}
-      className="grid gap-6"
-    >
+    <form onSubmit={handleSubmit} className="grid gap-6">
       <div className="grid gap-3">
         <Label htmlFor="email">Email</Label>
         <Input id="email" type="email" name="email" required />

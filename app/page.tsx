@@ -1,8 +1,7 @@
 "use client";
-console.log("Loaded auth.ts");
 import { Button } from "@/components/ui/button";
-
 import { MoveRight, Rabbit } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 export default function Home() {
   return (
@@ -44,6 +43,9 @@ export default function Home() {
               </Button>
             </Link>
           </div>
+        </div>
+        <div className="w-full h-full  rounded-md p-5 flex items-center justify-center">
+          <Image src="/cm.png" alt="" width={1200} height={100} />
         </div>
       </div>
     </div>

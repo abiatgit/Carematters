@@ -1,9 +1,9 @@
-console.log("Loaded sign-up.ts");
+
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "../ui/button";
-import {signUp} from "../../lib/db/serverAction"
+import {handleSignUp} from "../../lib/db/serverAction"
 import { redirect } from "next/navigation";
 
 const CredentialsForm = () => {
@@ -11,7 +11,7 @@ const CredentialsForm = () => {
     <form action={async(formdata)=>{
       "use server"
       console.log("Form data from form",formdata)
-      const res=await signUp(formdata)
+      const res=await handleSignUp(formdata)
       if(res.success){
         redirect("/auth/sign-in")
       }

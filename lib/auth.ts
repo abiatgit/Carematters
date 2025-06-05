@@ -1,62 +1,83 @@
+// app/api/auth/[...nextauth]/auth.ts or auth.ts (wherever you're defining it)
 import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
-import Credentials from "next-auth/providers/credentials";
-import { prisma } from "./db/prisma";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { userSchema } from "./userSchema";
-import { encode } from "next-auth/jwt";
-const adapter = PrismaAdapter(prisma);
-import { v4 as uuid } from "uuid";
+import { prisma } from "@/lib/db/prisma";
+import bcrypt from "bcryptjs";
+import { userSchema } from "@/lib/userSchema"; // Zod schema for validation
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
-    Google,
-    Credentials({
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    CredentialsProvider({
       credentials: {
-        email: {},
-        password: {},
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
-      authorize: async (credentials) => {
-        const validateCredentials = userSchema.parse(credentials);
-        const user = await prisma.user.findFirst({
-          where: {
-            email: validateCredentials.email,
-            password: validateCredentials.password,
-          },
-        });
-        if (user) {
-          return user;
-        } else {
-          throw new Error("invalid credential");
+      async authorize(credentials) {
+        try {
+          // Validate input with Zod
+          const { email, password } = userSchema.parse(credentials);
+
+          // Find user by email
+          const user = await prisma.user.findUnique({
+            where: { email },
+          });
+
+          if (!user || !user.password) {
+            throw new Error("Invalid credentials");
+          }
+
+          const isValid = await bcrypt.compare(password, user.password);
+          if (!isValid) {
+            throw new Error("Invalid credentials");
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+          };
+        } catch (error) {
+          console.error("Auth error:", error);
+          return null;
         }
       },
     }),
   ],
-   callbacks: {
-    async jwt({ token, account }) {
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, user, account }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+      }
+
       if (account?.provider === "credentials") {
         token.credentials = true;
       }
+
       return token;
     },
-  },
-  jwt: {
-    encode: async function (params) {
-      if (params.token?.credentials) {
-        const sessionToken = uuid();
-        if (!params.token.sub) {
-          throw new Error("No User id found in tokens");
-        }
-        const createdSession = await adapter?.createSession?.({
-          sessionToken: sessionToken,
-          userId: params.token.sub,
-          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        });
-        if (!createdSession) {
-          throw new Error("failed to create session");
-        }
-        return sessionToken;
+    async session({ session, token }) {
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.name = token.name as string;
       }
-      return encode(params);
-    },}
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/auth/sign-in",
+    error: "/auth/error",
+  },
 });
