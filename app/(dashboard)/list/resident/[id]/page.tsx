@@ -58,7 +58,7 @@ const SingelResidentPage = () => {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/manager">Dashboard</BreadcrumbLink>
+            <BreadcrumbLink href="/user">Dashboard</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

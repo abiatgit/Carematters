@@ -52,7 +52,7 @@ const CreateHome = ({userId}:CareHomePro) => {
     });
     const data=await res.json()
     if(data.success){
-      router.push("/manager")
+      router.push("/user")
     }
   }
   return (

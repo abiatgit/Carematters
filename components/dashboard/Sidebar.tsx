@@ -17,7 +17,7 @@ const Sidebar = () => {
         {/* Dashboard */}
         <div className="flex items-center justify-center hover:bg-gray-700 p-2 rounded-full w-full cursor-pointer group-hover:justify-start">
           <Home className="ml-2" />
-          <span className="ml-4 text-sm hidden group-hover:block" ><Link href={"/manager"}>Dashboard</Link></span>
+          <span className="ml-4 text-sm hidden group-hover:block" ><Link href={"/user"}>Dashboard</Link></span>
         </div>
 
         {/* Residents */}

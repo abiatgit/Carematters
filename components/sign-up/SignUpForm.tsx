@@ -31,7 +31,7 @@ export function SignUpForm({
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => signIn("google", { callbackUrl: "/manager" })}
+                onClick={() => signIn("google", { callbackUrl: "/user" })}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

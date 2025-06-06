@@ -24,7 +24,7 @@ export const handleSignUp = async (formdata: FormData) => {
             password: hashPassword,
           },
         });
-        redirect("/auth/manager");
+        redirect("/user");
       } catch (err) {
         console.log("failed to create ", err);
       }

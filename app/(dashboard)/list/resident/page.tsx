@@ -45,7 +45,7 @@ const Page = () => {
     const unitMatchResident =
       unitFilter === "all" || singleResident.unitId === unitFilter;
     const genderMatchResident =
-      genderFilter === "all" || singleResident.sex === genderFilter;
+      genderFilter === "all" || singleResident.gender === genderFilter;
     return searchMatchResident && unitMatchResident && genderMatchResident;
   });
   return (
@@ -53,7 +53,7 @@ const Page = () => {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/manager">Dashboard</BreadcrumbLink>
+            <BreadcrumbLink href="/user">Dashboard</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

@@ -14,7 +14,7 @@ export function CredentialsForm() {
       email: credentials.email as string,
       password: credentials.password as string,
       redirect: true,
-      callbackUrl: "/manager",
+      callbackUrl: "/user",
     });
   }
   return (

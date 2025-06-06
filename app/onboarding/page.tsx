@@ -4,11 +4,11 @@ import { prisma } from "@/lib/db";
 import { Rabbit } from "lucide-react";
 import { redirect } from "next/navigation";
 import React from "react";
-
-
 const page = async () => {
   const session = await auth();
+  console.log("onboarding  session",session)
   if (!session) redirect("/auth/sign-in");
+    console.log("hello abi")
   const user = session?.user;
   const currentUser = await prisma.user.findUnique({
     where: {
@@ -16,7 +16,7 @@ const page = async () => {
     },
   });
    if (!currentUser) redirect("/auth/sign-in");
-  if (currentUser?.role !== "MANAGER" && currentUser?.Onboarding) redirect("/manager")
+  if (currentUser?.role !== "MANAGER" && currentUser?.onboarded) redirect("/user")
   return (
     <div className="grid md:grid-cols-3 h-full ">
       {/* //Left */}
