@@ -1,66 +1,24 @@
-"use server";
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { clerkClient } from "@clerk/nextjs/server";
+import { NextResponse, NextRequest } from "next/server";
 
-export async function POST(req: Request) {
-  const clerk = await clerkClient();
-  console.log("API called");
-
+export async function POST(req: NextRequest) {
   try {
-    const data = await req.json();
-    const { careHomeName, address, totalRooms, createdBy } = data;
-    console.log(careHomeName, address, totalRooms, createdBy);
-
-    const managerId = createdBy;
-
-    // Create new care home
-    const newCareHome = await prisma.careHome.create({
-      data: {
-        name: careHomeName,
-        address,
-        totalRooms,
-        createdBy,
-      },
-    });
-
-    console.log("CareHome created:", newCareHome);
-
-    if (newCareHome) {
-      // Update user role in Clerk (Ensure Clerk Client is correctly initialized)
-      const clerkManager = await clerk.users.updateUser(managerId, {
-        publicMetadata: {
-          careHome: newCareHome.name,
-          role: "manager",
-        },
-      });
-
-      console.log("Clerk Manager updated:", clerkManager);
-
-      // Create manager entry in the database
-      const manager = await prisma.manager.create({
-        data: {
-          id: managerId,
-          firstName: clerkManager.firstName || "Default",
-          lastName: clerkManager.lastName || "Manager",
-          careHomeId: newCareHome.id,
-          role: "manager",
-        },
-      });
-
-      console.log("Manager created:", manager);
+    const body = await req.json();
+    const { name, address, postcode, logo, createdBy } = body;
+    if (!name || !address || !postcode || !createdBy ||!logo) {
+      return NextResponse.json(
+        { success: false, error: "Missing required fields" },
+        { status: 400 }
+      );
     }
-
-    // Send success response
-    return NextResponse.json(newCareHome, { status: 201 });
-  } catch (err) {
-    console.error("Error in onboarding POST:", err);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
-  } finally {
-    // Disconnect Prisma (optional; typically Prisma manages connections)
-    await prisma.$disconnect();
+    const careHome = await prisma.careHome.create({
+      data: { ...body },
+    });
+    console.log("careHome", careHome);
+    return NextResponse.json({ success: true, careHome },{status:201});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err:any) {
+    console.error("Error Creating Carehome",err)
+    return NextResponse.json({success:false,error:err.message || "Internal Server Error" },{status:500})
   }
 }

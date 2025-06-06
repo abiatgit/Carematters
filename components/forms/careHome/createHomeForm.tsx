@@ -2,7 +2,6 @@
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,22 +14,46 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { UploadCloud } from "lucide-react";
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
-  address:z.string().min(2).max(50),
-  postcode:z.string()
+  address: z.string().min(2).max(50),
+  postcode: z.string(),
+  logo: z.string(),
 });
-const CreateHome = () => {
+type CareHomePro={
+  userId:string
+}
+const CreateHome = ({userId}:CareHomePro) => {
+  const router = useRouter()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      address: "",
+      postcode: "",
+      logo: "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const payload = {
+    ...values,
+    createdBy: userId
+
+  };
+    const res = await fetch("/api/carehome", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data=await res.json()
+    if(data.success){
+      router.push("/manager")
+    }
   }
   return (
     <Form {...form}>
@@ -48,7 +71,7 @@ const CreateHome = () => {
               </FormItem>
             )}
           />
-            <FormField
+          <FormField
             control={form.control}
             name="postcode"
             render={({ field }) => (
@@ -60,10 +83,9 @@ const CreateHome = () => {
               </FormItem>
             )}
           />
-          
         </div>
         <div className="my-4">
-        <FormField
+          <FormField
             control={form.control}
             name="address"
             render={({ field }) => (
@@ -76,33 +98,23 @@ const CreateHome = () => {
             )}
           />
         </div>
-         <FormItem>
-      <FormLabel>Logo</FormLabel>
-      <FormControl>
-        <div className="flex items-center gap-3">
-          <Button type="button" variant="outline" className="flex items-center gap-2">
-            <UploadCloud className="w-5 h-5" />
-            Choose Image
-          </Button>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                field.onChange(file); // Update the field value with the file
-              }
-            }}
-            className="hidden" // hide the raw input visually
-            id="image-upload"
-          />
-        </div>
-      </FormControl>
-      <FormDescription>Upload a JPG or PNG file (max 2MB)</FormDescription>
-      <FormMessage />
-    </FormItem>
-        
-        <Button type="submit">Create</Button>
+        <FormField
+          control={form.control}
+          name="logo"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Logo</FormLabel>
+              <FormControl>
+                <Input placeholder="logo Link" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" className="mt-5">
+          Create
+        </Button>
       </form>
     </Form>
   );

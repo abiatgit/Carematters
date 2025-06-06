@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { prisma } from "../db";
 import { executeAction } from "../executeAction";
 import bcrypt from "bcryptjs";
@@ -7,28 +8,26 @@ import bcrypt from "bcryptjs";
 export const handleSignUp = async (formdata: FormData) => {
   const data = Object.fromEntries(formdata);
 
-  if(!data){
-    throw new Error("data required")
+  if (!data) {
+    throw new Error("data required");
   }
-  const password = data.password as string
-  const email = data.email as string
-  const hashPassword=await bcrypt.hash(password,10)
+  const password = data.password as string;
+  const email = data.email as string;
+  const hashPassword = await bcrypt.hash(password, 10);
 
-  return executeAction({
+  executeAction({
     actionFn: async () => {
       try {
-        const user = await prisma.user.create({
+        await prisma.user.create({
           data: {
             email,
-            password:hashPassword,
+            password: hashPassword,
           },
         });
- 
-        return user;
+        redirect("/auth/manager");
       } catch (err) {
-       console.log("failed to create ",err)
+        console.log("failed to create ", err);
       }
     },
   });
 };
-

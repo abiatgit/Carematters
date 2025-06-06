@@ -21,10 +21,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         try {
-          // Validate input with Zod
+    
           const { email, password } = userSchema.parse(credentials);
-
-          // Find user by email
           const user = await prisma.user.findUnique({
             where: { email },
           });
@@ -59,6 +57,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
+        token.id=user.id
       }
 
       if (account?.provider === "credentials") {

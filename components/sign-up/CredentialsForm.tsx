@@ -4,18 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "../ui/button";
 import {handleSignUp} from "../../lib/db/serverAction"
-import { redirect } from "next/navigation";
+
 
 const CredentialsForm = () => {
+
+
   return (
-    <form action={async(formdata)=>{
-      "use server"
-      console.log("Form data from form",formdata)
-      const res=await handleSignUp(formdata)
-      if(res.success){
-        redirect("/auth/sign-in")
-      }
-    }}>
+    <form action={handleSignUp}>
       <div className="grid gap-3">
         <Label htmlFor="email">Email</Label>
         <Input id="email" name="email" type="email" placeholder="m@example.com" required />
