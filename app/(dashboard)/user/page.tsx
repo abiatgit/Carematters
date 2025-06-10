@@ -7,6 +7,7 @@ import React from "react";
 async function Page() {
   const session = await auth();
   if (!session) redirect("/auth/sign-in");
+   console.log("My session",session.user?.email)
   return (
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2">

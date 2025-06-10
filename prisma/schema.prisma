@@ -24,7 +24,7 @@ model User {
   updatedAt     DateTime        @updatedAt
   deletedAt     DateTime?
   onboarded    Boolean         @default(false)
-  gender      Gender
+  gender      Gender?
 
   CareHome CareHome[]
 }

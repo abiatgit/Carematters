@@ -1,24 +1,43 @@
-import { Rabbit } from "lucide-react"
+import { LoginForm } from "@/components/login-form";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/db/prisma";
+import { GalleryVerticalEnd } from "lucide-react";
+import { redirect } from "next/navigation";
 
-import { SignInForm } from "@/components/sign-in/SignInForm"
-import Link from "next/link"
-import { auth, } from "@/lib/auth";
-import { redirect } from "next/navigation"
+export const runtime = "nodejs";
 
 export default async function LoginPage() {
-  const section =await auth()
-  if(section) redirect("/user")
-  return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <Link href="/" className="flex items-center gap-2 self-center font-medium">
-          <div >
-              <Rabbit className="text-green-700"></Rabbit>
-          </div>
-          Care Matters
-        </Link>
-        <SignInForm />
+  const session = await auth();
+    if (!session) {
+    return (
+      <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+        <div className="flex w-full max-w-sm flex-col gap-6">
+          <a href="#" className="flex items-center gap-2 self-center font-medium">
+            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+              <GalleryVerticalEnd className="size-4" />
+            </div>
+            Acme Inc.
+          </a>
+          <LoginForm />
+        </div>
       </div>
-    </div>
-  )
+    );
+  }
+  const currentUseremail = session?.user?.email
+  const user= await prisma.user.findUnique({
+    where:{
+      email:currentUseremail!
+    }
+  })
+  if(!user)return null
+  if(!user.onboarded){
+    redirect("/onboarding")
+  }
+  else{
+    redirect("/user")
+  }
+ 
+
+
+
 }
