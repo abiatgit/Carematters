@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -8,7 +8,8 @@ import {
 } from "@/components/ui/card";
 import React from "react";
 import { houseList } from "@/lib/mockData";
-import { Plus } from "lucide-react";
+import { CreateHouse } from "@/components/forms/houses/createHouse";
+import { Badge } from "@/components/ui/badge";
 
 const Page = () => {
   return (
@@ -16,7 +17,7 @@ const Page = () => {
       {houseList.map((house) => {
         return (
           <Card
-            className="flex items-center justify-center p-3"
+            className="flex items-center justify-center p-3 rounded-sm"
             key={house.name}
           >
             <CardHeader className="flex items-center justify-center ">
@@ -27,18 +28,16 @@ const Page = () => {
               <h1 className="mt-3">Total Staff :{house.staff}</h1>
             </CardContent>
             <CardFooter>
-              <Button className="w-full" variant="destructive">
+              <Badge className="w-20 border-red-700 bg-rose-100 hover:bg-red-300" variant="outline" >
                 Delete
-              </Button>
+              </Badge>
             </CardFooter>
           </Card>
         );
       })}
-      <Card className="flex items-center justify-center p-3">
+      <Card className="flex items-center justify-center p-3 rounded-sm">
         <CardContent>
-          <Button className="w-full" variant={"secondary"}>
-        <Plus/>
-          </Button>
+          <CreateHouse />
         </CardContent>
       </Card>
     </div>

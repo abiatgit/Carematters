@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { name, address, postcode, logo, createdBy } = body;
-    if (!name || !address || !postcode || !createdBy ||!logo) {
+    if (!name || !address || !postcode || !createdBy || !logo) {
       return NextResponse.json(
         { success: false, error: "Missing required fields" },
         { status: 400 }
@@ -14,11 +14,22 @@ export async function POST(req: NextRequest) {
     const careHome = await prisma.careHome.create({
       data: { ...body },
     });
-    console.log("careHome", careHome);
-    return NextResponse.json({ success: true, careHome },{status:201});
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err:any) {
-    console.error("Error Creating Carehome",err)
-    return NextResponse.json({success:false,error:err.message || "Internal Server Error" },{status:500})
+    
+    if (careHome) {
+      await prisma.user.update({
+        where: { id: createdBy },
+        data: {
+          onboarded: true,
+        },
+      });
+    }
+    return NextResponse.json({ success: true, careHome }, { status: 201 });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    console.error("Error Creating Carehome", err);
+    return NextResponse.json(
+      { success: false, error: err.message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

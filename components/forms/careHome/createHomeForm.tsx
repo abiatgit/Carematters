@@ -14,7 +14,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Check, X } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -22,11 +24,11 @@ const formSchema = z.object({
   postcode: z.string(),
   logo: z.string(),
 });
-type CareHomePro={
-  userId:string
-}
-const CreateHome = ({userId}:CareHomePro) => {
-  const router = useRouter()
+type CareHomePro = {
+  userId: string;
+};
+const CreateHome = ({ userId }: CareHomePro) => {
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,12 +39,28 @@ const CreateHome = ({userId}:CareHomePro) => {
       logo: "",
     },
   });
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    const payload = {
-    ...values,
-    createdBy: userId
-
+  const succesTosting = () => {
+    toast(
+      <div className="flex items-center gap-2">
+        <Check className="h-5 w-5 text-green-700" />
+        Succesfuly Created Your Home
+      </div>
+    );
   };
+  const errorTosting = () => {
+    toast(
+      <div className="flex items-center gap-2">
+        <X className="h-5 w-5 text-red-700" />
+        Error while Creating
+      </div>
+    );
+  };
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+    const payload = {
+      ...values,
+      createdBy: userId,
+    };
     const res = await fetch("/api/carehome", {
       method: "POST",
       body: JSON.stringify(payload),
@@ -50,9 +68,12 @@ const CreateHome = ({userId}:CareHomePro) => {
         "Content-Type": "application/json",
       },
     });
-    const data=await res.json()
-    if(data.success){
-      router.push("/user")
+    const data = await res.json();
+    if (data.success) {
+      succesTosting();
+      router.push("/user");
+    } else {
+      errorTosting();
     }
   }
   return (
