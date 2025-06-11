@@ -32,6 +32,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import CreateStaffForm from "@/components/forms/Staff/CreateStaffForm";
+import { Badge } from "@/components/ui/badge";
 
 export default function StaffPage() {
   const [search, setSearch] = useState("");
@@ -142,15 +143,20 @@ export default function StaffPage() {
               <CardFooter className="px-0 ">
                 <Dialog>
                   <DialogTrigger>
-                    <Button variant="outline" className="text-red-600">
+                    <Badge
+                      className="w-20 border-red-700 bg-rose-100 hover:bg-red-300"
+                      variant="outline"
+                    >
                       Delete
-                    </Button>
+                    </Badge>
                   </DialogTrigger>
                   <DialogContent className="flex items-center justify-center">
                     <DialogHeader>
-                      <DialogTitle>Are you absolutely sure to delete?</DialogTitle>
+                      <DialogTitle>
+                        Are you absolutely sure to delete?
+                      </DialogTitle>
                       <DialogDescription className="flex items-center justify-center mt-3">
-                      <Button variant={"destructive"}>yes</Button>
+                        <Badge variant={"destructive"} className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white">Yes</Badge>
                       </DialogDescription>
                     </DialogHeader>
                   </DialogContent>

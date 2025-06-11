@@ -33,6 +33,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 const Page = () => {
   const [search, setSearch] = useState("");
   const [unitFilter, setUnitFilter] = useState("all");
@@ -138,9 +139,9 @@ const Page = () => {
               <CardFooter className="px-0 ">
                 <Dialog>
                   <DialogTrigger>
-                    <Button variant="outline" className="text-red-600">
-                      Delete
-                    </Button>
+                    <Badge className="w-20 border-red-700 bg-rose-100 hover:bg-red-300" variant="outline" >
+                Delete
+              </Badge>
                   </DialogTrigger>
                   <DialogContent className="flex items-center justify-center">
                     <DialogHeader>
@@ -148,7 +149,7 @@ const Page = () => {
                         Are you absolutely sure to delete?
                       </DialogTitle>
                       <DialogDescription className="flex items-center justify-center mt-3">
-                        <Button variant={"destructive"}>yes</Button>
+                       <Badge variant={"destructive"} className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white">Yes</Badge>
                       </DialogDescription>
                     </DialogHeader>
                   </DialogContent>
