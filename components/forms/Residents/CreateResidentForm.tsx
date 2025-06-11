@@ -1,5 +1,4 @@
 "use client";
-
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import {
@@ -8,7 +7,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import React from "react";
+
 import {
   Form,
   FormControl,
@@ -27,6 +26,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCareHomeStore } from "@/store/globalStore";
+import { useEffect } from "react";
 
 export const createResidentSchema = z.object({
   firstName: z
@@ -45,6 +46,12 @@ export const createResidentSchema = z.object({
 });
 
 const CreateResidentForm = () => {
+  const { units, fetchUnits } = useCareHomeStore();
+  useEffect(() => {
+    fetchUnits();
+  }, []);
+  console.log("zustand fetched unint",units)
+
   async function onSubmit(values: z.infer<typeof createResidentSchema>) {
     await fetch("/api/resident", {
       method: "POST",

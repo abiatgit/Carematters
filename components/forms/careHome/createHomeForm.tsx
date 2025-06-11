@@ -7,6 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import React from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -17,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Check, X } from "lucide-react";
+import { useGlobalStore } from "@/store/globalStore";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -29,6 +31,7 @@ type CareHomePro = {
 };
 const CreateHome = ({ userId }: CareHomePro) => {
   const router = useRouter();
+  const { setCareHome } = useGlobalStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -71,6 +74,7 @@ const CreateHome = ({ userId }: CareHomePro) => {
     const data = await res.json();
     if (data.success) {
       succesTosting();
+      setCareHome(data.careHome);
       router.push("/user");
     } else {
       errorTosting();

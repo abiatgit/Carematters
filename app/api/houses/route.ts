@@ -20,3 +20,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: false, error });
   }
 }
+
+export async function GET() {
+  try {
+    const houses = await prisma.unit.findMany({});
+    return NextResponse.json({ success: true, houses });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ success: false, error });
+  }
+}

@@ -48,7 +48,12 @@
 
 ## 🚧 Local Development
 
+## Redux toolkit 
+- npm install @reduxjs/toolkit react-redux
+
+
 ```bash
+
 # Clone the repo
 git clone https://github.com/your-username/carematters.git
 cd carematters
@@ -58,5 +63,7 @@ npm install
 
 # Run the app
 npm run dev
+
+ 
 
 
