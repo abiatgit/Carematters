@@ -37,9 +37,8 @@ export const createResidentSchema = z.object({
   lastName: z.string().min(1, { message: "Required" }).max(50),
   dateOfBirth: z.string().min(1, { message: "Required" }),
   roomNumber: z.coerce.number().min(1, { message: "Room number is required" }),
-  gender: z.enum(["MALE", "FEMALE", "OTHER"]),
+  gender: z.enum(["male", "female", "other"]),
   unitId: z.string().min(1, { message: "Unit is required" }),
-  teamLeadId: z.string().min(1, { message: "Team lead is required" }),
   gp: z.string().optional(),
   nextOfKin: z.string().min(1, { message: "Next of kin is required" }),
   photo: z.string().url().optional(),
@@ -49,21 +48,28 @@ const CreateResidentForm = () => {
   const { units, fetchUnits } = useCareHomeStore();
   useEffect(() => {
     fetchUnits();
-  }, []);
-  console.log("zustand fetched unint",units)
+  }, [fetchUnits]);
+  console.log("zustand fetched unint", units[0]);
 
   async function onSubmit(values: z.infer<typeof createResidentSchema>) {
-    await fetch("/api/resident", {
+    console.log("hello iam called",values
+
+    );
+   const res = await fetch("/api/resident", {
       method: "POST",
       body: JSON.stringify({ values }),
       headers: {
         "Content-Type": "application/json",
       },
     });
+    const data=await res.json()
+    console.log(data)
   }
   const form = useForm<z.infer<typeof createResidentSchema>>({
     resolver: zodResolver(createResidentSchema),
-    defaultValues: {},
+    defaultValues: {
+      
+    },
   });
   return (
     <SheetContent>
@@ -85,7 +91,6 @@ const CreateResidentForm = () => {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="lastName"
@@ -125,7 +130,6 @@ const CreateResidentForm = () => {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="gender"
@@ -142,44 +146,43 @@ const CreateResidentForm = () => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="MALE">Male</SelectItem>
-                        <SelectItem value="FEMALE">Female</SelectItem>
-                        <SelectItem value="OTHER">Other</SelectItem>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="unitId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Unit</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter Unit ID" {...field} />
-                    </FormControl>
-                    <FormMessage />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a House" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {units.map((unit) => {
+                          return (
+                            <SelectItem key={unit.id} value={unit.id}>
+                              {unit.name}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="teamLeadId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Team Lead ID</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter Team Lead ID" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <FormField
                 control={form.control}
                 name="gp"
@@ -187,7 +190,7 @@ const CreateResidentForm = () => {
                   <FormItem>
                     <FormLabel>GP</FormLabel>
                     <FormControl>
-                      <Input placeholder="Doctor name / reference" {...field} />
+                      <Input placeholder="Doctor name " {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

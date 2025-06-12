@@ -1,6 +1,9 @@
+import { prisma } from "@/lib/db";
+import { NextResponse } from "next/server";
+
 export async function POST(req: Request) {
   const body = await req.json();
-  console.log(body)
+  console.log("i'm a  body", body);
   const {
     firstName,
     lastName,
@@ -8,10 +11,29 @@ export async function POST(req: Request) {
     roomNumber,
     gender,
     unitId,
-    teamLeadId,
     gp,
     nextOfKin,
     photo,
-  } = body.values
-  console.log(firstName,lastName,dateOfBirth,roomNumber,gender,unitId,teamLeadId,gender,nextOfKin,gp,photo);
+  } = body.values;
+  console .log("resident gender",gender)
+
+ try{
+   const resident = await prisma.resident.create({
+    data: {
+      name: firstName + " " + lastName,
+      dateOfBirth: new Date(dateOfBirth),
+      roomNumber,
+      gender,
+      unitId,
+      gp,
+      nextOfKin,
+      photo,
+    },
+  });
+  return NextResponse.json({ success: true, resident });
+
+ }
+ catch(err){
+    return NextResponse.json({succss:false,err})
+ }
 }

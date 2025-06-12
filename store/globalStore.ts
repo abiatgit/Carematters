@@ -45,6 +45,6 @@ export const useCareHomeStore = create<CareHomeStore>((set) => ({
   fetchUnits: async () => {
     const res = await fetch("/api/houses");
     const data = await res.json();
-    set({ units: data });
+    set({ units: data.houses });
   },
 }));

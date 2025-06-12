@@ -13,7 +13,7 @@ const page = async () => {
       id: user?.id,
     },
   });
-  if (!currentUser?.id) redirect("/auth/sign-in");
+  if (!currentUser?.id)redirect("/auth/sign-in");
   if (currentUser?.onboarded) redirect("/user");
 
   return (

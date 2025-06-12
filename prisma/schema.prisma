@@ -23,8 +23,8 @@ model User {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   deletedAt     DateTime?
-  onboarded    Boolean         @default(false)
-  gender      Gender?
+  onboarded     Boolean         @default(false)
+  gender        Gender?
 
   CareHome CareHome[]
 }
@@ -115,6 +115,7 @@ model Resident {
   nextOfKin   String
   photo       String?
   gender      Gender
+  gp          String?
   unitId      String
   unit        Unit         @relation(fields: [unitId], references: [id])
   appoinment  Appoinment[]

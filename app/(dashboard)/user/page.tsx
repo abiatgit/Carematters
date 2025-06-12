@@ -6,7 +6,6 @@ import React from "react";
 
 
 async function Page() {
- 
   const session = await auth();
   if (!session) redirect("/auth/sign-in");
   console.log("My session", session.user?.email);
