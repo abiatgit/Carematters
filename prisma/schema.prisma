@@ -128,7 +128,7 @@ model Resident {
 
 model Appoinment {
   id         String    @id @default(uuid())
-  where      String
+  venue      String
   date       DateTime
   time       DateTime
   with       String

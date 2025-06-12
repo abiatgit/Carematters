@@ -35,6 +35,7 @@ export const staffSchema = z.object({
   }),
   role: z.enum(["MANAGER", "TEAM_LEAD", "SUPPORT_WORKER"]),
   unitId: z.string().optional(),
+  photURL:z.string()
 });
 
 const CreateStaffForm = () => {
@@ -47,7 +48,7 @@ const CreateStaffForm = () => {
   }
   return (
     <DialogHeader>
-      <DialogTitle>Create a new staff?</DialogTitle>
+      <DialogTitle className="font-bold">Create  new staff</DialogTitle>
       <DialogDescription>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -98,7 +99,39 @@ const CreateStaffForm = () => {
                 </FormItem>
               )}
             />
-            <FormField
+      <div className="flex gap-5">
+              <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <div className="mb-5">
+                <FormItem>
+                  <FormLabel>Gender</FormLabel>
+                  
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="other">
+                         Other
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+               
+                  <FormMessage />
+                </FormItem>
+                   </div>
+              )}
+            />
+                  <FormField
               control={form.control}
               name="role"
               render={({ field }) => (
@@ -129,6 +162,7 @@ const CreateStaffForm = () => {
                    </div>
               )}
             />
+      </div>
             <FormField
               control={form.control}
               name="unitId"
@@ -145,7 +179,21 @@ const CreateStaffForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <FormField
+              control={form.control}
+              name="photURL"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Photo Url</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Photo url" {...field} />
+                  </FormControl>
+                  
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Create</Button>
           </form>
         </Form>
       </DialogDescription>

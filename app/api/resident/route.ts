@@ -15,25 +15,33 @@ export async function POST(req: Request) {
     nextOfKin,
     photo,
   } = body.values;
-  console .log("resident gender",gender)
+  console.log("resident gender", gender);
 
- try{
-   const resident = await prisma.resident.create({
-    data: {
-      name: firstName + " " + lastName,
-      dateOfBirth: new Date(dateOfBirth),
-      roomNumber,
-      gender,
-      unitId,
-      gp,
-      nextOfKin,
-      photo,
-    },
-  });
-  return NextResponse.json({ success: true, resident });
+  try {
+    const resident = await prisma.resident.create({
+      data: {
+        name: firstName + " " + lastName,
+        dateOfBirth: new Date(dateOfBirth),
+        roomNumber,
+        gender,
+        unitId,
+        gp,
+        nextOfKin,
+        photo,
+      },
+    });
+    return NextResponse.json({ success: true, resident });
+  } catch (err) {
+    return NextResponse.json({ succss: false, err });
+  }
+}
 
- }
- catch(err){
-    return NextResponse.json({succss:false,err})
- }
+export async function GET() {
+  try {
+    const residents = await prisma.resident.findMany({});
+
+    return NextResponse.json({ success: true, residents });
+  } catch (error) {
+    return NextResponse.json({ success: false, error });
+  }
 }

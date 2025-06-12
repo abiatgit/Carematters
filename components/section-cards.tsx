@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 
 export function SectionCards() {
+
   return (
     <div className=" @5xl/main:grid-cols-2 @7xl/main:grid-cols-4 grid grid-cols-1 gap-2 px-4 lg:px-6">
       <Card className="@container/card border border-dashed">
@@ -85,17 +86,19 @@ export function SectionCards() {
         </CardFooter>
       </Card>
       <Card className="@container/card border border-dashed">
-      <CardHeader className="flex justify-between items-start gap-1 text-sm">
-       <div>
-       <CardDescription>Acitive Houses</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            03
-          </CardTitle>
-       </div>
-          <div  className="">
-            <Badge variant="outline" className="flex gap-1 rounded-lg text-xs text-violet-600">
-              
-              <Sparkles/> Upgrade to pro
+        <CardHeader className="flex justify-between items-start gap-1 text-sm">
+          <div>
+            <CardDescription>Acitive Houses</CardDescription>
+            <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
+              03
+            </CardTitle>
+          </div>
+          <div className="">
+            <Badge
+              variant="outline"
+              className="flex gap-1 rounded-lg text-xs text-violet-600"
+            >
+              <Sparkles /> Upgrade to pro
             </Badge>
           </div>
         </CardHeader>

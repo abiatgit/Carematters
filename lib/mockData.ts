@@ -179,10 +179,10 @@ export const residents = [
     }
     
   ];
-  export const houses= [{name:"All Houses"},{name:"ceridwen"}, {name:"comgal"}, {name:"betheny"}]
+  export const houses= [{name:"All Houses"},{name:"Rose"}, {name:"Comgal"}, {name:"Betheny"}]
   
   export const houseList=[
-    {name:"ceridwen",Residents:1,staff:20}, {name:"comgal",Residents:1,staff:20}, {name:"betheny",Residents:1,staff:20},
+    {name:"Rose",Residents:1,staff:20}, {name:"Comgal",Residents:1,staff:20}, {name:"Betheny",Residents:1,staff:20},
   ]
  export const userManager = {
     id: "a1b2c3d4-e5f6-7890-abcd-1234567890ef",

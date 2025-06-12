@@ -19,8 +19,13 @@ import {
 } from "@/components/ui/pagination";
 import AppoinmentCards from "./appoinmentsCard/AppoinmentCards";
 import { appointments } from "./appoinmentsCard/data";
+import { useCareHomeStore } from "@/store/globalStore";
 
 export function MainListArea() {
+  const { fetchUnits } = useCareHomeStore();
+  React.useEffect(() => {
+    fetchUnits();
+  }, [fetchUnits]);
   return (
     <div className=" @xl/main:grid-cols-1 @5xl/main:grid-cols-2 grid grid-cols-1 gap-2   ">
       <Card className="@container/card h-[500px] border border-dashed ">
@@ -56,7 +61,7 @@ export function MainListArea() {
           <CardTitle>Apponinments</CardTitle>
         </CardHeader>
         <CardContent className="px-2 sm:px-6 overflow-y-auto">
-          <AppoinmentCards data={appointments}/>
+          <AppoinmentCards data={appointments} />
         </CardContent>
       </Card>
     </div>

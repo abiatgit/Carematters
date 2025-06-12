@@ -1,7 +1,6 @@
 import * as React from "react";
 import {items,houses,userManager} from "@/lib/mockData"
 import { HouseSwitcher } from "./HouseSwitcher";
-
 import {
   Sidebar,
   SidebarContent,

@@ -156,7 +156,12 @@ export default function StaffPage() {
                         Are you absolutely sure to delete?
                       </DialogTitle>
                       <DialogDescription className="flex items-center justify-center mt-3">
-                        <Badge variant={"destructive"} className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white">Yes</Badge>
+                        <Badge
+                          variant={"destructive"}
+                          className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white"
+                        >
+                          Yes
+                        </Badge>
                       </DialogDescription>
                     </DialogHeader>
                   </DialogContent>

@@ -35,9 +35,11 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 const Page = () => {
+  const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [unitFilter, setUnitFilter] = useState("all");
   const [genderFilter, setGenderFilter] = useState("all");
+  console.log("open",open)
 
   const filteredResident = residents.filter((singleResident) => {
     const searchMatchResident = singleResident.name
@@ -100,8 +102,11 @@ const Page = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Sheet>
-            <SheetTrigger asChild>
+          <Sheet
+            open={open}
+            onOpenChange={setOpen}
+          >
+            <SheetTrigger asChild onClick={() => setOpen(true)}>
               <Button
                 variant="default"
                 className="flex items-center gap-2 bg-green-700 hover:bg-green-500"
@@ -110,7 +115,7 @@ const Page = () => {
                 Add Resident
               </Button>
             </SheetTrigger>
-            <CreateResidentForm />
+            <CreateResidentForm setOpen={setOpen} />
           </Sheet>
         </div>
       </div>
@@ -139,9 +144,12 @@ const Page = () => {
               <CardFooter className="px-0 ">
                 <Dialog>
                   <DialogTrigger>
-                    <Badge className="w-20 border-red-700 bg-rose-100 hover:bg-red-300" variant="outline" >
-                Delete
-              </Badge>
+                    <Badge
+                      className="w-20 border-red-700 bg-rose-100 hover:bg-red-300"
+                      variant="outline"
+                    >
+                      Delete
+                    </Badge>
                   </DialogTrigger>
                   <DialogContent className="flex items-center justify-center">
                     <DialogHeader>
@@ -149,7 +157,12 @@ const Page = () => {
                         Are you absolutely sure to delete?
                       </DialogTitle>
                       <DialogDescription className="flex items-center justify-center mt-3">
-                       <Badge variant={"destructive"} className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white">Yes</Badge>
+                        <Badge
+                          variant={"destructive"}
+                          className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white"
+                        >
+                          Yes
+                        </Badge>
                       </DialogDescription>
                     </DialogHeader>
                   </DialogContent>

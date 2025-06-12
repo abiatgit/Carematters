@@ -27,7 +27,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCareHomeStore } from "@/store/globalStore";
-import { useEffect } from "react";
 
 export const createResidentSchema = z.object({
   firstName: z
@@ -44,17 +43,13 @@ export const createResidentSchema = z.object({
   photo: z.string().url().optional(),
 });
 
-const CreateResidentForm = () => {
-  const { units, fetchUnits } = useCareHomeStore();
-  useEffect(() => {
-    fetchUnits();
-  }, [fetchUnits]);
-  console.log("zustand fetched unint", units[0]);
+const CreateResidentForm = ({setOpen}:{setOpen:(open:boolean)=>void}) => {
+
+  
+  const { units } = useCareHomeStore();
+  
 
   async function onSubmit(values: z.infer<typeof createResidentSchema>) {
-    console.log("hello iam called",values
-
-    );
    const res = await fetch("/api/resident", {
       method: "POST",
       body: JSON.stringify({ values }),
@@ -63,12 +58,14 @@ const CreateResidentForm = () => {
       },
     });
     const data=await res.json()
-    console.log(data)
+    setOpen(false)
+    if (data.sccess){
+
+    }
   }
   const form = useForm<z.infer<typeof createResidentSchema>>({
     resolver: zodResolver(createResidentSchema),
     defaultValues: {
-      
     },
   });
   return (
