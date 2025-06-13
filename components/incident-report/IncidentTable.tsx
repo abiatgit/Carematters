@@ -25,7 +25,7 @@ import { Button } from "../ui/button";
 
 const IncidentTable = ({ data }: { data: Incident[] }) => {
   return (
-    <Table>
+    <Table >
       <TableHeader>
         <TableRow>
           {columns.map((item, index) => (
@@ -35,7 +35,7 @@ const IncidentTable = ({ data }: { data: Incident[] }) => {
           ))}
         </TableRow>
       </TableHeader>
-      <TableBody>
+      <TableBody >
         {data.map((item, index) => (
           <TableRow key={index}>
             <TableCell className="font-medium">

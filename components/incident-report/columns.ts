@@ -33,6 +33,6 @@ export const columns: ColumnDef<Incident>[] = [
   },
   {
     accessorKey: "repor",
-    header: "view report",
+    header: "View Report",
   }
 ];

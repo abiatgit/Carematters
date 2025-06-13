@@ -1,11 +1,11 @@
 "use client";
 
 import {
-  BadgeCheck,
   Bell,
   ChevronsUpDown,
   CreditCard,
   LogOut,
+  Pencil,
   Sparkles,
 } from "lucide-react";
 
@@ -37,8 +37,8 @@ type user = {
 
 export function NavUser({ user }: { user: user }) {
   const { isMobile } = useSidebar();
- const handleSignOut = async () => {
-     await signOut({ callbackUrl: "/" })
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: "/" });
   };
   return (
     <SidebarMenu>
@@ -80,16 +80,16 @@ export function NavUser({ user }: { user: user }) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem  className="text-violet-600">
-                <Sparkles className="text-violet-600"/>
+              <DropdownMenuItem className="text-violet-600">
+                <Sparkles className="text-violet-600" />
                 Upgrade to Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+                <Pencil />
+                Edit
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />
@@ -102,7 +102,7 @@ export function NavUser({ user }: { user: user }) {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>
-              <LogOut  />
+              <LogOut />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

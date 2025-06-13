@@ -9,6 +9,42 @@ export const incidentData = [
       date: "2025-04-20",
       house: "Rose Villa"
     },
+      {
+      id: "1",
+      photo: "https://randomuser.me/api/portraits/women/21.jpg",
+      name: "Alice Mathews",
+      incidentNature: "Fall in bathroom",
+      status:"serious",
+      date: "2025-04-20",
+      house: "Rose Villa"
+    },
+      {
+      id: "1",
+      photo: "https://randomuser.me/api/portraits/women/21.jpg",
+      name: "Alice Mathews",
+      incidentNature: "Fall in bathroom",
+      status:"serious",
+      date: "2025-04-20",
+      house: "Rose Villa"
+    },
+      {
+      id: "1",
+      photo: "https://randomuser.me/api/portraits/women/21.jpg",
+      name: "Alice Mathews",
+      incidentNature: "Fall in bathroom",
+      status:"serious",
+      date: "2025-04-20",
+      house: "Rose Villa"
+    },
+      {
+      id: "1",
+      photo: "https://randomuser.me/api/portraits/women/21.jpg",
+      name: "Alice Mathews",
+      incidentNature: "Fall in bathroom",
+      status:"serious",
+      date: "2025-04-20",
+      house: "Rose Villa"
+    },
     {
       id: "2",
       photo: "https://randomuser.me/api/portraits/men/35.jpg",
@@ -54,6 +90,7 @@ export const incidentData = [
         date: "2025-04-22",
         house: "Maple Cottage"
       },
+      
     
   ];
   
