@@ -47,9 +47,9 @@ const AppoinmentCards = ({ data }: AppoinmentCardsProp) => {
               <p className="text-sm font-medium leading-none">{item.where}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground mt-1">
+              {/* <p className="text-sm text-muted-foreground mt-1">
                 {item.time.toLocaleString()}
-              </p>
+              </p> */}
             </div>
           </div>
           <div>

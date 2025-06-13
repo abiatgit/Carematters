@@ -26,7 +26,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCareHomeStore } from "@/store/globalStore";
+
+import { useEffect, useState } from "react";
+import { Unit } from "@prisma/client";
 
 export const createResidentSchema = z.object({
   firstName: z
@@ -43,30 +45,39 @@ export const createResidentSchema = z.object({
   photo: z.string().url().optional(),
 });
 
-const CreateResidentForm = ({setOpen}:{setOpen:(open:boolean)=>void}) => {
+const CreateResidentForm = ({
+  setOpen,
+}: {
+  setOpen: (open: boolean) => void;
+}) => {
+  const [unitList, setUnitList] = useState<Unit[] | null>(null);
 
-  
-  const { units } = useCareHomeStore();
-  
-
+  const fetchUnit = async () => {
+    const res = await fetch("/api/houses", {
+      method: "GET",
+    });
+    const data = await res.json();
+    setUnitList(data.houses);
+  };
+  useEffect(() => {
+    fetchUnit();
+  }, []);
   async function onSubmit(values: z.infer<typeof createResidentSchema>) {
-   const res = await fetch("/api/resident", {
+    const res = await fetch("/api/resident", {
       method: "POST",
       body: JSON.stringify({ values }),
       headers: {
         "Content-Type": "application/json",
       },
     });
-    const data=await res.json()
-    setOpen(false)
-    if (data.sccess){
-
+    const data = await res.json();
+    setOpen(false);
+    if (data.sccess) {
     }
   }
   const form = useForm<z.infer<typeof createResidentSchema>>({
     resolver: zodResolver(createResidentSchema),
-    defaultValues: {
-    },
+    defaultValues: {},
   });
   return (
     <SheetContent>
@@ -168,7 +179,7 @@ const CreateResidentForm = ({setOpen}:{setOpen:(open:boolean)=>void}) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {units.map((unit) => {
+                        {unitList?.map((unit) => {
                           return (
                             <SelectItem key={unit.id} value={unit.id}>
                               {unit.name}

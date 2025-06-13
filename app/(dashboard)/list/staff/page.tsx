@@ -101,7 +101,7 @@ export default function StaffPage() {
             </SelectContent>
           </Select>
           <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <Button
                 variant="default"
                 className="flex items-center gap-2 bg-green-700 hover:bg-green-500"
@@ -111,6 +111,12 @@ export default function StaffPage() {
               </Button>
             </DialogTrigger>
             <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="font-bold">
+                  Create new staff
+                </DialogTitle>
+                <DialogDescription></DialogDescription>
+              </DialogHeader>
               <CreateStaffForm />
             </DialogContent>
           </Dialog>
@@ -142,7 +148,7 @@ export default function StaffPage() {
               </Link>
               <CardFooter className="px-0 ">
                 <Dialog>
-                  <DialogTrigger>
+                  <DialogTrigger asChild>
                     <Badge
                       className="w-20 border-red-700 bg-rose-100 hover:bg-red-300"
                       variant="outline"
