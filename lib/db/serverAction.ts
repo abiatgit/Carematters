@@ -14,7 +14,6 @@ export const handleSignUp = async (formdata: FormData) => {
   const email = data.email as string;
   const name = data.name as string;
   const hashPassword = await bcrypt.hash(password, 10);
-
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
     throw new Error("User already exists");

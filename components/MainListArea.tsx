@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 import {
   Card,
   CardContent,
@@ -19,17 +18,18 @@ import {
 } from "@/components/ui/pagination";
 import AppoinmentCards from "./appoinmentsCard/AppoinmentCards";
 import { appointments } from "./appoinmentsCard/data";
-import { useCareHomeStore } from "@/store/globalStore";
+import { useState } from "react";
+// import { useCareHomeStore } from "@/store/globalStore";
 
 const ITEMS_PER_PAGE = 6;
 
 export function MainListArea() {
-  const { fetchUnits } = useCareHomeStore();
-  const [currentPage, setCurrentPage] = React.useState(1);
+  // const { fetchUnits } = useCareHomeStore();
+  const [currentPage, setCurrentPage] = useState(1);
 
-  React.useEffect(() => {
-    fetchUnits();
-  }, [fetchUnits]);
+  // useEffect(() => {
+  //   fetchUnits();
+  // }, [fetchUnits]);
 
   const totalPages = Math.ceil(incidentData.length / ITEMS_PER_PAGE);
   const paginatedData = incidentData.slice(

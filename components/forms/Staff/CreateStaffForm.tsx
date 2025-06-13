@@ -35,7 +35,8 @@ export const staffSchema = z.object({
   }),
   role: z.enum(["MANAGER", "TEAM_LEAD", "SUPPORT_WORKER"]),
   unitId: z.string().optional(),
-  photURL:z.string()
+  photURL:z.string(),
+  onboarded:z.boolean().optional()
 });
 
 const CreateStaffForm = () => {
@@ -43,8 +44,19 @@ const CreateStaffForm = () => {
     resolver: zodResolver(staffSchema),
     defaultValues: {},
   });
-  function onSubmit(values: z.infer<typeof staffSchema>) {
-    console.log(values);
+  async function onSubmit (values: z.infer<typeof staffSchema>) {
+   values={...values,onboarded:true}
+   console.log(values)
+        const res=await fetch("/api/staff",{
+        method:"POST",
+        headers:{
+           "Content-Type": "application/json",
+        },
+        body:JSON.stringify(values)
+        })
+        const data=await res.json()
+        console.log(data)
+       
   }
   return (
     <DialogHeader>
@@ -168,12 +180,12 @@ const CreateStaffForm = () => {
               name="unitId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Unit ID (optional)</FormLabel>
+                  <FormLabel>Unit / House</FormLabel>
                   <FormControl>
-                    <Input placeholder="unit_123..." {...field} />
+                    <Input placeholder="Rose House" {...field} />
                   </FormControl>
                   <FormDescription>
-                    If known, assign the staff to a unit.
+                   Assign the staff to a unit or house where they work.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

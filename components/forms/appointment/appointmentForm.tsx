@@ -38,8 +38,9 @@ const appoinmentSchema = z.object({
 });
 
 const AppointmentForm = () => {
-      const { units } = useCareHomeStore();
-      const {residents}=useResidentStore()
+  const { units } = useCareHomeStore();
+  const { residents,} = useResidentStore();
+
   const form = useForm<z.infer<typeof appoinmentSchema>>({
     resolver: zodResolver(appoinmentSchema),
     defaultValues: {
@@ -81,14 +82,14 @@ const AppointmentForm = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                        {units.map((unit) => {
-                          return (
-                            <SelectItem key={unit.id} value={unit.id}>
-                              {unit.name}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
+                          {units.map((unit) => {
+                            return (
+                              <SelectItem key={unit.id} value={unit.id}>
+                                {unit.name}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
                       </Select>
                       <FormMessage />
                     </FormItem>
@@ -111,15 +112,15 @@ const AppointmentForm = () => {
                             <SelectValue placeholder="Select a Resident" />
                           </SelectTrigger>
                         </FormControl>
-                         <SelectContent>
-                        {residents.map((resident) => {
-                          return (
-                            <SelectItem key={resident.id} value={resident.id}>
-                              {resident.name}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
+                        <SelectContent>
+                          {residents.map((resident) => {
+                            return (
+                              <SelectItem key={resident.id} value={"ddd"}>
+                                {resident.name}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
                       </Select>
 
                       <FormMessage />
