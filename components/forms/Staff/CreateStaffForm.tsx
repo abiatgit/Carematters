@@ -19,9 +19,11 @@ import {
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Unit } from "@prisma/client";
+import { Check } from "lucide-react";
 
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 export const staffSchema = z.object({
@@ -36,11 +38,28 @@ export const staffSchema = z.object({
   }),
   role: z.enum(["MANAGER", "TEAM_LEAD", "SUPPORT_WORKER"]),
   unitId: z.string().optional(),
-  photURL: z.string(),
+  photoURL: z.string(),
   onboarded: z.boolean().optional(),
+  gender: z.enum(["male", "female", "other"]),
 });
 
-const CreateStaffForm = () => {
+const tosting = () => {
+  toast(
+    <div className="flex items-center gap-2">
+      <Check className="h-5 w-5 text-green-700" />
+      New staff created
+    </div>
+  );
+};
+const tostingError = () => {
+  toast(
+    <div className="flex items-center gap-2">
+      <Check className="h-5 w-5 text-red-700" />
+      Error crating staff
+    </div>
+  );
+};
+const CreateStaffForm = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
   const [unitList, setUnitList] = useState<Unit[] | null>();
 
   const fetchUnit = async () => {
@@ -53,7 +72,7 @@ const CreateStaffForm = () => {
   };
   useEffect(() => {
     fetchUnit();
-  },[]);
+  }, []);
 
   const form = useForm<z.infer<typeof staffSchema>>({
     resolver: zodResolver(staffSchema),
@@ -61,7 +80,7 @@ const CreateStaffForm = () => {
   });
   async function onSubmit(values: z.infer<typeof staffSchema>) {
     values = { ...values, onboarded: true };
-    console.log(values);
+
     const res = await fetch("/api/staff", {
       method: "POST",
       headers: {
@@ -70,7 +89,13 @@ const CreateStaffForm = () => {
       body: JSON.stringify(values),
     });
     const data = await res.json();
+    setOpen(false);
     console.log(data);
+    if (data.success) {
+      tosting();
+    } else {
+      tostingError();
+    }
   }
   return (
     <Form {...form}>
@@ -84,7 +109,6 @@ const CreateStaffForm = () => {
               <FormControl>
                 <Input placeholder="John Doe" {...field} />
               </FormControl>
-              <FormDescription>Staff&apos;s full name.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -102,7 +126,7 @@ const CreateStaffForm = () => {
                   {...field}
                 />
               </FormControl>
-              <FormDescription>Staff&apos;s login email.</FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
@@ -123,37 +147,6 @@ const CreateStaffForm = () => {
           )}
         />
         <div className="flex gap-5">
-          {/* <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <div className="mb-5">
-                <FormItem>
-                  <FormLabel>Gender</FormLabel>
-                  
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a role" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="male">Male</SelectItem>
-                        <SelectItem value="female">Female</SelectItem>
-                        <SelectItem value="other">
-                         Other
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-               
-                  <FormMessage />
-                </FormItem>
-                   </div>
-              )}
-            /> */}
           <FormField
             control={form.control}
             name="role"
@@ -185,6 +178,35 @@ const CreateStaffForm = () => {
               </div>
             )}
           />
+          <FormField
+            control={form.control}
+            name="gender"
+            render={({ field }) => (
+              <div className="mb-5">
+                <FormItem>
+                  <FormLabel>Gender</FormLabel>
+
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a Gender" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              </div>
+            )}
+          />
         </div>
         <FormField
           control={form.control}
@@ -199,8 +221,12 @@ const CreateStaffForm = () => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {unitList?.map((unit)=>{
-                   return(<SelectItem key={unit.id} value={unit.id}>{unit.name}</SelectItem>)
+                  {unitList?.map((unit) => {
+                    return (
+                      <SelectItem key={unit.id} value={unit.id}>
+                        {unit.name}
+                      </SelectItem>
+                    );
                   })}
                 </SelectContent>
               </Select>
@@ -209,7 +235,7 @@ const CreateStaffForm = () => {
         />
         <FormField
           control={form.control}
-          name="photURL"
+          name="photoURL"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Photo Url</FormLabel>

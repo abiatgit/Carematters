@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const body = await req.json();
-  console.log("i'm a  body", body);
   const {
     firstName,
     lastName,
@@ -15,7 +14,6 @@ export async function POST(req: Request) {
     nextOfKin,
     photo,
   } = body.values;
-  console.log("resident gender", gender);
 
   try {
     const resident = await prisma.resident.create({

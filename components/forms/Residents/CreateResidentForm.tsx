@@ -29,6 +29,8 @@ import {
 
 import { useEffect, useState } from "react";
 import { Unit } from "@prisma/client";
+import { Check } from "lucide-react";
+import { toast } from "sonner";
 
 export const createResidentSchema = z.object({
   firstName: z
@@ -44,7 +46,14 @@ export const createResidentSchema = z.object({
   nextOfKin: z.string().min(1, { message: "Next of kin is required" }),
   photo: z.string().url().optional(),
 });
-
+const tosting = () => {
+  toast(
+    <div className="flex items-center gap-2">
+      <Check className="h-5 w-5 text-green-700" />
+      Your house created
+    </div>
+  );
+};
 const CreateResidentForm = ({
   setOpen,
 }: {
@@ -72,7 +81,9 @@ const CreateResidentForm = ({
     });
     const data = await res.json();
     setOpen(false);
-    if (data.sccess) {
+console.log("resident",data)
+    if (data.success) {
+       tosting()
     }
   }
   const form = useForm<z.infer<typeof createResidentSchema>>({

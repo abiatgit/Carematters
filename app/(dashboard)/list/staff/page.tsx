@@ -38,6 +38,7 @@ export default function StaffPage() {
   const [search, setSearch] = useState("");
   const [unitFilter, setUnitFilter] = useState("all");
   const [positionFilter, setPositionFilter] = useState("all");
+  const [open,setOpen]=useState(true)
 
   const filteredStaff = staff.filter((singlestaff) => {
     const matchesSearch = singlestaff.name
@@ -100,7 +101,7 @@ export default function StaffPage() {
               <SelectItem value="Betheny">Betheny</SelectItem>
             </SelectContent>
           </Select>
-          <Dialog>
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button
                 variant="default"
@@ -117,7 +118,7 @@ export default function StaffPage() {
                 </DialogTitle>
                 <DialogDescription></DialogDescription>
               </DialogHeader>
-              <CreateStaffForm />
+              <CreateStaffForm setOpen={setOpen} />
             </DialogContent>
           </Dialog>
         </div>
