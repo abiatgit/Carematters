@@ -2,12 +2,13 @@
 import { ColumnDef } from "@tanstack/react-table"
 
 export type MedsType= {
-    id: string
+    id: string  
     medsname:string,
-    strength?: string,
     frequency: string[],
     count:number,
     dosage:string,
+    route:string
+    prescribedBy:string
 }
 
 export const columns: ColumnDef<MedsType>[] = [
