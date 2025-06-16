@@ -1,4 +1,5 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import { appointments } from "@/lib/mockData";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
@@ -9,20 +10,21 @@ const getData = () => {
   return appointments;
 };
 export default function Page() {
+  const [open,setOpen]=useState(false)
   const data = getData();
   return (
     <div>
       <div className="flex justify-between">
         Appoinments
         <div>
-          <Dialog>
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button variant={"outline"} className="border-green-700">
                 New Appoinment
               </Button>
             </DialogTrigger>
             
-            <AppointmentForm />
+            <AppointmentForm setOpen={setOpen}/>
           </Dialog>
         </div>
       </div>

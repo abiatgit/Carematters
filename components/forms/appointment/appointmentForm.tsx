@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Unit } from "@prisma/client";
@@ -37,11 +38,14 @@ const appoinmentSchema = z.object({
   unitId: z.string().min(1, "Unit is required"),
   residentId: z.string().min(1, "Resident is required"),
 });
+interface AppointmentFormProps {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const AppointmentForm = () => {
+const AppointmentForm = ({setOpen}:AppointmentFormProps) => {
+  
   const [unitList, setUnitList] = useState<Unit[] | null>(null);
   const [residents, setResident] = useState<Unit[] | null>(null);
-
   const fetchUnit = async () => {
     const res = await fetch("/api/houses", {
       method: "GET",
@@ -51,14 +55,16 @@ const AppointmentForm = () => {
   };
   useEffect(() => {
     fetchUnit();
-    fetchResident();
   }, []);
-const fetchResident = async () => {
-    const res = await fetch("/api/resident", {
+  const fetchResident = async (unitId: string) => {
+    console.log("unitid",unitId)
+    if (!unitId) return;
+    const res = await fetch(`/api/resident?unitId=${unitId}`, {
       method: "GET",
     });
     const data = await res.json();
     setResident(data.residents);
+    
   };
 
   const form = useForm<z.infer<typeof appoinmentSchema>>({
@@ -73,13 +79,17 @@ const fetchResident = async () => {
     },
   });
   async function onSubmit(values: z.infer<typeof appoinmentSchema>) {
-     const res=await fetch("/api/appoinment",{
-      method:"POST",
-      body:JSON.stringify(values)
-    })
-    const data=await res.json()
-    console.log(data)
-
+    const res = await fetch("/api/appoinment", {
+      method: "POST",
+      body: JSON.stringify(values),
+    });
+    const data = await res.json();
+    setOpen(false)
+     if (data.success) {
+          showSuccessToast( "New appoinment created");
+        } else {
+          showErrorToast("Error crating appoinment")
+        }
   }
 
   return (
@@ -99,7 +109,10 @@ const fetchResident = async () => {
                     <FormItem>
                       <FormLabel>Unit</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          fetchResident(value);
+                        }}
                         defaultValue={field.value}
                       >
                         <FormControl>

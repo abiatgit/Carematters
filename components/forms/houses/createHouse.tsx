@@ -17,24 +17,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { toast } from "sonner";
 import { useGlobalStore } from "@/store/globalStore";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import { Plus } from "lucide-react";
 
 const createHouseSchema = z.object({
   name: z.string(),
 });
-const tosting = () => {
-  toast(
-    <div className="flex items-center gap-2">
-      <Check className="h-5 w-5 text-green-700" />
-      Your house created
-    </div>
-  );
-};
+
 export function CreateHouse() {
   const { setHouse } = useGlobalStore();
   const [open, setOpen] = useState(false);
@@ -52,7 +45,9 @@ export function CreateHouse() {
     if (data.succes) {
       setHouse(data.house);
 
-      tosting();
+      showSuccessToast("New house created");
+    } else {
+      showErrorToast("error creating new house");
     }
   };
 
@@ -71,7 +66,7 @@ export function CreateHouse() {
     >
       <DialogTrigger asChild>
         <Button variant="outline">
-          <Plus />
+          <Plus/>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

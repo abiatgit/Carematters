@@ -16,9 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { Check, X } from "lucide-react";
 import { useGlobalStore } from "@/store/globalStore";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -42,22 +41,6 @@ const CreateHome = ({ userId }: CareHomePro) => {
       logo: "",
     },
   });
-  const succesTosting = () => {
-    toast(
-      <div className="flex items-center gap-2">
-        <Check className="h-5 w-5 text-green-700" />
-        Succesfuly Created Your Home
-      </div>
-    );
-  };
-  const errorTosting = () => {
-    toast(
-      <div className="flex items-center gap-2">
-        <X className="h-5 w-5 text-red-700" />
-        Error while Creating
-      </div>
-    );
-  };
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     const payload = {
@@ -73,11 +56,11 @@ const CreateHome = ({ userId }: CareHomePro) => {
     });
     const data = await res.json();
     if (data.success) {
-      succesTosting();
+    showSuccessToast("Succesfuly Created Your Home")
       setCareHome(data.careHome);
       router.push("/user");
     } else {
-      errorTosting();
+      showErrorToast("Error while Creating")
     }
   }
   return (

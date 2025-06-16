@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -34,9 +34,14 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(req:NextRequest) {
+  const {searchParams}=new URL(req.url)
+  const unitId= searchParams.get("unitId")
+  console.log("Unit id only",unitId)
   try {
-    const residents = await prisma.resident.findMany({});
+    const residents = await prisma.resident.findMany({
+      where:unitId?{unitId}:undefined
+    });
 
     return NextResponse.json({ success: true, residents });
   } catch (error) {

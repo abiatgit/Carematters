@@ -7,7 +7,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-
 import {
   Form,
   FormControl,
@@ -26,11 +25,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
 import { useEffect, useState } from "react";
 import { Unit } from "@prisma/client";
-import { Check } from "lucide-react";
-import { toast } from "sonner";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 export const createResidentSchema = z.object({
   firstName: z
@@ -46,14 +43,7 @@ export const createResidentSchema = z.object({
   nextOfKin: z.string().min(1, { message: "Next of kin is required" }),
   photo: z.string().url().optional(),
 });
-const tosting = () => {
-  toast(
-    <div className="flex items-center gap-2">
-      <Check className="h-5 w-5 text-green-700" />
-      Your house created
-    </div>
-  );
-};
+
 const CreateResidentForm = ({
   setOpen,
 }: {
@@ -83,7 +73,10 @@ const CreateResidentForm = ({
     setOpen(false);
 console.log("resident",data)
     if (data.success) {
-       tosting()
+       showSuccessToast("New resident created")
+    }
+    else{
+      showErrorToast("Error creating resident")
     }
   }
   const form = useForm<z.infer<typeof createResidentSchema>>({

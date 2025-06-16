@@ -38,7 +38,7 @@ export default function StaffPage() {
   const [search, setSearch] = useState("");
   const [unitFilter, setUnitFilter] = useState("all");
   const [positionFilter, setPositionFilter] = useState("all");
-  const [open,setOpen]=useState(true)
+  const [open,setOpen]=useState(false)
 
   const filteredStaff = staff.filter((singlestaff) => {
     const matchesSearch = singlestaff.name

@@ -17,13 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Unit } from "@prisma/client";
-import { Check } from "lucide-react";
-
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import z from "zod";
 
 export const staffSchema = z.object({
@@ -43,22 +41,8 @@ export const staffSchema = z.object({
   gender: z.enum(["male", "female", "other"]),
 });
 
-const tosting = () => {
-  toast(
-    <div className="flex items-center gap-2">
-      <Check className="h-5 w-5 text-green-700" />
-      New staff created
-    </div>
-  );
-};
-const tostingError = () => {
-  toast(
-    <div className="flex items-center gap-2">
-      <Check className="h-5 w-5 text-red-700" />
-      Error crating staff
-    </div>
-  );
-};
+
+
 const CreateStaffForm = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
   const [unitList, setUnitList] = useState<Unit[] | null>();
 
@@ -92,9 +76,9 @@ const CreateStaffForm = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
     setOpen(false);
     console.log(data);
     if (data.success) {
-      tosting();
+      showSuccessToast( "New staff created");
     } else {
-      tostingError();
+      showErrorToast("Error crating staff")
     }
   }
   return (
