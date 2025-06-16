@@ -22,9 +22,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCareHomeStore, useResidentStore } from "@/store/globalStore";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { Unit } from "@prisma/client";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -32,14 +33,33 @@ const appoinmentSchema = z.object({
   venue: z.string().min(1, "Venue is required"),
   date: z.string().min(1, "Date is required"),
   time: z.string().min(1, "Time is required"),
-  with: z.string().min(1, "With is required"),
+  scheduledWith: z.string().min(1, "With is required"),
   unitId: z.string().min(1, "Unit is required"),
   residentId: z.string().min(1, "Resident is required"),
 });
 
 const AppointmentForm = () => {
-  const { units } = useCareHomeStore();
-  const { residents,} = useResidentStore();
+  const [unitList, setUnitList] = useState<Unit[] | null>(null);
+  const [residents, setResident] = useState<Unit[] | null>(null);
+
+  const fetchUnit = async () => {
+    const res = await fetch("/api/houses", {
+      method: "GET",
+    });
+    const data = await res.json();
+    setUnitList(data.houses);
+  };
+  useEffect(() => {
+    fetchUnit();
+    fetchResident();
+  }, []);
+const fetchResident = async () => {
+    const res = await fetch("/api/resident", {
+      method: "GET",
+    });
+    const data = await res.json();
+    setResident(data.residents);
+  };
 
   const form = useForm<z.infer<typeof appoinmentSchema>>({
     resolver: zodResolver(appoinmentSchema),
@@ -47,13 +67,19 @@ const AppointmentForm = () => {
       venue: "",
       date: "",
       time: "",
-      with: "",
+      scheduledWith: "",
       unitId: "",
       residentId: "",
     },
   });
-  function onSubmit(values: z.infer<typeof appoinmentSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof appoinmentSchema>) {
+     const res=await fetch("/api/appoinment",{
+      method:"POST",
+      body:JSON.stringify(values)
+    })
+    const data=await res.json()
+    console.log(data)
+
   }
 
   return (
@@ -82,7 +108,7 @@ const AppointmentForm = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {units.map((unit) => {
+                          {unitList?.map((unit) => {
                             return (
                               <SelectItem key={unit.id} value={unit.id}>
                                 {unit.name}
@@ -113,9 +139,9 @@ const AppointmentForm = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {residents.map((resident) => {
+                          {residents?.map((resident) => {
                             return (
-                              <SelectItem key={resident.id} value={"ddd"}>
+                              <SelectItem key={resident.id} value={resident.id}>
                                 {resident.name}
                               </SelectItem>
                             );
@@ -146,7 +172,7 @@ const AppointmentForm = () => {
               />
               <FormField
                 control={form.control}
-                name="with"
+                name="scheduledWith"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>With</FormLabel>

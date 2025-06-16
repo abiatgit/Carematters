@@ -131,7 +131,7 @@ model Appoinment {
   venue      String
   date       DateTime
   time       DateTime
-  with       String
+  scheduledWith       String
   residentId String
   resident   Resident  @relation(fields: [residentId], references: [id])
   unitId     String
