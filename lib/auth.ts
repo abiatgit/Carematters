@@ -59,7 +59,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.credentials = true;
       }
       return token;
-    },},
+    },
+      async session({ session, token }) {
+    if (token?.id && session.user) {
+      session.user.id = token.id as string; // Attach id to session.user
+    }
+    return session;
+  }
+  },
     jwt: {
     encode: async function (params) {
       if (params.token?.credentials) {

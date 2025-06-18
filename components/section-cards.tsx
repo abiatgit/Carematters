@@ -11,8 +11,24 @@ import {
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
+import { fetchResident } from "@/app/(dashboard)/list/resident/action";
+import { auth } from "@/lib/auth";
+import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
 
-export function SectionCards() {
+export async function SectionCards() {
+  const session = await auth();
+  const user = session?.user;
+  
+  console.log("user",user)
+  const residents = await fetchResident(user);
+  const staff= await fetchStaff(user)
+  const totalStaff=staff.length || 0
+  const maleStaff=staff.filter((staff)=>staff.gender==="male").length ||0
+  const femaleStaff=totalStaff- maleStaff
+  const total = residents?.length || 0;
+  const maleCount = residents?.filter((r) => r.gender === "male").length || 0;
+  const femaleCount = total - maleCount;
+
 
   return (
     <div className=" @5xl/main:grid-cols-2 @7xl/main:grid-cols-4 grid grid-cols-1 gap-2 px-4 lg:px-6">
@@ -21,17 +37,14 @@ export function SectionCards() {
           <div>
             <CardDescription>Total Residents</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-              48
+              {total}
             </CardTitle>
           </div>
           <div>
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              20 male
-              <Separator
-                orientation="vertical"
-                className="mx-2 data-[orientation=vertical]:h-4"
-              />
-              28 female
+              {maleCount} male
+              <Separator orientation="vertical" className="mx-2 h-4" />
+              {femaleCount} female
             </Badge>
           </div>
         </CardHeader>
@@ -42,7 +55,9 @@ export function SectionCards() {
               <TrendingUpIcon className="size-4" />
             </div>
             <div className="text-muted-foreground">
-              2 new joining the last 6 months
+              {total > 0
+                ? "2 new joining the last 6 months"
+                : "No recent joiners"}
             </div>
           </div>
           <div>
@@ -57,17 +72,17 @@ export function SectionCards() {
           <div>
             <CardDescription>Total Staff</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-              101
+              {totalStaff}
             </CardTitle>
           </div>
           <div>
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              50 male
+             {maleStaff} male
               <Separator
                 orientation="vertical"
                 className="mx-2 data-[orientation=vertical]:h-4"
               />
-              51 female
+              {femaleStaff} female
             </Badge>
           </div>
         </CardHeader>

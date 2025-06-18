@@ -1,11 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import Image from "next/image";
-import { staff } from "@/lib/mockData";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -33,17 +32,22 @@ import {
 } from "@/components/ui/dialog";
 import CreateStaffForm from "@/components/forms/Staff/CreateStaffForm";
 import { Badge } from "@/components/ui/badge";
+import { fetchStaff } from "./action";
+import { useSession } from "next-auth/react";
+import { User } from "@prisma/client";
 
 export default function StaffPage() {
+  const { data: session } = useSession();
   const [search, setSearch] = useState("");
   const [unitFilter, setUnitFilter] = useState("all");
   const [positionFilter, setPositionFilter] = useState("all");
-  const [open,setOpen]=useState(false)
+  const [open, setOpen] = useState(false);
+  const [allStaff, setAllStaff] = useState<User[]>([]);
 
-  const filteredStaff = staff.filter((singlestaff) => {
+  const filteredStaff = allStaff.filter((singlestaff) => {
     const matchesSearch = singlestaff.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+      ?.toLowerCase()
+      .includes(search.toLowerCase()) ?? false;
     const matchesUnit =
       unitFilter === "all" || singlestaff.unitId === unitFilter;
 
@@ -52,6 +56,25 @@ export default function StaffPage() {
 
     return matchesSearch && matchesUnit && positionSearch;
   });
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const getStaff = async () => {
+    if (!session?.user?.id) return;
+    
+    // Fetch the full user data from the database
+    const response = await fetch(`/api/user/${session.user.id}`);
+    const userData = await response.json();
+    
+    if (userData.user) {
+      const res = await fetchStaff(userData.user);
+      setAllStaff(res);
+      console.log("all staff", res);
+    }
+  };
+
+  useEffect(() => {
+    getStaff();
+  }, [session]);
 
   return (
     <div className="">
@@ -84,9 +107,9 @@ export default function StaffPage() {
               <SelectGroup>
                 <SelectLabel>Select a Position</SelectLabel>
                 <SelectItem value="all">All</SelectItem>
-                <SelectItem value="teamLead">Team Leader</SelectItem>
-                <SelectItem value="supportWorker">Support Worker</SelectItem>
-                {/* <SelectItem value="Comgal">Support Worker</SelectItem> */}
+                <SelectItem value="MANAGER">Manager</SelectItem>
+                <SelectItem value="TEAM_LEAD">Team Leader</SelectItem>
+                <SelectItem value="SUPPORT_WORKER">Support Worker</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -127,8 +150,8 @@ export default function StaffPage() {
       <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredStaff.map((staff) => {
           return (
-            <Card className="px-6" key={staff.name}>
-              <Link href={"/list/staff/32"}>
+            <Card className="px-6" key={staff.id}>
+              <Link href={`/list/staff/${staff.id}`}>
                 <div className="flex gap-5 items-center">
                   <div className="w-15 h-15 rounded-full relative overflow-hidden ">
                     <Image

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { userManager } from "@/lib/mockData";
 
+
 type houseProp = {
   name: string;
 };
@@ -24,9 +25,15 @@ export function HouseSwitcher({
   houses: houseProp[];
   defaultHouse: string;
 }) {
-  const currentUser = userManager
-  const fileterdHouses= currentUser.role ==="manager"?houses:houses.filter((item)=>item.name===currentUser?.house)
-  const [selectedHouse, setSelectedHouse] = React.useState(currentUser.role==="manager"?defaultHouse:fileterdHouses[0].name);
+
+  const currentUser = userManager;
+  const fileterdHouses =
+    currentUser.role === "manager"
+      ? houses
+      : houses.filter((item) => item.name === currentUser?.house);
+  const [selectedHouse, setSelectedHouse] = React.useState(
+    currentUser.role === "manager" ? defaultHouse : fileterdHouses[0].name
+  );
   return (
     <SidebarMenu>
       <SidebarMenuItem>

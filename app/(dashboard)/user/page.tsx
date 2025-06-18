@@ -4,10 +4,13 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import React from "react";
 
-
 async function Page() {
-    const session = await auth();
+  const session = await auth();
+
   if (!session) redirect("/auth/sign-in");
+  if (!session?.user) redirect("/auth/sign-in");
+
+
 
   return (
     <div className="flex flex-1 flex-col">
@@ -15,7 +18,7 @@ async function Page() {
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <SectionCards />
           <div className="px-4 lg:px-6">
-            <MainListArea />
+            <MainListArea/>
           </div>
         </div>
       </div>

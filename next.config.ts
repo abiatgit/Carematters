@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
         hostname: "media.product.which.co.uk",
         pathname: "/**",
       },
+      {hostname:"img.freepik.com"},
       {hostname: "e7.pngegg.com"},
       {
         hostname: "randomuser.me",

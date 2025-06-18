@@ -20,10 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import CreateResidentForm from "@/components/forms/Residents/CreateResidentForm";
-import { residents } from "@/lib/mockData";
+// import { residents } from "@/lib/mockData";
 import Link from "next/link";
 import {
   Dialog,
@@ -34,16 +34,33 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { User } from "@prisma/client";
+import { useSession } from "next-auth/react";
 const Page = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [residents, setResident] = useState<User[]>([]);
   const [unitFilter, setUnitFilter] = useState("all");
   const [genderFilter, setGenderFilter] = useState("all");
-  console.log("open",open)
+  const {data:session} = useSession();
+  const userid=session?.user?.id 
+  console.log("user Id",userid)
+  const fetchResident = async () => {
+    const res = await fetch("/api/resident", {
+      method: "GET",
+    });
+    const data = await res.json();
+    console.log("response", data.residents);
+    setResident(data.residents);
+  };
 
+  useEffect(() => {
+    fetchResident();
+  }, []);
+  console.log("response resident", residents);
   const filteredResident = residents.filter((singleResident) => {
-    const searchMatchResident = singleResident.name
-      .toLowerCase()
+    const searchMatchResident = singleResident
+      .name!.toLowerCase()
       .includes(search.toLowerCase());
     const unitMatchResident =
       unitFilter === "all" || singleResident.unitId === unitFilter;
@@ -102,10 +119,7 @@ const Page = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Sheet
-            open={open}
-            onOpenChange={setOpen}
-          >
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild onClick={() => setOpen(true)}>
               <Button
                 variant="default"
@@ -122,13 +136,16 @@ const Page = () => {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredResident.map((resident) => {
           return (
-            <Card className="px-6" key={resident.name}>
+            <Card className="px-6" key={resident.id}>
               <Link href={"/list/resident/32"}>
                 <div className="flex gap-5 items-center">
                   <div className="w-15 h-15 rounded-full relative overflow-hidden ">
                     <Image
                       alt=" "
-                      src={"https://github.com/shadcn.png"}
+                      src={
+                        resident.image ??
+                        "https://img.freepik.com/premium-photo/young-man-isolated-blue_1368-124991.jpg?semt=ais_hybrid&w=740"
+                      }
                       fill
                       className="object-cover"
                     />

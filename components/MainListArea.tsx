@@ -18,11 +18,19 @@ import {
 } from "@/components/ui/pagination";
 import AppoinmentCards from "./appoinmentsCard/AppoinmentCards";
 import { appointments } from "./appoinmentsCard/data";
+import { Role } from "@prisma/client";
 import { useState } from "react";
 
 const ITEMS_PER_PAGE = 6;
+export type SafeUser = {
+  id: string;
+  name: string | null;
+  email: string;
+  role: Role;
+};
 
 export function MainListArea() {
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(incidentData.length / ITEMS_PER_PAGE);

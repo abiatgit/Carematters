@@ -37,7 +37,6 @@ export async function POST(req: Request) {
 export async function GET(req:NextRequest) {
   const {searchParams}=new URL(req.url)
   const unitId= searchParams.get("unitId")
-  console.log("Unit id only",unitId)
   try {
     const residents = await prisma.resident.findMany({
       where:unitId?{unitId}:undefined
