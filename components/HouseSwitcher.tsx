@@ -13,19 +13,17 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { userManager } from "@/lib/mockData";
+import { useGlobalStore } from "@/store/globalStore";
+import { Unit } from "@prisma/client";
 
-
-type houseProp = {
-  name: string;
-};
 export function HouseSwitcher({
   houses,
   defaultHouse,
 }: {
-  houses: houseProp[];
+  houses: Unit[];
   defaultHouse: string;
 }) {
-
+  const { setHouseId } = useGlobalStore();
   const currentUser = userManager;
   const fileterdHouses =
     currentUser.role === "manager"
@@ -61,9 +59,12 @@ export function HouseSwitcher({
               return (
                 <DropdownMenuItem
                   key={index}
-                  onSelect={() => setSelectedHouse(house.name)}
+                  onSelect={() => {
+                    setSelectedHouse(house.name);
+                    setHouseId(house.id);
+                  }}
                 >
-                  {house.name}{" "}
+                  {house.name}
                   {house.name === selectedHouse && (
                     <Check className="ml-auto" />
                   )}

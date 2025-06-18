@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Sparkles, TrendingUpIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -11,40 +14,73 @@ import {
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
-import { fetchResident } from "@/app/(dashboard)/list/resident/action";
-import { auth } from "@/lib/auth";
+import { useSession } from "next-auth/react";
 import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
+import { Resident, User } from "@prisma/client";
+import { fetchResident } from "@/app/(dashboard)/list/resident/action";
+import { useGlobalStore } from "@/store/globalStore";
 
-export async function SectionCards() {
-  const session = await auth();
+// Replace with real client-safe fetch functions or API routes
+async function fetchResidentsClient(resident: Resident,houseId : string | null) {
+  const res = await fetchResident(resident,houseId);
+  return res;
+}
+
+async function fetchStaffClient(user: User) {
+  const res = await fetchStaff(user);
+  console.log("staff", res);
+  return res;
+}
+
+export function SectionCards() {
+  const { data: session } = useSession();
   const user = session?.user;
-  
-  console.log("user",user)
-  const residents = await fetchResident(user);
-  const staff= await fetchStaff(user)
-  const totalStaff=staff.length || 0
-  const maleStaff=staff.filter((staff)=>staff.gender==="male").length ||0
-  const femaleStaff=totalStaff- maleStaff
-  const total = residents?.length || 0;
-  const maleCount = residents?.filter((r) => r.gender === "male").length || 0;
-  const femaleCount = total - maleCount;
+  // const { houseId } = useGlobalStore();
+  // const fakeHouseid="1d535b1e-2527-493d-a3d1-7681b0bb4a91"
+    const fakeHouseid=null
 
+  const [residents, setResidents] = useState([]);
+  const [staff, setStaff] = useState([]);
+
+  useEffect(() => {
+    if (!user) return;
+   
+    async function fetchData() {
+      const [residentsData, staffData] = await Promise.all([
+        fetchResidentsClient(user,fakeHouseid),
+        fetchStaffClient(user),
+      ]);
+      setResidents(residentsData || []);
+      setStaff(staffData || []);
+    }
+
+    fetchData();
+  }, [user]);
+
+  const totalResidents = residents.length;
+  const maleResidents = residents.filter((r) => r.gender === "male").length;
+  const femaleResidents = totalResidents - maleResidents;
+
+  const totalStaff = staff.length;
+  const maleStaff = staff.filter((s) => s.gender === "male").length;
+  const femaleStaff = totalStaff - maleStaff;
 
   return (
-    <div className=" @5xl/main:grid-cols-2 @7xl/main:grid-cols-4 grid grid-cols-1 gap-2 px-4 lg:px-6">
+    <div className="@5xl/main:grid-cols-2 @7xl/main:grid-cols-4 grid grid-cols-1 gap-2 px-4 lg:px-6">
+      {/* Resident Card */}
       <Card className="@container/card border border-dashed">
         <CardHeader className="flex justify-between items-start gap-1 text-sm">
           <div>
             <CardDescription>Total Residents</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-              {total}
+              {totalResidents}
             </CardTitle>
           </div>
           <div>
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              {maleCount} male
+              {maleResidents} male
               <Separator orientation="vertical" className="mx-2 h-4" />
-              {femaleCount} female
+              {femaleResidents} female
             </Badge>
           </div>
         </CardHeader>
@@ -55,7 +91,7 @@ export async function SectionCards() {
               <TrendingUpIcon className="size-4" />
             </div>
             <div className="text-muted-foreground">
-              {total > 0
+              {totalResidents > 0
                 ? "2 new joining the last 6 months"
                 : "No recent joiners"}
             </div>
@@ -67,6 +103,8 @@ export async function SectionCards() {
           </div>
         </CardFooter>
       </Card>
+
+      {/* Staff Card */}
       <Card className="@container/card border border-dashed">
         <CardHeader className="flex justify-between items-start gap-1 text-sm">
           <div>
@@ -77,11 +115,8 @@ export async function SectionCards() {
           </div>
           <div>
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-             {maleStaff} male
-              <Separator
-                orientation="vertical"
-                className="mx-2 data-[orientation=vertical]:h-4"
-              />
+              {maleStaff} male
+              <Separator orientation="vertical" className="mx-2 h-4" />
               {femaleStaff} female
             </Badge>
           </div>
@@ -89,7 +124,7 @@ export async function SectionCards() {
         <CardFooter className="flex justify-between items-start gap-1 text-sm">
           <div>
             <div className="line-clamp-1 flex gap-2 font-medium">
-              Toatal Staff <TrendingUpIcon className="size-4" />
+              Total Staff <TrendingUpIcon className="size-4" />
             </div>
             <div className="text-muted-foreground">6 on probation period</div>
           </div>
@@ -100,15 +135,17 @@ export async function SectionCards() {
           </div>
         </CardFooter>
       </Card>
+
+      {/* Active Houses */}
       <Card className="@container/card border border-dashed">
         <CardHeader className="flex justify-between items-start gap-1 text-sm">
           <div>
-            <CardDescription>Acitive Houses</CardDescription>
+            <CardDescription>Active Houses</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
               03
             </CardTitle>
           </div>
-          <div className="">
+          <div>
             <Badge
               variant="outline"
               className="flex gap-1 rounded-lg text-xs text-violet-600"
@@ -120,9 +157,9 @@ export async function SectionCards() {
         <CardFooter className="flex justify-between items-start gap-1 text-sm">
           <div>
             <div className="line-clamp-1 flex gap-2 font-medium">
-              Toatal Houses <TrendingUpIcon className="size-4" />
+              Total Houses <TrendingUpIcon className="size-4" />
             </div>
-            <div className="text-muted-foreground">you can create 7 more</div>
+            <div className="text-muted-foreground">You can create 7 more</div>
           </div>
           <div>
             <Button className="bg-green-700 hover:bg-green-600">
@@ -131,28 +168,30 @@ export async function SectionCards() {
           </div>
         </CardFooter>
       </Card>
+
+      {/* Appointments */}
       <Card className="@container/card border border-dashed">
         <CardHeader className="flex justify-between items-start gap-1 text-sm">
           <div>
-            <CardDescription>Upcoming Appoinments</CardDescription>
+            <CardDescription>Upcoming Appointments</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
               7
             </CardTitle>
           </div>
           <div>
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" />2 in this week
+              <TrendingUpIcon className="size-3" /> 2 in this week
             </Badge>
           </div>
         </CardHeader>
         <CardFooter className="flex justify-between items-start gap-1 text-sm">
-          <div className=" flex -space-x-3">
+          <div className="flex -space-x-3">
             <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarImage src="https://]github.com/shadcn.png" alt="@shadcn" />
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <Avatar>

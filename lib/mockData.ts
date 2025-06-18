@@ -184,6 +184,7 @@ export const residents = [
   export const houseList=[
     {name:"Rose",Residents:1,staff:20}, {name:"Comgal",Residents:1,staff:20}, {name:"Betheny",Residents:1,staff:20},
   ]
+  
  export const userManager = {
     id: "a1b2c3d4-e5f6-7890-abcd-1234567890ef",
     firstName: "Abi",

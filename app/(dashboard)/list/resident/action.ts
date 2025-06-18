@@ -2,7 +2,16 @@
 import { prisma } from "@/lib/db";
 import { User } from "@prisma/client";
 
-export async function fetchResident(user: User) {
+export async function fetchResident(user: User,houseId:string | null) {
+   if(houseId){
+    const residents=await prisma.resident.findMany({
+      where:{
+        unitId:houseId
+      }
+    })
+    return residents
+   }
+   
   const fullUser = await prisma.user.findUnique({
     where: { id: user.id },
     include: {

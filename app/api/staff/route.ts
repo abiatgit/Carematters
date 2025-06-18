@@ -34,19 +34,3 @@ export async function POST(req: Request) {
   }
 }
 
-// export async function GET(req:Request) {
-//   const body= await req.json()
-//   const id=body.id
-//   try{
-//   const fullUser = await prisma.user.findUnique({
-//     where: { id:id },
-//     include: {
-//       CareHome: {
-//         include:{
-//             units:true
-//         }
-//       },
-//     },
-//   });
-//   }
-// }

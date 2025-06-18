@@ -2,43 +2,32 @@
 import { prisma } from "@/lib/db";
 import { User } from "@prisma/client";
 
-export async function fetchHouse(user: User) {
+export async function fetchHouse(user: User | null) {
+  if (!user) return [];
 
-  const fullUser = await prisma.user.findUnique({
-    where: { id: user.id },
-    include: {
-      CareHome: {
-        include:{
-            units:true
-        }
-      },
-    },
-  });
-  if(!user )return[];
   if (user.role === "MANAGER") {
-    const careHome = fullUser?.CareHome[0]
+    const careHome = await prisma.careHome.findFirst({
+      where: {
+        createdBy:  user.id,
+      
+      },
+      include: {
+        units: true,
+      },
+    });
+
     if (!careHome) return [];
 
-   const unitIds=careHome.units.map((unit)=>unit.id)
-
-    if(unitIds.length===0)return[]
-
-    const staff = await prisma.user.findMany({
-      where: {
-        unitId: {
-          in: unitIds,
-        },
-      },
-    });
-    return staff
+    return careHome.units;
   } else {
-    const unitId = user.unitId;
-    if (!unitId) return[];
-    const staff = await prisma.user.findMany({
+    if (!user.unitId) return [];
+
+    const unit = await prisma.unit.findUnique({
       where: {
-        unitId,
+        id: user.unitId,
       },
     });
-    return staff;
+
+    return unit ? [unit] : [];
   }
 }

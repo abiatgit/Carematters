@@ -9,9 +9,6 @@ async function Page() {
 
   if (!session) redirect("/auth/sign-in");
   if (!session?.user) redirect("/auth/sign-in");
-
-
-
   return (
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2">
