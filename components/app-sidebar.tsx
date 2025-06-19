@@ -18,10 +18,24 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { fetchHouse } from "@/app/(dashboard)/list/houses/action";
 import { Unit } from "@prisma/client";
+import { useGlobalStore } from "@/store/globalStore";
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user, setUser } = useGlobalStore()
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await fetch('/api/get-current-user')
+
+      if (res.ok) {
+        const data = await res.json()
+        console.log("glog", data)
+        setUser(data.currentUser)
+      }
+    }
+
+    fetchUser()
+  }, [])
   const [houseList, setHouseList] = useState<Unit[]>([]);
-  const { data: session } = useSession();
-  const user = session?.user;
   const getHouse = async () => {
     try {
       const res = await fetchHouse(user);
@@ -33,7 +47,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   useEffect(() => {
     getHouse();
   }, [user]);
-
   const role: "TeamLeader" | "Manager" = "Manager";
   return (
     <Sidebar {...props} collapsible="icon">
@@ -52,7 +65,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 ) {
                   return;
                 }
-
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild className="h-10 px-6 text-md">

@@ -64,7 +64,7 @@ export function HouseSwitcher({
                     setHouseId(house.id);
                   }}
                 >
-                  {house.name}
+                  {house.name}{house.id}
                   {house.name === selectedHouse && (
                     <Check className="ml-auto" />
                   )}

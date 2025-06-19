@@ -20,9 +20,8 @@ import { Resident, User } from "@prisma/client";
 import { fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { useGlobalStore } from "@/store/globalStore";
 
-// Replace with real client-safe fetch functions or API routes
-async function fetchResidentsClient(resident: Resident,houseId : string | null) {
-  const res = await fetchResident(resident,houseId);
+async function fetchResidentsClient(houseId : string | null) {
+  const res = await fetchResident(houseId);
   return res;
 }
 
@@ -36,8 +35,8 @@ export function SectionCards() {
   const { data: session } = useSession();
   const user = session?.user;
   // const { houseId } = useGlobalStore();
-  // const fakeHouseid="1d535b1e-2527-493d-a3d1-7681b0bb4a91"
-    const fakeHouseid=null
+  const fakeHouseid="ca76a511-42f7-4249-b8c2-fc5bf94d8089"
+    // const fakeHouseid=null
 
   const [residents, setResidents] = useState([]);
   const [staff, setStaff] = useState([]);
@@ -47,7 +46,7 @@ export function SectionCards() {
    
     async function fetchData() {
       const [residentsData, staffData] = await Promise.all([
-        fetchResidentsClient(user,fakeHouseid),
+        fetchResidentsClient(fakeHouseid),
         fetchStaffClient(user),
       ]);
       setResidents(residentsData || []);
