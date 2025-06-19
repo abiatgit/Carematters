@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { items, houses, userManager } from "@/lib/mockData";
 import { HouseSwitcher } from "./HouseSwitcher";
 import {
@@ -15,27 +15,24 @@ import {
 } from "@/components/ui/sidebar";
 import { NavUser } from "./NavUser";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { fetchHouse } from "@/app/(dashboard)/list/houses/action";
 import { Unit } from "@prisma/client";
 import { useGlobalStore } from "@/store/globalStore";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, setUser } = useGlobalStore()
+  const [houseList, setHouseList] = useState<Unit[]>([]);
   useEffect(() => {
     const fetchUser = async () => {
       const res = await fetch('/api/get-current-user')
-
       if (res.ok) {
         const data = await res.json()
-        console.log("glog", data)
         setUser(data.currentUser)
       }
     }
-
     fetchUser()
   }, [])
-  const [houseList, setHouseList] = useState<Unit[]>([]);
+
   const getHouse = async () => {
     try {
       const res = await fetchHouse(user);
@@ -51,7 +48,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props} collapsible="icon">
       <SidebarHeader>
-        <HouseSwitcher houses={houseList} defaultHouse={houses[0].name} />
+        <HouseSwitcher houses={houseList} />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

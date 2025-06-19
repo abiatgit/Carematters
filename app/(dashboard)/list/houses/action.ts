@@ -9,7 +9,6 @@ export async function fetchHouse(user: User | null) {
     const careHome = await prisma.careHome.findFirst({
       where: {
         createdBy:  user.id,
-      
       },
       include: {
         units: true,
@@ -21,13 +20,11 @@ export async function fetchHouse(user: User | null) {
     return careHome.units;
   } else {
     if (!user.unitId) return [];
-
     const unit = await prisma.unit.findUnique({
       where: {
         id: user.unitId,
       },
     });
-
     return unit ? [unit] : [];
   }
 }

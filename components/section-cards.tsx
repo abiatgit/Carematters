@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { Sparkles, TrendingUpIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -14,13 +13,13 @@ import {
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
 import { Resident, User } from "@prisma/client";
 import { fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { useGlobalStore } from "@/store/globalStore";
 
-async function fetchResidentsClient(houseId : string | null) {
+async function fetchResidentsClient(houseId: string | null) {
+  console.log("Iam gonna fetch residents",houseId)
   const res = await fetchResident(houseId);
   return res;
 }
@@ -32,34 +31,28 @@ async function fetchStaffClient(user: User) {
 }
 
 export function SectionCards() {
-  const { data: session } = useSession();
-  const user = session?.user;
-  // const { houseId } = useGlobalStore();
-  const fakeHouseid="ca76a511-42f7-4249-b8c2-fc5bf94d8089"
-    // const fakeHouseid=null
-
-  const [residents, setResidents] = useState([]);
-  const [staff, setStaff] = useState([]);
+  const { user } = useGlobalStore()
+  const { houseId } = useGlobalStore();
+  const [residents, setResidents] = useState<Resident[]>([]);
+  const [staff, setStaff] = useState<User[]>([]);
 
   useEffect(() => {
-    if (!user) return;
-   
+   if (!user || !houseId) return;
     async function fetchData() {
       const [residentsData, staffData] = await Promise.all([
-        fetchResidentsClient(fakeHouseid),
-        fetchStaffClient(user),
+        fetchResidentsClient(houseId),
+        fetchStaffClient(user!),
       ]);
       setResidents(residentsData || []);
       setStaff(staffData || []);
+      console.log("Resident data",residents)
     }
-
     fetchData();
-  }, [user]);
+  }, [user,houseId]);
 
   const totalResidents = residents.length;
   const maleResidents = residents.filter((r) => r.gender === "male").length;
   const femaleResidents = totalResidents - maleResidents;
-
   const totalStaff = staff.length;
   const maleStaff = staff.filter((s) => s.gender === "male").length;
   const femaleStaff = totalStaff - maleStaff;

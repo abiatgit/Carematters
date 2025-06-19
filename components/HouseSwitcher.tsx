@@ -12,26 +12,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { userManager } from "@/lib/mockData";
 import { useGlobalStore } from "@/store/globalStore";
 import { Unit } from "@prisma/client";
-
 export function HouseSwitcher({
   houses,
-  defaultHouse,
 }: {
-  houses: Unit[];
-  defaultHouse: string;
+  houses: Unit[]
 }) {
   const { setHouseId } = useGlobalStore();
-  const currentUser = userManager;
-  const fileterdHouses =
-    currentUser.role === "manager"
-      ? houses
-      : houses.filter((item) => item.name === currentUser?.house);
-  const [selectedHouse, setSelectedHouse] = React.useState(
-    currentUser.role === "manager" ? defaultHouse : fileterdHouses[0].name
-  );
+  const { user } = useGlobalStore()
+  const [selectedHouse, setSelectedHouse] = React.useState<string>(houses[0]?.name);
+
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -55,7 +47,7 @@ export function HouseSwitcher({
             className="w-[--radix-dropdown-menu-trigger-width]"
             align="end"
           >
-            {fileterdHouses.map((house, index) => {
+            {houses.map((house, index) => {
               return (
                 <DropdownMenuItem
                   key={index}
