@@ -25,7 +25,6 @@ model User {
   deletedAt     DateTime?
   onboarded     Boolean         @default(false)
   gender        Gender?
-
   CareHome      CareHome[]
 }
 

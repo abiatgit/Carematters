@@ -14,48 +14,65 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
-import { Resident, User } from "@prisma/client";
+import {  Resident, User } from "@prisma/client";
 import { fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { useGlobalStore } from "@/store/globalStore";
 
+type MinimalCareHome = {
+  id: string;
+  name?: string;
+} | null;
 async function fetchResidentsClient(houseId: string | null) {
-  console.log("Iam gonna fetch residents",houseId)
   const res = await fetchResident(houseId);
   return res;
 }
-
-async function fetchStaffClient(user: User) {
-  const res = await fetchStaff(user);
-  console.log("staff", res);
+async function fetchStaffClient(houseId:string | null) {
+  const res = await fetchStaff(houseId);
   return res;
 }
+
 
 export function SectionCards() {
   const { user } = useGlobalStore()
   const { houseId } = useGlobalStore();
   const [residents, setResidents] = useState<Resident[]>([]);
   const [staff, setStaff] = useState<User[]>([]);
-
-  useEffect(() => {
-   if (!user || !houseId) return;
-    async function fetchData() {
-      const [residentsData, staffData] = await Promise.all([
-        fetchResidentsClient(houseId),
-        fetchStaffClient(user!),
-      ]);
-      setResidents(residentsData || []);
-      setStaff(staffData || []);
-      console.log("Resident data",residents)
-    }
-    fetchData();
-  }, [user,houseId]);
-
+  const [allhouses, setAllhouses] = useState<any[]>([]);
+  const{ careHome}=useGlobalStore()
   const totalResidents = residents.length;
   const maleResidents = residents.filter((r) => r.gender === "male").length;
   const femaleResidents = totalResidents - maleResidents;
   const totalStaff = staff.length;
   const maleStaff = staff.filter((s) => s.gender === "male").length;
   const femaleStaff = totalStaff - maleStaff;
+
+  async function fetchAllHouse(careHome: MinimalCareHome) {
+  if (!careHome || !careHome.id) return;
+  try {
+  const res = await fetch(`/api/houses?careHomeId=${encodeURIComponent(careHome.id)}`, {
+      method: "GET",
+    });
+    const data = await res.json();
+    setAllhouses(data.houses)
+    console.log("all houses", data);
+  } catch (error) {
+    console.error("Failed to fetch houses:", error);
+  }
+}
+  
+  useEffect(() => {
+    if (!user || !houseId) return;
+    async function fetchData() {
+      const [residentsData, staffData] = await Promise.all([
+        fetchResidentsClient(houseId),
+        fetchStaffClient(houseId),
+      ]);
+      setResidents(residentsData || []);
+      setStaff(staffData || []);
+    }
+    fetchData();
+    fetchAllHouse(careHome)
+  }, [user, houseId,careHome,houseId]);
 
   return (
     <div className="@5xl/main:grid-cols-2 @7xl/main:grid-cols-4 grid grid-cols-1 gap-2 px-4 lg:px-6">
@@ -95,7 +112,6 @@ export function SectionCards() {
           </div>
         </CardFooter>
       </Card>
-
       {/* Staff Card */}
       <Card className="@container/card border border-dashed">
         <CardHeader className="flex justify-between items-start gap-1 text-sm">
@@ -127,40 +143,6 @@ export function SectionCards() {
           </div>
         </CardFooter>
       </Card>
-
-      {/* Active Houses */}
-      <Card className="@container/card border border-dashed">
-        <CardHeader className="flex justify-between items-start gap-1 text-sm">
-          <div>
-            <CardDescription>Active Houses</CardDescription>
-            <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-              03
-            </CardTitle>
-          </div>
-          <div>
-            <Badge
-              variant="outline"
-              className="flex gap-1 rounded-lg text-xs text-violet-600"
-            >
-              <Sparkles /> Upgrade to pro
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardFooter className="flex justify-between items-start gap-1 text-sm">
-          <div>
-            <div className="line-clamp-1 flex gap-2 font-medium">
-              Total Houses <TrendingUpIcon className="size-4" />
-            </div>
-            <div className="text-muted-foreground">You can create 7 more</div>
-          </div>
-          <div>
-            <Button className="bg-green-700 hover:bg-green-600">
-              <Link href={"/list/houses"}>Create One</Link>
-            </Button>
-          </div>
-        </CardFooter>
-      </Card>
-
       {/* Appointments */}
       <Card className="@container/card border border-dashed">
         <CardHeader className="flex justify-between items-start gap-1 text-sm">
@@ -198,6 +180,42 @@ export function SectionCards() {
           </div>
         </CardFooter>
       </Card>
+      {/* Active Houses */}
+      <Card className="@container/card border border-dashed">
+        <CardHeader className="flex justify-between items-start gap-1 text-sm">
+          <div>
+            <CardDescription>Active Houses</CardDescription>
+            <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
+         {allhouses.length}
+            </CardTitle>
+          </div>
+          <div>
+            <Badge
+              variant="outline"
+              className="flex gap-1 rounded-lg text-xs text-violet-600"
+            >
+              <Sparkles /> Upgrade to pro
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardFooter className="flex justify-between items-start gap-1 text-sm">
+          <div>
+            <div className="line-clamp-1 flex gap-2 font-medium">
+              Total Houses <TrendingUpIcon className="size-4" />
+            </div>
+            <div className="text-muted-foreground">You can create 7 more</div>
+          </div>
+          <div>
+            <Button className="bg-green-700 hover:bg-green-600">
+              <Link href={"/list/houses"}>Create One</Link>
+            </Button>
+          </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 }
+function setHouses(houses: any) {
+  throw new Error("Function not implemented.");
+}
+

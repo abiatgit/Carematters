@@ -23,7 +23,6 @@ import { Plus } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import CreateResidentForm from "@/components/forms/Residents/CreateResidentForm";
-// import { residents } from "@/lib/mockData";
 import Link from "next/link";
 import {
   Dialog,
@@ -34,29 +33,31 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { User } from "@prisma/client";
+import { Resident, User } from "@prisma/client";
 import { useSession } from "next-auth/react";
+import { useGlobalStore } from "@/store/globalStore";
+import { fetchResident } from "@/app/(dashboard)/list/resident/action";
 const Page = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [residents, setResident] = useState<User[]>([]);
+  const [residents, setResident] = useState<Resident[]>([]);
   const [unitFilter, setUnitFilter] = useState("all");
   const [genderFilter, setGenderFilter] = useState("all");
-  const {data:session} = useSession();
-  const userid=session?.user?.id 
-  console.log("user Id",userid)
-  const fetchResident = async () => {
-    const res = await fetch("/api/resident", {
-      method: "GET",
-    });
-    const data = await res.json();
-    console.log("response", data.residents);
-    setResident(data.residents);
-  };
+  const { data: session } = useSession();
+  const userid = session?.user?.id
+  const { houseId } = useGlobalStore();
 
+  async function fetchResidentsClient(houseId: string | null) {
+    const res = await fetchResident(houseId)
+    setResident(res!)
+    console.log("residents",residents)
+  }
+ 
   useEffect(() => {
-    fetchResident();
-  }, []);
+  if (houseId) {
+    fetchResidentsClient(houseId);
+  }
+  }, [houseId]);
   console.log("response resident", residents);
   const filteredResident = residents.filter((singleResident) => {
     const searchMatchResident = singleResident
@@ -137,13 +138,13 @@ const Page = () => {
         {filteredResident.map((resident) => {
           return (
             <Card className="px-6" key={resident.id}>
-              <Link href={"/list/resident/32"}>
+              <Link href={`/list/resident/${resident.id}`}>
                 <div className="flex gap-5 items-center">
                   <div className="w-15 h-15 rounded-full relative overflow-hidden ">
                     <Image
                       alt=" "
                       src={
-                        resident.image ??
+                        resident.photo ||
                         "https://img.freepik.com/premium-photo/young-man-isolated-blue_1368-124991.jpg?semt=ais_hybrid&w=740"
                       }
                       fill

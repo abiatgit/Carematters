@@ -21,16 +21,29 @@ import { useGlobalStore } from "@/store/globalStore";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, setUser } = useGlobalStore()
+  const { setCareHome } = useGlobalStore()
   const [houseList, setHouseList] = useState<Unit[]>([]);
   useEffect(() => {
-    const fetchUser = async () => {
-      const res = await fetch('/api/get-current-user')
-      if (res.ok) {
-        const data = await res.json()
-        setUser(data.currentUser)
+    const fetchData = async () => {
+      try {
+        const [userRes, careHomeRes] = await Promise.all([
+          fetch('/api/get-current-user'),
+          fetch('/api/get-current-carehome'),
+        ])
+        if (userRes.ok) {
+          const userData = await userRes.json()
+          setUser(userData?.currentUser)
+        }
+        if (careHomeRes.ok) {
+          const data = await careHomeRes.json()
+          setCareHome(data?.careHome)
+        }
+      }
+      catch (error) {
+        console.error("Error fetching data:", error);
       }
     }
-    fetchUser()
+    fetchData()
   }, [])
 
   const getHouse = async () => {

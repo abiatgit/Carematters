@@ -5,28 +5,26 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   const body = await req.json();
   try {
-    const { name, email, password, role, unitId, photoURL, onboarded,gender } = body;
-
-
-    const hashPassword=await bcrypt.hash(password,10)
-    console.log("new staff", name, email,hashPassword, role, unitId, photoURL,onboarded,gender )
-    const staff=await prisma.user.create({
-        data:{
-            name:name,
-            email:email,
-            password:hashPassword,
-            role:role,
-            unit:{
-                connect:{
-                    id:unitId
-                }
-            },
-            image:photoURL,
-            onboarded:onboarded,
-            gender :gender
-        }
+    const { name, email, password, role, unitId, photoURL, onboarded, gender } = body;
+    const hashPassword = await bcrypt.hash(password, 10)
+    console.log("new staff", name, email, hashPassword, role, unitId, photoURL, onboarded, gender)
+    const staff = await prisma.user.create({
+      data: {
+        name: name,
+        email: email,
+        password: hashPassword,
+        role: role,
+        unit: {
+          connect: {
+            id: unitId
+          }
+        },
+        image: photoURL,
+        onboarded: onboarded,
+        gender: gender
+      }
     })
- 
+
     return NextResponse.json({ success: true, staff });
   } catch (error) {
     console.log(error)

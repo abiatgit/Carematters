@@ -28,6 +28,7 @@ import {
 import { useEffect, useState } from "react";
 import { Unit } from "@prisma/client";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import { useGlobalStore } from "@/store/globalStore";
 
 export const createResidentSchema = z.object({
   firstName: z
@@ -49,17 +50,24 @@ const CreateResidentForm = ({
 }: {
   setOpen: (open: boolean) => void;
 }) => {
+    const { careHome } = useGlobalStore()
   const [unitList, setUnitList] = useState<Unit[] | null>(null);
-
-  const fetchUnit = async () => {
-    const res = await fetch("/api/houses", {
+  type MinimalCareHome = {
+    id: string;
+    name?: string;
+  } | null;
+  const fetchUnit = async (careHome: MinimalCareHome) => {
+    if (!careHome || !careHome.id) return;
+    const res = await fetch(`/api/houses?careHomeId=${encodeURIComponent(careHome.id)}`, {
       method: "GET",
     });
-    const data = await res.json();
-    setUnitList(data.houses);
+    const data = await res?.json();
+    console.log("DDDATA", data)
+    setUnitList(data?.houses);
+    console.log("UNIT", data.houses);
   };
   useEffect(() => {
-    fetchUnit();
+    fetchUnit(careHome);
   }, []);
   async function onSubmit(values: z.infer<typeof createResidentSchema>) {
     const res = await fetch("/api/resident", {
@@ -71,11 +79,11 @@ const CreateResidentForm = ({
     });
     const data = await res.json();
     setOpen(false);
-console.log("resident",data)
+    console.log("resident", data)
     if (data.success) {
-       showSuccessToast("New resident created")
+      showSuccessToast("New resident created")
     }
-    else{
+    else {
       showErrorToast("Error creating resident")
     }
   }

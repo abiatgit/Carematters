@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-
 import {
   Form,
   FormControl,
@@ -13,12 +12,13 @@ import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
-  
+
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import { useGlobalStore } from "@/store/globalStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Unit } from "@prisma/client";
 import React, { useEffect, useState } from "react";
@@ -43,20 +43,28 @@ export const staffSchema = z.object({
 });
 
 
+type MinimalCareHome = {
+  id: string;
+  name?: string;
+} | null;
 
 const CreateStaffForm = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
   const [unitList, setUnitList] = useState<Unit[] | null>();
+  const { careHome } = useGlobalStore()
 
-  const fetchUnit = async () => {
-    const res = await fetch("/api/houses", {
+  const fetchUnit = async (careHome: MinimalCareHome) => {
+
+    if (!careHome || !careHome.id) return;
+    const res = await fetch(`/api/houses?careHomeId=${encodeURIComponent(careHome.id)}`, {
       method: "GET",
     });
     const data = await res?.json();
+    console.log("DDDATA", data)
     setUnitList(data?.houses);
     console.log("UNIT", data.houses);
   };
   useEffect(() => {
-    fetchUnit();
+    fetchUnit(careHome);
   }, []);
 
   const form = useForm<z.infer<typeof staffSchema>>({
@@ -75,9 +83,9 @@ const CreateStaffForm = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
     });
     const data = await res.json();
     setOpen(false);
-    console.log(data);
+
     if (data.success) {
-      showSuccessToast( "New staff created");
+      showSuccessToast("New staff created");
     } else {
       showErrorToast("Error crating staff")
     }

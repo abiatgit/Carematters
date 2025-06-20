@@ -22,7 +22,12 @@ export function HouseSwitcher({
   const { setHouseId } = useGlobalStore();
   const { user } = useGlobalStore()
   const [selectedHouse, setSelectedHouse] = React.useState<string>(houses[0]?.name);
-
+  React.useEffect(() => {
+    if (houses.length > 0) {
+      setSelectedHouse(houses[0].name);
+      setHouseId(houses[0].id);
+    }
+  }, [houses, setHouseId]);
 
   return (
     <SidebarMenu>
@@ -56,7 +61,7 @@ export function HouseSwitcher({
                     setHouseId(house.id);
                   }}
                 >
-                  {house.name}{house.id}
+                  {house.name}
                   {house.name === selectedHouse && (
                     <Check className="ml-auto" />
                   )}
