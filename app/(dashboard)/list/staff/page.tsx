@@ -19,8 +19,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectLabel
 } from "@/components/ui/select";
-import { SelectLabel } from "@radix-ui/react-select";
+
 import Link from "next/link";
 import {
   Dialog,
@@ -32,18 +33,22 @@ import {
 } from "@/components/ui/dialog";
 import CreateStaffForm from "@/components/forms/Staff/CreateStaffForm";
 import { Badge } from "@/components/ui/badge";
-import { fetchStaff } from "./action";
-import { useSession } from "next-auth/react";
 import { User } from "@prisma/client";
+import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
+import { useGlobalStore } from "@/store/globalStore";
 
 export default function StaffPage() {
-  const { data: session } = useSession();
   const [search, setSearch] = useState("");
   const [unitFilter, setUnitFilter] = useState("all");
   const [positionFilter, setPositionFilter] = useState("all");
   const [open, setOpen] = useState(false);
+  const { houseId } = useGlobalStore();
   const [allStaff, setAllStaff] = useState<User[]>([]);
 
+  async function fetchStaffClient(houseId: string | null) {
+    const res = await fetchStaff(houseId);
+    setAllStaff(res!)
+  }
   const filteredStaff = allStaff.filter((singlestaff) => {
     const matchesSearch = singlestaff.name
       ?.toLowerCase()
@@ -57,24 +62,11 @@ export default function StaffPage() {
     return matchesSearch && matchesUnit && positionSearch;
   });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getStaff = async () => {
-    if (!session?.user?.id) return;
-    
-    // Fetch the full user data from the database
-    const response = await fetch(`/api/user/${session.user.id}`);
-    const userData = await response.json();
-    
-    if (userData.user) {
-      const res = await fetchStaff(userData.user);
-      setAllStaff(res);
-      console.log("all staff", res);
-    }
-  };
-
   useEffect(() => {
-    getStaff();
-  }, [session]);
+    if (houseId) {
+      fetchStaffClient(houseId);
+    }
+  }, [houseId]);
 
   return (
     <div className="">
@@ -156,7 +148,7 @@ export default function StaffPage() {
                   <div className="w-15 h-15 rounded-full relative overflow-hidden ">
                     <Image
                       alt=" "
-                      src={"https://github.com/shadcn.png"}
+                      src={"https://upload.wikimedia.org/wikipedia/commons/c/c8/Richard_Attenborough_%283x4_cropped%29.jpg"}
                       fill
                       className="object-cover"
                     />
