@@ -16,10 +16,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+
+import { Appoinment, Role } from "@prisma/client";
+import { useEffect, useState } from "react";
+import { useGlobalStore } from "@/store/globalStore";
+import { fetchAppoinment } from "@/app/(dashboard)/list/appoinments/action";
 import AppoinmentCards from "./appoinmentsCard/AppoinmentCards";
-import { appointments } from "./appoinmentsCard/data";
-import { Role } from "@prisma/client";
-import { useState } from "react";
 
 const ITEMS_PER_PAGE = 6;
 export type SafeUser = {
@@ -30,6 +32,17 @@ export type SafeUser = {
 };
 
 export function MainListArea() {
+  const [appointments, setAppointments] = useState<Appoinment[]>([])
+  const { houseId } = useGlobalStore()
+  async function fetchAppoinmentClient(houseId: string | null) {
+    const res = await fetchAppoinment(houseId);
+    setAppointments(res!)
+    return res;
+  }
+
+  useEffect(() => {
+    fetchAppoinmentClient(houseId)
+  }, [houseId])
 
   const [currentPage, setCurrentPage] = useState(1);
 

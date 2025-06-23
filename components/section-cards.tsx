@@ -14,9 +14,10 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
-import {  Resident, User } from "@prisma/client";
+import { Appoinment, Resident, User } from "@prisma/client";
 import { fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { useGlobalStore } from "@/store/globalStore";
+import { fetchAppoinment } from "@/app/(dashboard)/list/appoinments/action";
 
 type MinimalCareHome = {
   id: string;
@@ -26,19 +27,23 @@ async function fetchResidentsClient(houseId: string | null) {
   const res = await fetchResident(houseId);
   return res;
 }
-async function fetchStaffClient(houseId:string | null) {
+async function fetchStaffClient(houseId: string | null) {
   const res = await fetchStaff(houseId);
   return res;
 }
-
-
+async function fetchAppoinmentClient(houseId: string | null) {
+  const res = await fetchAppoinment(houseId);
+  return res;
+}
 export function SectionCards() {
   const { user } = useGlobalStore()
   const { houseId } = useGlobalStore();
   const [residents, setResidents] = useState<Resident[]>([]);
   const [staff, setStaff] = useState<User[]>([]);
+  const [appoinments, setAppoinment] = useState<Appoinment[]>([])
   const [allhouses, setAllhouses] = useState<any[]>([]);
-  const{ careHome}=useGlobalStore()
+  const { careHome } = useGlobalStore()
+
   const totalResidents = residents.length;
   const maleResidents = residents.filter((r) => r.gender === "male").length;
   const femaleResidents = totalResidents - maleResidents;
@@ -47,32 +52,34 @@ export function SectionCards() {
   const femaleStaff = totalStaff - maleStaff;
 
   async function fetchAllHouse(careHome: MinimalCareHome) {
-  if (!careHome || !careHome.id) return;
-  try {
-  const res = await fetch(`/api/houses?careHomeId=${encodeURIComponent(careHome.id)}`, {
-      method: "GET",
-    });
-    const data = await res.json();
-    setAllhouses(data.houses)
-    console.log("all houses", data);
-  } catch (error) {
-    console.error("Failed to fetch houses:", error);
+    if (!careHome || !careHome.id) return;
+    try {
+      const res = await fetch(`/api/houses?careHomeId=${encodeURIComponent(careHome.id)}`, {
+        method: "GET",
+      });
+      const data = await res.json();
+      setAllhouses(data.houses)
+      console.log("all houses", data);
+    } catch (error) {
+      console.error("Failed to fetch houses:", error);
+    }
   }
-}
-  
+
   useEffect(() => {
     if (!user || !houseId) return;
     async function fetchData() {
-      const [residentsData, staffData] = await Promise.all([
+      const [residentsData, staffData, appoinmentData] = await Promise.all([
         fetchResidentsClient(houseId),
         fetchStaffClient(houseId),
+        fetchAppoinmentClient(houseId)
       ]);
       setResidents(residentsData || []);
       setStaff(staffData || []);
+      setAppoinment(appoinmentData || [])
     }
     fetchData();
     fetchAllHouse(careHome)
-  }, [user, houseId,careHome,houseId]);
+  }, [user, houseId, careHome, houseId,]); {/* removed appoinment form array due to repeated rendering*/ }
 
   return (
     <div className="@5xl/main:grid-cols-2 @7xl/main:grid-cols-4 grid grid-cols-1 gap-2 px-4 lg:px-6">
@@ -105,10 +112,12 @@ export function SectionCards() {
                 : "No recent joiners"}
             </div>
           </div>
-          <div>
-            <Button className="bg-green-700 hover:bg-green-600">
-              <Link href={"/list/resident"}>See all</Link>
-            </Button>
+          <div >
+            <Link href={"/list/resident"}>
+              <Button className="bg-green-700 hover:bg-green-600">
+                See all
+              </Button>
+            </Link>
           </div>
         </CardFooter>
       </Card>
@@ -149,7 +158,7 @@ export function SectionCards() {
           <div>
             <CardDescription>Upcoming Appointments</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-              7
+              {appoinments.length}
             </CardTitle>
           </div>
           <div>
@@ -186,7 +195,7 @@ export function SectionCards() {
           <div>
             <CardDescription>Active Houses</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-         {allhouses.length}
+              {allhouses.length}
             </CardTitle>
           </div>
           <div>
