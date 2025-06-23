@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "../ui/card";
 import Image from "next/image";
-import { Badge } from "../ui/badge";
-import { Appoinment } from "@prisma/client";
+import { Badge } from "../ui/badge";  
+import { EnrichedAppointment } from "@/app/(dashboard)/list/appoinments/action";
+import { SkeletonDemo } from "../skelton";
 
-const AppoinmentCards = ({data}:{data:Appoinment[]}) => {
-console.log("dataAppoinment",data)
-  return (
+interface AppointmentCardsProps {
+  data: EnrichedAppointment[];
+}
+
+const AppoinmentCards = ({ data }: AppointmentCardsProps) => {
+return data.length==0?( <div className="flex flex-col gap-5">
+  <SkeletonDemo/>
+  <SkeletonDemo/>
+  <SkeletonDemo/>
+</div>) :
+(
     <div className="flex flex-col gap-3 ">
       {data?.map((item, index) => (
         <Card
@@ -24,9 +33,9 @@ console.log("dataAppoinment",data)
 
             <div className="mx-3">
               <p className="text-sm font-medium leading-none">
-                {item.resident?.name}
+                {item?.residentName}
               </p>
-              <p className="text-sm text-muted-foreground ">{item.unit.name}</p>
+              <p className="text-sm text-muted-foreground ">{item?.unitName}</p>
             </div>
           </div>
 
