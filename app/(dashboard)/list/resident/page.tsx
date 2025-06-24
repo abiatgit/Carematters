@@ -50,13 +50,19 @@ const Page = () => {
   async function fetchResidentsClient(houseId: string | null) {
     const res = await fetchResident(houseId)
     setResident(res!)
-    console.log("residents",residents)
+    console.log("residents", residents)
   }
- 
+  const refreshResidentCard = async () => {
+    if (houseId) {
+      const res = await fetchResident(houseId);
+      setResident(res!);
+    }
+  }
+
   useEffect(() => {
-  if (houseId) {
-    fetchResidentsClient(houseId);
-  }
+    if (houseId) {
+      fetchResidentsClient(houseId);
+    }
   }, [houseId]);
   console.log("response resident", residents);
   const filteredResident = residents.filter((singleResident) => {
@@ -130,7 +136,7 @@ const Page = () => {
                 Add Resident
               </Button>
             </SheetTrigger>
-            <CreateResidentForm setOpen={setOpen} />
+            <CreateResidentForm setOpen={setOpen} onResidentCreated={refreshResidentCard} />
           </Sheet>
         </div>
       </div>
@@ -141,14 +147,14 @@ const Page = () => {
               <Link href={`/list/resident/${resident.id}`}>
                 <div className="flex gap-5 items-center">
                   <div className="w-15 h-15 rounded-full relative overflow-hidden ">
-                    <Image
+                    <img
                       alt=" "
+                      // Added w-full h-full to make image fill the container
+                      className="w-full h-full object-cover"
                       src={
                         resident.photo ||
                         "https://img.freepik.com/premium-photo/young-man-isolated-blue_1368-124991.jpg?semt=ais_hybrid&w=740"
                       }
-                      fill
-                      className="object-cover"
                     />
                   </div>
                   <div>

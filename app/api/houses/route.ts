@@ -14,7 +14,7 @@ export async function POST(req: Request) {
         careHomeId: carehomeId?.id,
       },
     });
-    return NextResponse.json({ succes: true, house });
+    return NextResponse.json({ success: true, house });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ success: false, error });

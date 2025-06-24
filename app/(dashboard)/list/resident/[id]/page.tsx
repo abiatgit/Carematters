@@ -11,7 +11,6 @@ import {
 import AppoinmentCards from "@/components/appoinmentsCard/AppoinmentCards";
 import { Progress } from "@/components/ui/progress";
 import MedsTable from "@/components/medsTable/MedsTable";
-import { IncidetnChart } from "@/components/incidentChart/incidentChart";
 import { Button } from "@/components/ui/button";
 import { Folder, Pencil, Plus } from "lucide-react";
 import {
@@ -22,6 +21,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Dialog } from "@/components/ui/dialog";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import { CreateIncidentFrom } from "@/components/forms/incidentreport/CreateIncident";
+import { IncidetnChart } from "@/components/incidentChart/incidentChart";
+
 
 const appointments = [
   {
@@ -76,25 +80,25 @@ const SingelResidentPage = () => {
         <div className="w-full xl:w-1/3 space-y-6">
           {/*User badges*/}
           <div className="border border-dashed p-4 rounded-l-lg flex-row space-y-2 ">
-         <div className="flex items-center justify-between">
-             <h1 className="text-xl font-semibold">Name : {"Mr.John Doe"}</h1>
-            <Sheet>
-              <SheetTrigger>
-                <Button variant={"outline"} size={"icon"}>
-                  <Pencil></Pencil>
-                </Button>
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>Are you absolutely sure?</SheetTitle>
-                  <SheetDescription>
-                    This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
-                  </SheetDescription>
-                </SheetHeader>
-              </SheetContent>
-            </Sheet>
-         </div>
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl font-semibold">Name : {"Mr.John Doe"}</h1>
+              <Sheet>
+                <SheetTrigger>
+                  <Button variant={"outline"} size={"icon"}>
+                    <Pencil></Pencil>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Are you absolutely sure?</SheetTitle>
+                    <SheetDescription>
+                      This action cannot be undone. This will permanently delete
+                      your account and remove your data from our servers.
+                    </SheetDescription>
+                  </SheetHeader>
+                </SheetContent>
+              </Sheet>
+            </div>
 
             <p className="text-foreground text-sm">
               Date of Birth : {"13/03/1965"}
@@ -150,7 +154,13 @@ const SingelResidentPage = () => {
           {/*User Card*/}
           <div className="border border-dashed flex gap-4 p-4 rounded-l-lg">
             <Button>Daily Reoprt</Button>
-            <Button>Incidet Reoprt</Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button>Incidet Reoprt</Button>
+              </DialogTrigger>
+          <CreateIncidentFrom/>
+            </Dialog>
+
             <Button>Food & Fluid</Button>
             <Button>Body Map</Button>
             <Button>

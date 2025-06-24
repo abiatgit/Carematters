@@ -1,4 +1,4 @@
-
+"use client"
 import {
   Card,
   CardContent,
@@ -6,15 +6,43 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import React from "react";
-import { houseList } from "@/lib/mockData";
+import React, { useEffect, useState } from "react";
 import { CreateHouse } from "@/components/forms/houses/createHouse";
 import { Badge } from "@/components/ui/badge";
+import { useGlobalStore } from "@/store/globalStore";
+type MinimalCareHome = {
+  id: string;
+  name?: string;
+} | null;
+
 
 const Page = () => {
+  const { careHome } = useGlobalStore()
+  const [allhouses, setAllhouses] = useState<any[]>([]);
+
+  async function fetchAllHouse(careHome: MinimalCareHome) {
+    console.log("all houses list page");
+    if (!careHome || !careHome.id) return;
+    try {
+      const res = await fetch(`/api/houses?careHomeId=${encodeURIComponent(careHome.id)}`, {
+        method: "GET",
+      });
+      const data = await res.json();
+      setAllhouses(data.houses)
+      console.log("all houses list page", data);
+    } catch (error) {
+      console.error("Failed to fetch houses:", error);
+    }
+  }
+  const refreshHouses = () => {
+    fetchAllHouse(careHome)
+  };
+  useEffect(() => {
+    fetchAllHouse(careHome)
+  }, [])
   return (
     <div className="w-full grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-4 ">
-      {houseList.map((house) => {
+      {allhouses.map((house) => {
         return (
           <Card
             className="flex items-center justify-center p-3 rounded-sm"
@@ -37,7 +65,7 @@ const Page = () => {
       })}
       <Card className="flex items-center justify-center p-3 rounded-sm">
         <CardContent>
-          <CreateHouse />
+          <CreateHouse onHouseCreated={refreshHouses} />
         </CardContent>
       </Card>
     </div>

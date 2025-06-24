@@ -20,16 +20,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useGlobalStore } from "@/store/globalStore";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import { Plus } from "lucide-react";
 
 const createHouseSchema = z.object({
   name: z.string(),
 });
+interface CreateHouseProp{
+  onHouseCreated?:()=>void
+}
 
-export function CreateHouse() {
-  const { setHouse } = useGlobalStore();
+export function CreateHouse({onHouseCreated}:CreateHouseProp) {
+
   const [open, setOpen] = useState(false);
   const handleSubmit = async (value: z.infer<typeof createHouseSchema>) => {
     const { name } = value;
@@ -42,10 +44,9 @@ export function CreateHouse() {
     });
     const data = await res.json();
     setOpen(false);
-    if (data.succes) {
-      setHouse(data.house);
-
+    if (data.success) {
       showSuccessToast("New house created");
+      onHouseCreated?.(); 
     } else {
       showErrorToast("error creating new house");
     }

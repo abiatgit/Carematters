@@ -176,8 +176,7 @@ export const residents = [
       title: "All Houses",
       url: "/list/houses",
       icon: House,
-    }
-    
+    },   
   ];
   export const houses= [{name:"All Houses"},{name:"Rose"}, {name:"Comgal"}, {name:"Betheny"}]
   

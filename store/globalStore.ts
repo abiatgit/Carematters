@@ -1,5 +1,6 @@
 import { User } from "@prisma/client";
 import { create } from "zustand";
+import { persist } from 'zustand/middleware'
 
 type CareHome = {
   id: string;
@@ -15,15 +16,24 @@ type GlobalState = {
   setCareHome: (careHome: CareHome) => void;
   resetState: () => void;
 };
-export const useGlobalStore = create<GlobalState>((set) => ({
-  user: null,
-  house: null,
-  careHome: null,
-  houseId: null,
-  setHouseId: (houseId: string) => set({ houseId }),
-  setUser: (user) => set({ user }),
-  setCareHome: (careHome) => set({ careHome }),
-  resetState: () => set({ user: null, careHome: null }),
-}));
-
-
+export const useGlobalStore = create<GlobalState>()(
+  persist(
+    (set) => ({
+      user: null,
+      house: null,
+      careHome: null,
+      houseId: null,
+      setHouseId: (houseId: string) => set({ houseId }),
+      setUser: (user) => set({ user }),
+      setCareHome: (careHome) => set({ careHome }),
+      resetState: () => set({ user: null, careHome: null }),
+    }),
+    {
+      name: 'global-storage',
+      partialize: (state) => ({
+        user: state.user,
+        houseId: state.houseId,
+      }),
+    }
+  )
+)

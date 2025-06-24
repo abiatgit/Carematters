@@ -32,7 +32,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased scroll-smooth`}
       >
-;
             <SessionProvider>{children}</SessionProvider>
         <Toaster position="top-right"/>
       </body>

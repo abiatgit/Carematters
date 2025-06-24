@@ -216,7 +216,7 @@ export function SectionCards() {
           </div>
           <div>
             <Button className="bg-green-700 hover:bg-green-600">
-              <Link href={"/list/houses"}>Create One</Link>
+              <Link href={"/list/houses"}>Add New</Link>
             </Button>
           </div>
         </CardFooter>
