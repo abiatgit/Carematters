@@ -64,7 +64,7 @@ const CreateResidentForm = ({
   const [isLoadingUnits, setIsLoadingUnits] = useState(false);
   const [unitsFetched, setUnitsFetched] = useState(false);
 
-  const fetchUnits = useCallback(async (careHome: MinimalCareHome) => {
+ const fetchUnits = useCallback(async (careHome: MinimalCareHome) => {
     if (!careHome?.id || isLoadingUnits) return;
 
     setIsLoadingUnits(true);

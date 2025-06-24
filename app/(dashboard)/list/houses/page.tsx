@@ -46,7 +46,7 @@ const Page = () => {
         return (
           <Card
             className="flex items-center justify-center p-3 rounded-sm"
-            key={house.name}
+            key={house.id}
           >
             <CardHeader className="flex items-center justify-center ">
               <CardTitle className="text-xl">{house.name}</CardTitle>

@@ -1,5 +1,4 @@
 "use client"
-
 import { Button } from "@/components/ui/button"
 import {
     DialogContent,
@@ -15,17 +14,17 @@ import {
     FormItem,
     FormLabel,
     FormControl,
-    FormDescription,
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Appoinment, Incident, Resident } from "@prisma/client"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-// ✅ Schema
 const IncidentSchema = z.object({
     status: z.enum(["serious", "medium", "low"]),
     title: z.string(),
@@ -35,9 +34,20 @@ const IncidentSchema = z.object({
     residentId: z.string(),
     unitId: z.string(),
 })
+interface CreateIncidentFromProp {
+    user: Resident | null
+}
+type IncidentInput = {
+    title: string;
+    description: string;
+    status: "serious" | "medium" | "low";
+    date: Date;
+    time: Date;
+    residentId: string;
+    unitId: string;
+};
 
-// ✅ Component
-export function CreateIncidentFrom() {
+export function CreateIncidentFrom({ user }: CreateIncidentFromProp) {
     const form = useForm<z.infer<typeof IncidentSchema>>({
         resolver: zodResolver(IncidentSchema),
         defaultValues: {
@@ -50,10 +60,19 @@ export function CreateIncidentFrom() {
             unitId: "",
         },
     })
-
     const onSubmit = (values: z.infer<typeof IncidentSchema>) => {
-        console.log("Form Data:", values)
-    //   need to pass unit id and resident name to backend
+        if (!user?.id || !user?.unitId) {
+            console.error("Resident ID or Unit ID is missing");
+            return;
+        }
+        const data = { ...values, residentId: user?.id, unitId: user?.unitId }
+        const postForm = async (data: IncidentInput) => {
+            const res = await fetch("/api/incident", {
+                method: "POST",
+                body: JSON.stringify(data)
+            })
+        }
+        postForm(data)
     }
 
     return (
@@ -88,7 +107,7 @@ export function CreateIncidentFrom() {
                             <FormItem>
                                 <FormLabel>Description</FormLabel>
                                 <FormControl>
-                                    <Textarea placeholder="write a detail dicription about the incident" {...field}  />
+                                    <Textarea placeholder="write a detail dicription about the incident" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -126,9 +145,9 @@ export function CreateIncidentFrom() {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="male">Low</SelectItem>
-                                        <SelectItem value="male">Medium</SelectItem>
-                                        <SelectItem value="male">Serious</SelectItem>
+                                        <SelectItem value="low">Low</SelectItem>
+                                        <SelectItem value="medium">Medium</SelectItem>
+                                        <SelectItem value="serious">Serious</SelectItem>
 
                                     </SelectContent>
                                 </Select>
@@ -161,8 +180,18 @@ export function CreateIncidentFrom() {
                             <FormItem>
                                 <FormLabel>Time</FormLabel>
                                 <FormControl>
-                                    <Input type="time" value={field.value ? field.value.toISOString().split("T")[0] : ""}
-                                        onChange={(e) => field.onChange(new Date(e.target.value))} />
+                                    <Input
+                                        type="time"
+                                        value={field.value ? new Date(field.value).toTimeString().slice(0, 5) : ""}
+                                        onChange={(e) => {
+                                            const [hours, minutes] = e.target.value.split(":");
+                                            const newDate = new Date();
+                                            newDate.setHours(Number(hours));
+                                            newDate.setMinutes(Number(minutes));
+                                            field.onChange(newDate);
+                                        }}
+                                    />
+
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

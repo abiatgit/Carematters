@@ -45,7 +45,7 @@ return data.length==0?( <div className="flex flex-col gap-5">
             </div> */}
             <div>
               <p className="text-sm text-muted-foreground mt-1">
-                {item.time.toLocaleString()}
+                {/* {item.time.toLocaleString()} */}
               </p>
             </div>
           </div>

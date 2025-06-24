@@ -1,129 +1,131 @@
-import { Button } from "@/components/ui/button";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Unit } from "@prisma/client";
+
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import { useGlobalStore } from "@/store/globalStore";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Unit } from "@prisma/client";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import z from "zod";
 
 export const staffSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
-  }),
+  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+  email: z.string().email({ message: "Please enter a valid email address." }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
   role: z.enum(["MANAGER", "TEAM_LEAD", "SUPPORT_WORKER"]),
   unitId: z.string().optional(),
-  photoURL: z.string(),
+  photoURL: z.string().url({ message: "Enter a valid photo URL." }).optional(),
   onboarded: z.boolean().optional(),
   gender: z.enum(["male", "female", "other"]),
 });
 
+interface CreateStaffProp {
+  setOpen: (open: boolean) => void;
+  onStaffCreated?: () => void;
+}
 
-type MinimalCareHome = {
-  id: string;
-  name?: string;
-} | null;
-
-const CreateStaffForm = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
-  const [unitList, setUnitList] = useState<Unit[] | null>();
-  const { careHome } = useGlobalStore()
-
-  const fetchUnit = async (careHome: MinimalCareHome) => {
-
-    if (!careHome || !careHome.id) return;
-    const res = await fetch(`/api/houses?careHomeId=${encodeURIComponent(careHome.id)}`, {
-      method: "GET",
-    });
-    const data = await res?.json();
-    console.log("DDDATA", data)
-    setUnitList(data?.houses);
-    console.log("UNIT", data.houses);
-  };
-  useEffect(() => {
-    fetchUnit(careHome);
-  }, []);
+const CreateStaffForm = ({ setOpen, onStaffCreated }: CreateStaffProp) => {
+  const { careHome } = useGlobalStore();
+  const [units, setUnits] = useState<Unit[]>([]);
+  const [loadingUnits, setLoadingUnits] = useState(false);
 
   const form = useForm<z.infer<typeof staffSchema>>({
     resolver: zodResolver(staffSchema),
-    defaultValues: {},
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      role: "SUPPORT_WORKER",
+      unitId: "",
+      photoURL: "",
+      gender: "male",
+    },
   });
-  async function onSubmit(values: z.infer<typeof staffSchema>) {
-    values = { ...values, onboarded: true };
 
-    const res = await fetch("/api/staff", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
-    const data = await res.json();
-    setOpen(false);
+  useEffect(() => {
+    const fetchUnits = async () => {
+      if (!careHome?.id) return;
 
-    if (data.success) {
-      showSuccessToast("New staff created");
-    } else {
-      showErrorToast("Error crating staff")
+      setLoadingUnits(true);
+      try {
+        const res = await fetch(`/api/houses?careHomeId=${careHome.id}`);
+        const data = await res.json();
+        if (data?.houses) setUnits(data.houses);
+      } catch (err) {
+        showErrorToast("Failed to load units");
+      } finally {
+        setLoadingUnits(false);
+      }
+    };
+
+    fetchUnits();
+  }, [careHome?.id]);
+
+  const onSubmit = async (values: z.infer<typeof staffSchema>) => {
+    try {
+      const res = await fetch("/api/staff", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        showSuccessToast("Staff created successfully");
+        form.reset();
+        setOpen(false);
+        onStaffCreated?.();
+      } else {
+        showErrorToast(data.message || "Failed to create staff");
+      }
+    } catch (err) {
+      showErrorToast("Something went wrong while creating staff");
     }
-  }
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Full Name</FormLabel>
               <FormControl>
-                <Input placeholder="John Doe" {...field} />
+                <Input placeholder="Jane Smith" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Email Address</FormLabel>
               <FormControl>
-                <Input
-                  type="email"
-                  placeholder="example@domain.com"
-                  {...field}
-                />
+                <Input type="email" placeholder="jane@example.com" {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
         />
-
+        
         <FormField
           control={form.control}
           name="password"
@@ -133,113 +135,102 @@ const CreateStaffForm = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
               <FormControl>
                 <Input type="password" placeholder="••••••••" {...field} />
               </FormControl>
-              <FormDescription>At least 6 characters.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div className="flex gap-5">
-          <FormField
-            control={form.control}
-            name="role"
-            render={({ field }) => (
-              <div className="mb-5">
-                <FormItem>
-                  <FormLabel>Role</FormLabel>
 
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a role" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="MANAGER">Manager</SelectItem>
-                      <SelectItem value="TEAM_LEAD">Team Lead</SelectItem>
-                      <SelectItem value="SUPPORT_WORKER">
-                        Support Worker
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+        <FormField
+          control={form.control}
+          name="gender"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Gender</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select gender" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="male">Male</SelectItem>
+                  <SelectItem value="female">Female</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-                  <FormMessage />
-                </FormItem>
-              </div>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="gender"
-            render={({ field }) => (
-              <div className="mb-5">
-                <FormItem>
-                  <FormLabel>Gender</FormLabel>
+        <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Role</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="MANAGER">Manager</SelectItem>
+                  <SelectItem value="TEAM_LEAD">Team Lead</SelectItem>
+                  <SelectItem value="SUPPORT_WORKER">Support Worker</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a Gender" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <FormMessage />
-                </FormItem>
-              </div>
-            )}
-          />
-        </div>
         <FormField
           control={form.control}
           name="unitId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Unit / House</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormLabel>Unit (Optional)</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a House" />
+                    <SelectValue placeholder={loadingUnits ? "Loading..." : "Select a unit"} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {unitList?.map((unit) => {
-                    return (
-                      <SelectItem key={unit.id} value={unit.id}>
-                        {unit.name}
-                      </SelectItem>
-                    );
-                  })}
+                  {units.map((unit) => (
+                    <SelectItem key={unit.id} value={unit.id}>
+                      {unit.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
+              <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="photoURL"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Photo Url</FormLabel>
+              <FormLabel>Photo URL (Optional)</FormLabel>
               <FormControl>
-                <Input placeholder="Photo url" {...field} />
+                <Input placeholder="https://example.com/photo.jpg" {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Create</Button>
+
+        <div className="flex justify-end gap-2 pt-4">
+          <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button type="submit">Create Staff</Button>
+        </div>
       </form>
     </Form>
   );

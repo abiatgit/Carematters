@@ -107,9 +107,6 @@ export default function MedsTable() {
             <TableCell className="font-medium">{<Badge className="bg-green-600">Done</Badge>}</TableCell>
           </TableRow>
         ))}
-        <div>
-          
-        </div>
       </TableBody>
     </Table>
   );

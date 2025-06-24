@@ -48,11 +48,11 @@ export async function fetchAppoinment(houseId: string | null) {
         return [];
     }
 }
-export async function fetchAppoinmentBasic(houseId: string | null) {
-    if (houseId) {
+export async function fetchAppoinmentBasic(residentId: string | null) {
+    if (residentId) {
         const appoinments = await prisma.appoinment.findMany({
             where: {
-                unitId: houseId
+            residentId: residentId
             }
         });
         return appoinments;

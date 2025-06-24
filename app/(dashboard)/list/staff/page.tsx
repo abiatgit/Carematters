@@ -36,6 +36,7 @@ import { Badge } from "@/components/ui/badge";
 import { User } from "@prisma/client";
 import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
 import { useGlobalStore } from "@/store/globalStore";
+import { SkeletonDemo } from "@/components/skelton";
 
 export default function StaffPage() {
   const [search, setSearch] = useState("");
@@ -61,7 +62,9 @@ export default function StaffPage() {
 
     return matchesSearch && matchesUnit && positionSearch;
   });
-
+  const onStaffCreated =()=>{
+    fetchStaffClient(houseId)
+  }
   useEffect(() => {
     if (houseId) {
       fetchStaffClient(houseId);
@@ -133,24 +136,23 @@ export default function StaffPage() {
                 </DialogTitle>
                 <DialogDescription></DialogDescription>
               </DialogHeader>
-              <CreateStaffForm setOpen={setOpen} />
+              <CreateStaffForm setOpen={setOpen}  onStaffCreated ={onStaffCreated}/>
             </DialogContent>
           </Dialog>
         </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filteredStaff.map((staff) => {
+        {allStaff.length===0? <div className="flex gap-6"><SkeletonDemo/> <SkeletonDemo/><SkeletonDemo/><SkeletonDemo/></div>: filteredStaff.map((staff) => {
           return (
             <Card className="px-6" key={staff.id}>
               <Link href={`/list/staff/${staff.id}`}>
                 <div className="flex gap-5 items-center">
                   <div className="w-15 h-15 rounded-full relative overflow-hidden ">
-                    <Image
+                    <img
                       alt=" "
                       src={"https://upload.wikimedia.org/wikipedia/commons/c/c8/Richard_Attenborough_%283x4_cropped%29.jpg"}
-                      fill
-                      className="object-cover"
+                      className="object-cover w-full h-full"
                     />
                   </div>
                   <div>

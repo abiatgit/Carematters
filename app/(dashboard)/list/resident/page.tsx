@@ -37,6 +37,7 @@ import { Resident, User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useGlobalStore } from "@/store/globalStore";
 import { fetchResident } from "@/app/(dashboard)/list/resident/action";
+import { SkeletonDemo } from "@/components/skelton";
 const Page = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -141,7 +142,7 @@ const Page = () => {
         </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filteredResident.map((resident) => {
+        {residents.length === 0 ? <div className="flex gap-6"><SkeletonDemo/><SkeletonDemo/><SkeletonDemo/><SkeletonDemo/></div> : filteredResident.map((resident) => {
           return (
             <Card className="px-6" key={resident.id}>
               <Link href={`/list/resident/${resident.id}`}>
