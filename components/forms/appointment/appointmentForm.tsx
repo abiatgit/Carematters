@@ -1,7 +1,9 @@
 "use client";
+console.log("rendered")
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -23,12 +25,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
-
+import { useGlobalStore } from "@/store/globalStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Unit } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { fetchAllHouse } from "./action";
 
 const appoinmentSchema = z.object({
   venue: z.string().min(1, "Venue is required"),
@@ -43,19 +46,16 @@ interface AppointmentFormProps {
 }
 
 const AppointmentForm = ({setOpen}:AppointmentFormProps) => {
-  
+  const {careHome}=useGlobalStore()
   const [unitList, setUnitList] = useState<Unit[] | null>(null);
   const [residents, setResident] = useState<Unit[] | null>(null);
-  const fetchUnit = async () => {
-    const res = await fetch("/api/houses", {
-      method: "GET",
-    });
-    const data = await res.json();
-    setUnitList(data.houses);
+
+  const fetchUnit = async (id:string | undefined) => {
+    console.log("SSsfdsfsdfsd")
+    const data =await fetchAllHouse(id)
+    setUnitList(data)
+
   };
-  useEffect(() => {
-    fetchUnit();
-  }, []);
   const fetchResident = async (unitId: string) => {
     console.log("unitid",unitId)
     if (!unitId) return;
@@ -66,6 +66,10 @@ const AppointmentForm = ({setOpen}:AppointmentFormProps) => {
     setResident(data.residents);
     
   };
+useEffect(() => {
+  console.log("careHome?.id inside useEffect", careHome?.id); // 👈 Add this
+  fetchUnit(careHome?.id);
+},[]);
 
   const form = useForm<z.infer<typeof appoinmentSchema>>({
     resolver: zodResolver(appoinmentSchema),
@@ -97,6 +101,8 @@ const AppointmentForm = ({setOpen}:AppointmentFormProps) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle> Appoinment</DialogTitle>
+          <DialogDescription>
+            </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4">
           <Form {...form}>

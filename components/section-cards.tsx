@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import Link from "next/link";
+import Link from "next/link"; 
 import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
 import { Appoinment, Resident, User } from "@prisma/client";
 import { fetchResident } from "@/app/(dashboard)/list/resident/action";

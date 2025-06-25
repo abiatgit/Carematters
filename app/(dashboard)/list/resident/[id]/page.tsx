@@ -21,8 +21,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Dialog } from "@/components/ui/dialog";
-import { DialogTrigger } from "@radix-ui/react-dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CreateIncidentFrom } from "@/components/forms/incidentreport/CreateIncident";
 import { IncidetnChart } from "@/components/incidentChart/incidentChart";
 import { fetchResidentwithId } from "../action";
