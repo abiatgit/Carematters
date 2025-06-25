@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "./ui/card";
 import IncidentTable from "./incident-report/IncidentTable";
-import { incidentData } from "./incident-report/data";
+import {  fetchIncidents } from "./incident-report/data";
 import {
   Pagination,
   PaginationContent,
@@ -16,8 +16,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-
-import { Appoinment, Role } from "@prisma/client";
+import { Appoinment, Incident, Role } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useGlobalStore } from "@/store/globalStore";
 import { fetchAppoinment } from "@/app/(dashboard)/list/appoinments/action";
@@ -32,16 +31,25 @@ export type SafeUser = {
 };
 
 export function MainListArea() {
+
   const [appointments, setAppointments] = useState<Appoinment[]>([])
+  const [incidentData, setInsidnetData] = useState<Incident[]>([])
   const { houseId } = useGlobalStore()
   async function fetchAppoinmentClient(houseId: string | null) {
     const res = await fetchAppoinment(houseId);
     setAppointments(res!)
     return res;
   }
-
+  const IncidentDataFetch = async(houseId: string |null) => {
+    if (!houseId) return[]
+    const data = await fetchIncidents(houseId)
+    setInsidnetData(data ||[])
+    console.log("IncidentDataFetch",data)
+  }
   useEffect(() => {
+      if (!houseId) return;
     fetchAppoinmentClient(houseId)
+    IncidentDataFetch(houseId)
   }, [houseId])
 
   const [currentPage, setCurrentPage] = useState(1);

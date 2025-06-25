@@ -16,14 +16,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Incident, columns } from "./columns";
+import {  columns } from "./columns";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { CircleSmall, FileText, Share } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
+import { Incident, Resident, Unit } from "@prisma/client";
+interface IncidetProp extends Incident{
+resident:Resident[],
+unit:Unit[]
+}
 
-const IncidentTable = ({ data }: { data: Incident[] }) => {
+const IncidentTable = ({ data }: { data: IncidetProp[] }) => {
   return (
     <Table >
       <TableHeader>
@@ -40,12 +45,18 @@ const IncidentTable = ({ data }: { data: Incident[] }) => {
           <TableRow key={index}>
             <TableCell className="font-medium">
               <Avatar>
-                <AvatarImage src={`${item?.photo}`} alt="@shadcn" />
+                <img
+                alt=""
+                src={item?.resident?.photo}
+                className="w-full h-full"
+                />
+         
+                {/* <AvatarImage src={`${item?.resident.photo}`} alt="@shadcn" /> */}
               </Avatar>
             </TableCell>
-            <TableCell className="font-medium">{item?.name}</TableCell>
+            <TableCell className="font-medium">{item.resident?.name}</TableCell>
             <TableCell className="font-medium">
-              {item?.incidentNature}
+              {item?.title}
             </TableCell>
             <TableCell className="font-medium">
               <Badge
@@ -64,7 +75,7 @@ const IncidentTable = ({ data }: { data: Incident[] }) => {
                 {item?.status}
               </Badge>
             </TableCell>
-            <TableCell className="font-medium">{item?.house}</TableCell>
+            <TableCell className="font-medium">{item?.unit.name}</TableCell>
             <TableCell className="font-medium flex items-center justify-center">
               <Dialog>
                 <DialogTrigger>
@@ -74,18 +85,7 @@ const IncidentTable = ({ data }: { data: Incident[] }) => {
                   <DialogHeader>
                     <DialogTitle>Incident Report</DialogTitle>
                     <DialogDescription>
-                      On April 25, 2025, at approximately 2:45 PM, resident Mary
-                      Thomas was found on the floor near the dining area by
-                      Support Worker James. She reported feeling dizzy before
-                      attempting to stand, resulting in a fall. No visible
-                      injuries were observed, but she appeared shaken. A full
-                      body check was completed, and vital signs were stable. The
-                      nurse on duty was informed immediately, and a GP review
-                      was requested. The area was dry and clear of obstacles.
-                      The incident was logged, and the family was informed.
-                      Preventive measures, including regular hydration and
-                      assisted mobility, have been reinforced with the care
-                      team.
+                      {item.description}
                       <div className="mt-4">
                         <Button>
                           forward <Share></Share>
