@@ -56,7 +56,7 @@ const CreateHome = ({ userId }: CareHomePro) => {
     });
     const data = await res.json();
     if (data.success) {
-    showSuccessToast("Succesfuly Created Your Home")
+      showSuccessToast("Succesfuly Created Your Home")
       setCareHome(data.careHome);
       router.push("/user");
     } else {

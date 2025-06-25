@@ -57,6 +57,7 @@ const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => 
     const res = await fetchResidentwithId(residentId)
     setUser(res)
   }
+    const [open,setOpen]=useState(false)
   const [user, setUser] = useState<Resident | null>(null)
   const date = new Date().toLocaleDateString();
   const [progress, setProgress] = useState(10);
@@ -165,11 +166,11 @@ console.log("user",user)
           {/*User Card*/}
           <div className="border border-dashed flex gap-4 p-4 rounded-l-lg">
             <Button>Daily Reoprt</Button>
-            <Dialog>
+            <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <Button>Incidet Reoprt</Button>
               </DialogTrigger>
-              <CreateIncidentFrom user={user} />
+              <CreateIncidentFrom user={user}   setOpen={setOpen} />
             </Dialog>
 
             <Button>Food & Fluid</Button>

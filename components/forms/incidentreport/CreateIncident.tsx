@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Appoinment, Incident, Resident } from "@prisma/client"
 import { useEffect } from "react"
@@ -46,8 +47,10 @@ type IncidentInput = {
     residentId: string;
     unitId: string;
 };
-
-export function CreateIncidentFrom({ user }: CreateIncidentFromProp) {
+interface AppointmentFormProps extends CreateIncidentFromProp {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export function CreateIncidentFrom({ user ,setOpen}: AppointmentFormProps) {
     const form = useForm<z.infer<typeof IncidentSchema>>({
         resolver: zodResolver(IncidentSchema),
         defaultValues: {
@@ -71,7 +74,14 @@ export function CreateIncidentFrom({ user }: CreateIncidentFromProp) {
                 method: "POST",
                 body: JSON.stringify(data)
             })
-            console.log(res)
+            setOpen(false)
+            console.log("res.status",res)
+           if(res.ok){
+            showSuccessToast("Incident crated")
+           }
+           else{
+            showErrorToast("Error Creating Incident")
+           }
         }
         postForm(data)
     }
