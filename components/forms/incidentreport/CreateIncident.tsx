@@ -25,7 +25,7 @@ import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-const IncidentSchema = z.object({
+export const IncidentSchema = z.object({
     status: z.enum(["serious", "medium", "low"]),
     title: z.string(),
     description: z.string(),
@@ -71,6 +71,7 @@ export function CreateIncidentFrom({ user }: CreateIncidentFromProp) {
                 method: "POST",
                 body: JSON.stringify(data)
             })
+            console.log(res)
         }
         postForm(data)
     }
