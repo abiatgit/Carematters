@@ -22,35 +22,40 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import { Plus } from "lucide-react";
+import { useGlobalStore } from "@/store/globalStore";
 
 const createHouseSchema = z.object({
   name: z.string(),
 });
-interface CreateHouseProp{
-  onHouseCreated?:()=>void
+interface CreateHouseProp {
+  onHouseCreated?: () => void
 }
 
-export function CreateHouse({onHouseCreated}:CreateHouseProp) {
+export function CreateHouse({ onHouseCreated }: CreateHouseProp) {
 
   const [open, setOpen] = useState(false);
-  const handleSubmit = async (value: z.infer<typeof createHouseSchema>) => {
-    const { name } = value;
-    const res = await fetch("/api/houses", {
-      method: "POST",
-      body: JSON.stringify({ name }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await res.json();
-    setOpen(false);
-    if (data.success) {
-      showSuccessToast("New house created");
-      onHouseCreated?.(); 
-    } else {
-      showErrorToast("error creating new house");
-    }
-  };
+  const { careHome } = useGlobalStore()
+const handleSubmit = async (value: z.infer<typeof createHouseSchema>) => {
+  const { name } = value;
+  const payload = { name, careHomeId: careHome?.id };
+  console.log("create unit data", payload);
+  const res = await fetch("/api/houses", {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await res.json();
+  setOpen(false);
+  if (data.success) {
+    showSuccessToast("New house created");
+    onHouseCreated?.();
+  } else {
+    showErrorToast("Error creating new house");
+  }
+};
+
 
   const form = useForm<z.infer<typeof createHouseSchema>>({
     resolver: zodResolver(createHouseSchema),
@@ -67,7 +72,7 @@ export function CreateHouse({onHouseCreated}:CreateHouseProp) {
     >
       <DialogTrigger asChild>
         <Button variant="outline">
-          <Plus/>
+          <Plus />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

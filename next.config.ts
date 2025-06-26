@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
         hostname: "randomuser.me",
       },
       { hostname: "github.com" },
+      {hostname: "encrypted-tbn1.gstatic.com"},
       { hostname: "upload.wikimedia.org" },
     ],
   },

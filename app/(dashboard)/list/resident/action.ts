@@ -14,8 +14,6 @@ export async function fetchResident(houseId: string | null) {
 }
 
 
-
-
 export async function fetchResidentwithId(Id: string | null) {
   if (!Id) return null
   try {
@@ -34,3 +32,22 @@ export async function fetchResidentwithId(Id: string | null) {
   }
 
 }
+export async function deleteResidentwithId(Id: string | null) {
+  if (!Id) return null
+  try {
+    
+      const residents = await prisma.resident.delete({
+        where: {
+          id: Id
+        }
+      })
+      return "deleted"
+    
+  }
+  catch (err) {
+    console.log(err)
+    return null
+  }
+
+}
+

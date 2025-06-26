@@ -6,8 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import IncidentTable from "./incident-report/IncidentTable";
-import {  fetchIncidents } from "./incident-report/data";
+import IncidentTable, { IncidetProp } from "./incident-report/IncidentTable";
+import { fetchIncidents } from "./incident-report/data";
 import {
   Pagination,
   PaginationContent,
@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { useGlobalStore } from "@/store/globalStore";
 import { fetchAppoinment } from "@/app/(dashboard)/list/appoinments/action";
 import AppoinmentCards from "./appoinmentsCard/AppoinmentCards";
+import { SkeletonDemo } from "./skelton";
 
 const ITEMS_PER_PAGE = 6;
 export type SafeUser = {
@@ -33,21 +34,21 @@ export type SafeUser = {
 export function MainListArea() {
 
   const [appointments, setAppointments] = useState<Appoinment[]>([])
-  const [incidentData, setInsidnetData] = useState<Incident[]>([])
+  const [incidentData, setInsidnetData] = useState<IncidetProp[]>([])
   const { houseId } = useGlobalStore()
   async function fetchAppoinmentClient(houseId: string | null) {
     const res = await fetchAppoinment(houseId);
     setAppointments(res!)
     return res;
   }
-  const IncidentDataFetch = async(houseId: string |null) => {
-    if (!houseId) return[]
+  const IncidentDataFetch = async (houseId: string | null) => {
+    if (!houseId) return []
     const data = await fetchIncidents(houseId)
-    setInsidnetData(data ||[])
-    console.log("IncidentDataFetch",data)
+    setInsidnetData(data || [])
+    console.log("IncidentDataFetch", data)
   }
   useEffect(() => {
-      if (!houseId) return;
+    if (!houseId) return;
     fetchAppoinmentClient(houseId)
     IncidentDataFetch(houseId)
   }, [houseId])
@@ -73,7 +74,8 @@ export function MainListArea() {
           <CardTitle>Incident Reports</CardTitle>
         </CardHeader>
         <CardContent className="px-2 sm:px-6 overflow-hidden">
-          <IncidentTable data={paginatedData} />
+          {paginatedData.length == 0 ? <div className="flex flex-col gap-5"><SkeletonDemo /><SkeletonDemo /><SkeletonDemo /></div> :
+            <IncidentTable data={paginatedData} />}
         </CardContent>
         <CardFooter>
           <Pagination>

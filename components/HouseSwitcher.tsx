@@ -20,8 +20,8 @@ export function HouseSwitcher({
   houses: Unit[]
 }) {
   const { setHouseId } = useGlobalStore();
-  const { user } = useGlobalStore()
-  const [selectedHouse, setSelectedHouse] = React.useState<string>(houses[0]?.name);
+  const { user, careHome } = useGlobalStore()
+  const [selectedHouse, setSelectedHouse] = React.useState<string>("");
   React.useEffect(() => {
     if (houses.length > 0) {
       setSelectedHouse(houses[0].name);
@@ -38,11 +38,12 @@ export function HouseSwitcher({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className=" bg-green-700 flex aspect-square size-8 items-center justify-center rounded-lg  text-sidebar-primary-foreground">
+              <div className="  flex aspect-square size-8 items-center justify-center rounded-lg  text-sidebar-primary-foreground">
                 <GalleryVerticalEnd className="size-4" />
+                <img src={careHome?.logo}></img>
               </div>
               <div className="flex flex-col gap-0.5 leading-none">
-                <span className="font-semibold">CamphillGlencraig</span>
+                <span className="font-semibold">{careHome?.name}</span>
                 <span className="">{selectedHouse}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />

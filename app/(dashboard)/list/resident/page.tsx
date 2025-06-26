@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -36,7 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import { Resident, User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useGlobalStore } from "@/store/globalStore";
-import { fetchResident } from "@/app/(dashboard)/list/resident/action";
+import { deleteResidentwithId, fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { SkeletonDemo } from "@/components/skelton";
 const Page = () => {
   const [open, setOpen] = useState(false);
@@ -76,6 +75,9 @@ const Page = () => {
       genderFilter === "all" || singleResident.gender === genderFilter;
     return searchMatchResident && unitMatchResident && genderMatchResident;
   });
+  const delteHandle=async(id:string)=>{
+   await deleteResidentwithId(id)
+  }
   return (
     <div>
       <Breadcrumb>
@@ -168,7 +170,7 @@ const Page = () => {
               </Link>
               <CardFooter className="px-0 ">
                 <Dialog>
-                  <DialogTrigger>
+                  <DialogTrigger asChild>
                     <Badge
                       className="w-20 border-red-700 bg-rose-100 hover:bg-red-300"
                       variant="outline"
@@ -185,6 +187,7 @@ const Page = () => {
                         <Badge
                           variant={"destructive"}
                           className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white"
+                          onClick={()=>delteHandle(resident.id)}
                         >
                           Yes
                         </Badge>

@@ -21,8 +21,10 @@ import { useGlobalStore } from "@/store/globalStore";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, setUser } = useGlobalStore()
-  const { setCareHome } = useGlobalStore()
-  const [houseList, setHouseList] = useState<Unit[]>([]);
+  const {careHome, setCareHome } = useGlobalStore()
+  const [houseList, setHouseList] = useState<Unit[]>([])
+  console.log("Current Care Home",careHome)
+  console.log("Current User Home",user)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,6 +50,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const getHouse = async () => {
     try {
+      console.log("user for fetching",user)
       const res = await fetchHouse(user);
       setHouseList(res)
     } catch (er) {
@@ -91,7 +94,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={userManager} />
+        <NavUser  />
       </SidebarFooter>
     </Sidebar>
   );

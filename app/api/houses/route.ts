@@ -2,16 +2,16 @@ import { prisma } from "@/lib/db/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const carehomeId = await prisma.careHome.findFirst();
-  if (!carehomeId) return;
+
   const body = await req.json();
-  const { name } = body;
+  const { name,careHomeId} = body;
+  console.log(" name,careHomeid ",name,careHomeId)
 
   try {
     const house = await prisma.unit.create({
       data: {
         name,
-        careHomeId: carehomeId?.id,
+        careHomeId: careHomeId
       },
     });
     return NextResponse.json({ success: true, house });

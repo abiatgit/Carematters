@@ -6,6 +6,7 @@ type CareHome = {
   id: string;
   name: string;
   address?: string;
+   logo?:string
 };
 type GlobalState = {
   houseId: string | null;
