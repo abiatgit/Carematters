@@ -1,5 +1,6 @@
 "use server";
 import { prisma } from "@/lib/db";
+import { id } from "zod/v4/locales";
 
 export async function fetchResident(houseId: string | null) {
   if (houseId) {
@@ -34,13 +35,14 @@ export async function fetchResidentwithId(Id: string | null) {
 }
 export async function deleteResidentwithId(Id: string | null) {
   if (!Id) return null
+  console.log("delete user",id)
   try {
-    
       const residents = await prisma.resident.delete({
         where: {
           id: Id
         }
       })
+      console.log(residents)
       return "deleted"
     
   }

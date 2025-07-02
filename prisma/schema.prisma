@@ -116,7 +116,7 @@ model Resident {
   gender      Gender
   gp          String?
   unitId      String
-  unit        Unit         @relation(fields: [unitId], references: [id])
+  unit        Unit         @relation(fields: [unitId], references: [id],onDelete: Cascade)
   appoinment  Appoinment[]
   incident    Incident[]
   medication  Medication[]
@@ -132,9 +132,9 @@ model Appoinment {
   time       DateTime
   scheduledWith       String
   residentId String
-  resident   Resident  @relation(fields: [residentId], references: [id])
+  resident   Resident  @relation(fields: [residentId], references: [id],onDelete: Cascade)
   unitId     String
-  unit       Unit      @relation(fields: [unitId], references: [id])
+  unit       Unit      @relation(fields: [unitId], references: [id],onDelete: Cascade)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   deletedAt  DateTime?
