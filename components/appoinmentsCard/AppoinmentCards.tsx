@@ -1,6 +1,5 @@
 
 import { Card } from "../ui/card";
-import Image from "next/image";
 import { Badge } from "../ui/badge";
 import { EnrichedAppointment } from "@/app/(dashboard)/list/appoinments/action";
 import { SkeletonDemo } from "../skelton";

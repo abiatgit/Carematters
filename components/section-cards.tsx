@@ -14,7 +14,7 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link"; 
 import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
-import { Appoinment, Resident, User } from "@prisma/client";
+import { Appoinment, Resident, Unit, User } from "@prisma/client";
 import { fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { useGlobalStore } from "@/store/globalStore";
 import { fetchAppoinment } from "@/app/(dashboard)/list/appoinments/action";
@@ -41,7 +41,7 @@ export function SectionCards() {
   const [residents, setResidents] = useState<Resident[]>([]);
   const [staff, setStaff] = useState<User[]>([]);
   const [appoinments, setAppoinment] = useState<Appoinment[]>([])
-  const [allhouses, setAllhouses] = useState<any[]>([]);
+  const [allhouses, setAllhouses] = useState<Unit[]>([]);
   const { careHome } = useGlobalStore()
 
   const totalResidents = residents.length;
@@ -79,6 +79,7 @@ export function SectionCards() {
     }
     fetchData();
     fetchAllHouse(careHome)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, houseId, careHome, houseId,]); {/* removed appoinment form array due to repeated rendering*/ }
 
   return (
@@ -224,7 +225,5 @@ export function SectionCards() {
     </div>
   );
 }
-function setHouses(houses: any) {
-  throw new Error("Function not implemented.");
-}
+
 

@@ -1,3 +1,4 @@
+///need show exact resident  and staff number in each house
 "use client"
 import {
   Card,
@@ -10,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import { CreateHouse } from "@/components/forms/houses/createHouse";
 import { Badge } from "@/components/ui/badge";
 import { useGlobalStore } from "@/store/globalStore";
+import { Unit } from "@prisma/client";
 type MinimalCareHome = {
   id: string;
   name?: string;
@@ -18,7 +20,7 @@ type MinimalCareHome = {
 
 const Page = () => {
   const { careHome } = useGlobalStore()
-  const [allhouses, setAllhouses] = useState<any[]>([]);
+  const [allhouses, setAllhouses] = useState<Unit[]>([]);
 
   async function fetchAllHouse(careHome: MinimalCareHome) {
     console.log("all houses list page");
@@ -52,8 +54,9 @@ const Page = () => {
               <CardTitle className="text-xl">{house.name}</CardTitle>
             </CardHeader>
             <CardContent>
-              <h1>Total Residents :{house.Residents} </h1>
-              <h1 className="mt-3">Total Staff :{house.staff}</h1>
+            {/* ///need show exact resident  and staff number in each house */}
+              <h1>Total Residents :{house.name} </h1>
+              <h1 className="mt-3">Total Staff :{house.name}</h1>
             </CardContent>
             <CardFooter>
               <Badge className="w-20 border-red-700 bg-rose-100 hover:bg-red-300" variant="outline" >

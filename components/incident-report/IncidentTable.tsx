@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { columns } from "./columns";
-import { Avatar, AvatarImage } from "../ui/avatar";
+import { Avatar} from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { CircleSmall, FileText, Share } from "lucide-react";
 import { cn } from "@/lib/utils";

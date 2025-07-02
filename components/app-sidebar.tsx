@@ -1,5 +1,5 @@
-import { use, useEffect, useState } from "react";
-import { items, houses, userManager } from "@/lib/mockData";
+import {  useEffect, useState } from "react";
+import { items } from "@/lib/mockData";
 import { HouseSwitcher } from "./HouseSwitcher";
 import {
   Sidebar,

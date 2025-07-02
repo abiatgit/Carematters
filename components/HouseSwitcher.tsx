@@ -20,7 +20,7 @@ export function HouseSwitcher({
   houses: Unit[]
 }) {
   const { setHouseId } = useGlobalStore();
-  const { user, careHome } = useGlobalStore()
+  const {  careHome } = useGlobalStore()
   const [selectedHouse, setSelectedHouse] = React.useState<string>("");
   React.useEffect(() => {
     if (houses.length > 0) {

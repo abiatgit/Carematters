@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -49,7 +50,6 @@ const Page = () => {
   const [unitFilter, setUnitFilter] = useState("all");
   const [genderFilter, setGenderFilter] = useState("all");
   const { houseId } = useGlobalStore();
-  const router = useRouter()
 
   async function fetchResidentsClient(houseId: string | null) {
     const res = await fetchResident(houseId)
