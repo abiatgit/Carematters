@@ -17,12 +17,11 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { showErrorToast, showSuccessToast } from "@/lib/toast"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Appoinment, Incident, Resident } from "@prisma/client"
-import { useEffect } from "react"
+import {Resident } from "@prisma/client"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 

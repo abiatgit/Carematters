@@ -34,11 +34,10 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Resident } from "@prisma/client";
-
 import { useGlobalStore } from "@/store/globalStore";
 import { deleteResidentwithId, fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { SkeletonDemo } from "@/components/skelton";
-import { useRouter } from "next/navigation";
+
 
 const Page = () => {
   const [dialogResidentId, setDialogResidentId] = useState<string | null>(null);

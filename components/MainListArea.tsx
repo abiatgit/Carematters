@@ -16,7 +16,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Appoinment, Incident, Role } from "@prisma/client";
+import { Appoinment,Role } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useGlobalStore } from "@/store/globalStore";
 import { fetchAppoinment } from "@/app/(dashboard)/list/appoinments/action";
@@ -42,10 +42,10 @@ export function MainListArea() {
     return res;
   }
   const IncidentDataFetch = async (houseId: string | null) => {
-    if (!houseId) return []
-    const data = await fetchIncidents(houseId)
-    setInsidnetData(data || [])
-    console.log("IncidentDataFetch", data)
+    if (!houseId) return;
+    const data = await fetchIncidents(houseId);
+    setInsidnetData(data || []);
+    console.log("IncidentDataFetch", data);
   }
   useEffect(() => {
     if (!houseId) return;
