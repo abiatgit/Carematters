@@ -1,5 +1,5 @@
-import { use, useEffect, useState } from "react";
-import { items, houses, userManager } from "@/lib/mockData";
+import {  useEffect, useState } from "react";
+import { items } from "@/lib/mockData";
 import { HouseSwitcher } from "./HouseSwitcher";
 import {
   Sidebar,
@@ -21,10 +21,9 @@ import { useGlobalStore } from "@/store/globalStore";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, setUser } = useGlobalStore()
-  const {careHome, setCareHome } = useGlobalStore()
+  const { setCareHome } = useGlobalStore()
   const [houseList, setHouseList] = useState<Unit[]>([])
-  console.log("Current Care Home",careHome)
-  console.log("Current User Home",user)
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -50,7 +49,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const getHouse = async () => {
     try {
-      console.log("user for fetching",user)
+
       const res = await fetchHouse(user);
       setHouseList(res)
     } catch (er) {

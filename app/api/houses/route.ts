@@ -5,7 +5,7 @@ export async function POST(req: Request) {
 
   const body = await req.json();
   const { name,careHomeId} = body;
-  console.log(" name,careHomeid ",name,careHomeId)
+
 
   try {
     const house = await prisma.unit.create({
@@ -22,9 +22,9 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: NextRequest) {
-  console.log("iam called")
+
   const careHomeId = req.nextUrl.searchParams.get("careHomeId")
-  console.log("iam called", careHomeId)
+
   if (!careHomeId) return NextResponse.json({ success: false, });
   try {
     const houses = await prisma.unit.findMany({

@@ -58,7 +58,7 @@ const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => 
   }
     const [open,setOpen]=useState(false)
   const [user, setUser] = useState<Resident | null>(null)
-  const date = new Date().toLocaleDateString();
+
   const [progress, setProgress] = useState(10);
   useEffect(() => {
     const timer = setTimeout(() => setProgress(50), 500);

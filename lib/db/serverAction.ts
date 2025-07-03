@@ -5,7 +5,6 @@ import bcrypt from "bcryptjs";
 
 export const handleSignUp = async (formdata: FormData) => {
   const data = Object.fromEntries(formdata);
-  console.log("data fdsf", data);
 
   if (!data) {
     throw new Error("data required");

@@ -28,7 +28,7 @@ export interface IncidetProp extends Incident {
 }
 
 const IncidentTable = ({ data }: { data: IncidetProp[] }) => {
-  console.log("IncidetProp", data)
+
   return (
     <div>
       <Table >

@@ -15,6 +15,6 @@ export async function POST(req: Request) {
       scheduledWith: scheduledWith,
     },
   });
-  console.log(res);
+
   return NextResponse.json({ success: true, res });
 }

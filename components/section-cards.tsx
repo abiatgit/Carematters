@@ -59,7 +59,6 @@ export function SectionCards() {
       });
       const data = await res.json();
       setAllhouses(data.houses)
-      console.log("all houses", data);
     } catch (error) {
       console.error("Failed to fetch houses:", error);
     }
@@ -224,7 +223,5 @@ export function SectionCards() {
     </div>
   );
 }
-function setHouses(houses: any) {
-  throw new Error("Function not implemented.");
-}
+
 

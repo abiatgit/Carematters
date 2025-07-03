@@ -16,7 +16,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Appoinment, Incident, Role } from "@prisma/client";
+import { Appoinment, Role } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useGlobalStore } from "@/store/globalStore";
 import { fetchAppoinment } from "@/app/(dashboard)/list/appoinments/action";
@@ -45,7 +45,6 @@ export function MainListArea() {
     if (!houseId) return []
     const data = await fetchIncidents(houseId)
     setInsidnetData(data || [])
-    console.log("IncidentDataFetch", data)
   }
   useEffect(() => {
     if (!houseId) return;
@@ -122,7 +121,14 @@ export function MainListArea() {
           <CardTitle>Appointments</CardTitle>
         </CardHeader>
         <CardContent className="px-2 sm:px-6 overflow-y-auto">
-          <AppoinmentCards data={appointments} />
+          <AppoinmentCards
+            data={appointments.map((appt) => ({
+              ...appt,
+              residentName: "", // Provide actual resident name if available
+              residentAvatar: "", // Provide actual avatar URL if available
+              unitName: "", // Provide actual unit name if available
+            }))}
+          />
         </CardContent>
       </Card>
     </div>

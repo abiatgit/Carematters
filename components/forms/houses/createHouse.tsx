@@ -38,7 +38,7 @@ export function CreateHouse({ onHouseCreated }: CreateHouseProp) {
 const handleSubmit = async (value: z.infer<typeof createHouseSchema>) => {
   const { name } = value;
   const payload = { name, careHomeId: careHome?.id };
-  console.log("create unit data", payload);
+
   const res = await fetch("/api/houses", {
     method: "POST",
     body: JSON.stringify(payload),

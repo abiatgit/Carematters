@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
 
   const careHomeId = req.nextUrl.searchParams.get("careHomeId")
-  console.log("iam called", careHomeId)
+
   if (!careHomeId) return NextResponse.json({ success: false, });
   try {
     const houses = await prisma.unit.findMany({

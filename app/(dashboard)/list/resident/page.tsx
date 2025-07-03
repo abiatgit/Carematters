@@ -43,14 +43,12 @@ const Page = () => {
   const [residents, setResident] = useState<Resident[]>([]);
   const [unitFilter, setUnitFilter] = useState("all");
   const [genderFilter, setGenderFilter] = useState("all");
-  const { data: session } = useSession();
-  const userid = session?.user?.id
   const { houseId } = useGlobalStore();
 
   async function fetchResidentsClient(houseId: string | null) {
     const res = await fetchResident(houseId)
     setResident(res!)
-    console.log("residents", residents)
+
   }
   const refreshResidentCard = async () => {
     if (houseId) {
@@ -64,7 +62,7 @@ const Page = () => {
       fetchResidentsClient(houseId);
     }
   }, [houseId]);
-  console.log("response resident", residents);
+
   const filteredResident = residents.filter((singleResident) => {
     const searchMatchResident = singleResident
       .name!.toLowerCase()

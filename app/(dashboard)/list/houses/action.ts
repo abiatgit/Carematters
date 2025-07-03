@@ -28,3 +28,19 @@ export async function fetchHouse(user: User | null) {
     return unit ? [unit] : [];
   }
 }
+
+export async function fetchHousewithresident(careHomeId: string) {
+  if (!careHomeId) return;
+
+  const data = await prisma.unit.findMany({
+    where: {
+      careHomeId: careHomeId,
+    },
+    include: {
+      residents: true, // includes related residents
+      staff: true,      // includes related user (if relation exists)
+    },
+  });
+
+  return data;
+}

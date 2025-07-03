@@ -1,5 +1,4 @@
 "use client";
-console.log("rendered")
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -51,13 +50,11 @@ const AppointmentForm = ({setOpen}:AppointmentFormProps) => {
   const [residents, setResident] = useState<Unit[] | null>(null);
 
   const fetchUnit = async (id:string | undefined) => {
-    console.log("SSsfdsfsdfsd")
     const data =await fetchAllHouse(id)
     setUnitList(data)
 
   };
   const fetchResident = async (unitId: string) => {
-    console.log("unitid",unitId)
     if (!unitId) return;
     const res = await fetch(`/api/resident?unitId=${unitId}`, {
       method: "GET",
@@ -67,7 +64,7 @@ const AppointmentForm = ({setOpen}:AppointmentFormProps) => {
     
   };
 useEffect(() => {
-  console.log("careHome?.id inside useEffect", careHome?.id); // 👈 Add this
+ 
   fetchUnit(careHome?.id);
 },[]);
 

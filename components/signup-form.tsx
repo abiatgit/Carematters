@@ -30,7 +30,6 @@ export function SignupForm({
           <form
             action={async (formdata: FormData) => {
               "use server";
-              console.log("form form fata",formdata)
               const result = await handleSignUp(formdata);
               if (result.success) {
                 redirect("/auth/sign-in");
