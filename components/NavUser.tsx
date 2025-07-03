@@ -85,7 +85,11 @@ export function NavUser() {
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Pencil />
-                Edit
+                Edit Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Pencil />
+                Edit Organization
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />

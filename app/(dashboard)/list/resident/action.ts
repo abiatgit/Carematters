@@ -1,6 +1,7 @@
 "use server";
 import { prisma } from "@/lib/db";
 
+
 export async function fetchResident(houseId: string | null) {
   if (houseId) {
     const residents = await prisma.resident.findMany({
@@ -34,13 +35,17 @@ export async function fetchResidentwithId(Id: string | null) {
 }
 export async function deleteResidentwithId(Id: string | null) {
   if (!Id) return null
+
   try {
+
     
        await prisma.resident.delete({
+
         where: {
           id: Id
         }
       })
+    
       return "deleted"
     
   }

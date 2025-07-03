@@ -36,14 +36,17 @@ import { Resident} from "@prisma/client";
 import { useGlobalStore } from "@/store/globalStore";
 import { deleteResidentwithId, fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { SkeletonDemo } from "@/components/skelton";
+
+
 const Page = () => {
+  const [dialogResidentId, setDialogResidentId] = useState<string | null>(null);
+  const [ setDialogOpoen] = useState(false)
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [residents, setResident] = useState<Resident[]>([]);
   const [unitFilter, setUnitFilter] = useState("all");
   const [genderFilter, setGenderFilter] = useState("all");
   const { houseId } = useGlobalStore();
-
   async function fetchResidentsClient(houseId: string | null) {
     const res = await fetchResident(houseId)
     setResident(res!)
@@ -62,6 +65,7 @@ const Page = () => {
     }
   }, [houseId]);
 
+
   const filteredResident = residents.filter((singleResident) => {
     const searchMatchResident = singleResident
       .name!.toLowerCase()
@@ -72,8 +76,12 @@ const Page = () => {
       genderFilter === "all" || singleResident.gender === genderFilter;
     return searchMatchResident && unitMatchResident && genderMatchResident;
   });
-  const delteHandle=async(id:string)=>{
-   await deleteResidentwithId(id)
+  const delteHandle = async (id: string) => {
+    await deleteResidentwithId(id)
+    setDialogOpoen(false)
+    if (houseId) {
+      await fetchResidentsClient(houseId);
+    }
   }
   return (
     <div>
@@ -141,7 +149,7 @@ const Page = () => {
         </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {residents.length === 0 ? <div className="flex gap-6"><SkeletonDemo/><SkeletonDemo/><SkeletonDemo/><SkeletonDemo/></div> : filteredResident.map((resident) => {
+        {residents.length === 0 ? <div className="flex gap-6"><SkeletonDemo /><SkeletonDemo /><SkeletonDemo /><SkeletonDemo /></div> : filteredResident.map((resident) => {
           return (
             <Card className="px-6" key={resident.id}>
               <Link href={`/list/resident/${resident.id}`}>
@@ -166,11 +174,13 @@ const Page = () => {
                 </div>
               </Link>
               <CardFooter className="px-0 ">
-                <Dialog>
+                <Dialog open={dialogResidentId === resident.id} onOpenChange={(open) => !open && setDialogResidentId(null)}>
+
                   <DialogTrigger asChild>
                     <Badge
                       className="w-20 border-red-700 bg-rose-100 hover:bg-red-300"
                       variant="outline"
+                      onClick={() => setDialogResidentId(resident.id)}
                     >
                       Delete
                     </Badge>
@@ -184,7 +194,8 @@ const Page = () => {
                         <Badge
                           variant={"destructive"}
                           className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white"
-                          onClick={()=>delteHandle(resident.id)}
+                          onClick={() => delteHandle(resident.id)}
+
                         >
                           Yes
                         </Badge>
