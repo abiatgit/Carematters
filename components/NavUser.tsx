@@ -28,13 +28,7 @@ import {
 import { signOut } from "next-auth/react";
 import { useGlobalStore } from "@/store/globalStore";
 
-type user = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  photo: string;
-};
+
 
 export function NavUser() {
   const { isMobile } = useSidebar();

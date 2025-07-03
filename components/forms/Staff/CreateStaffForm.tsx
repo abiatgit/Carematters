@@ -65,6 +65,7 @@ const CreateStaffForm = ({ setOpen, onStaffCreated }: CreateStaffProp) => {
         if (data?.houses) setUnits(data.houses);
       } catch (err) {
         showErrorToast("Failed to load units");
+        console.error(err)
       } finally {
         setLoadingUnits(false);
       }
@@ -91,6 +92,7 @@ const CreateStaffForm = ({ setOpen, onStaffCreated }: CreateStaffProp) => {
         showErrorToast(data.message || "Failed to create staff");
       }
     } catch (err) {
+      console.error(err)
       showErrorToast("Something went wrong while creating staff");
     }
   };

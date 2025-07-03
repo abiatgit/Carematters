@@ -41,7 +41,7 @@ export function SectionCards() {
   const [residents, setResidents] = useState<Resident[]>([]);
   const [staff, setStaff] = useState<User[]>([]);
   const [appoinments, setAppoinment] = useState<Appoinment[]>([])
-  const [allhouses, setAllhouses] = useState<any[]>([]);
+  const [allhouses, setAllhouses] = useState<MinimalCareHome[]>([]);
   const { careHome } = useGlobalStore()
 
   const totalResidents = residents.length;
@@ -78,7 +78,7 @@ export function SectionCards() {
     }
     fetchData();
     fetchAllHouse(careHome)
-  }, [user, houseId, careHome, houseId,]); {/* removed appoinment form array due to repeated rendering*/ }
+  }, [user, houseId, careHome]); {/* removed appoinment form array due to repeated rendering*/ }
 
   return (
     <div className="@5xl/main:grid-cols-2 @7xl/main:grid-cols-4 grid grid-cols-1 gap-2 px-4 lg:px-6">

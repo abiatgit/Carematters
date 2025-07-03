@@ -32,8 +32,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Resident, User } from "@prisma/client";
-import { useSession } from "next-auth/react";
+import { Resident} from "@prisma/client";
 import { useGlobalStore } from "@/store/globalStore";
 import { deleteResidentwithId, fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { SkeletonDemo } from "@/components/skelton";

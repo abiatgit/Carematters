@@ -36,7 +36,7 @@ export async function deleteResidentwithId(Id: string | null) {
   if (!Id) return null
   try {
     
-      const residents = await prisma.resident.delete({
+       await prisma.resident.delete({
         where: {
           id: Id
         }

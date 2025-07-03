@@ -1,19 +1,19 @@
 
-"use client";
-import { useUserStore } from "@/store/useSessionStore";
-import { User } from "@prisma/client";
-import { useEffect } from "react";
+// "use client";
+// import { useUserStore } from "@/store/useSessionStore";
+// import { User } from "@prisma/client";
+// import { useEffect } from "react";
 
-type InitUserClientProps = {
-  user: User
-};
+// type InitUserClientProps = {
+//   user: User
+// };
 
-export default function InitUserClient({ user }: InitUserClientProps) {
-  const setUser = useUserStore((state:User) => state.setUser);
+// export default function InitUserClient({ user }: InitUserClientProps) {
+//   const setUser = useUserStore((state:User) => state.setUser);
 
-  useEffect(() => {
-    if (user) setUser(user);
-  }, [user]);
+//   useEffect(() => {
+//     if (user) setUser(user);
+//   }, [user]);
 
-  return null;
-}
+//   return null;
+// }

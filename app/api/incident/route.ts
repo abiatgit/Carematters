@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const data = await prisma.incident.create({ data: res });
 
     return NextResponse.json({ success: true, data }, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating incident:", error);
 
     if (error instanceof z.ZodError) {
