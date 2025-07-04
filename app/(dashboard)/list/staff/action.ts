@@ -6,6 +6,9 @@ export async function fetchStaff(houseId:string | null) {
       const staff=await prisma.user.findMany({
         where:{
           unitId:houseId
+        },
+        include:{
+          unit:true
         }
       })
       return staff
