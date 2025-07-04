@@ -40,7 +40,7 @@ import { SkeletonDemo } from "@/components/skelton";
 
 const Page = () => {
   const [dialogResidentId, setDialogResidentId] = useState<string | null>(null);
-  const [ setDialogOpoen] = useState(false)
+  // const [ setDialogOpoen] = useState(false)
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [residents, setResident] = useState<Resident[]>([]);
@@ -78,7 +78,7 @@ const Page = () => {
   });
   const delteHandle = async (id: string) => {
     await deleteResidentwithId(id)
-    setDialogOpoen(false)
+    // setDialogOpoen(false)
     if (houseId) {
       await fetchResidentsClient(houseId);
     }
