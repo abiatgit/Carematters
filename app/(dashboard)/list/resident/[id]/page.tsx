@@ -8,7 +8,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-// import AppoinmentCards from "@/components/appoinmentsCard/AppoinmentCards";
 import { Progress } from "@/components/ui/progress";
 import MedsTable from "@/components/medsTable/MedsTable";
 import { Button } from "@/components/ui/button";
@@ -27,38 +26,15 @@ import { IncidetnChart } from "@/components/incidentChart/incidentChart";
 import { fetchResidentwithId } from "../action";
 import { Resident } from "@prisma/client";
 
-
-// const appointments = [
-//   {
-//     id: "1a1a1a1a-aaaa-1111-aaaa-111111111111",
-//     where: "Royal Victoria Hospital",
-//     date: new Date("2025-05-01T10:00:00Z"),
-//     time: new Date("2025-05-01T10:30:00Z"),
-//     with: "Dr. Susan Smith",
-//     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-//     residentId: "Clara Mcd",
-//     unitId: "Comgal",
-//   },
-//   {
-//     id: "1a1a1a1a-aaaa-1111-aaaa-111111111111",
-//     where: "Royal Victoria Hospital",
-//     date: new Date("2025-05-01T10:00:00Z"),
-//     time: new Date("2025-05-01T10:30:00Z"),
-//     with: "Dr. Susan Smith",
-//     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-//     residentId: "Clara Mcd",
-//     unitId: "Comgal",
-//   },
-// ];
 const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params)
+
   const getResident = async (residentId: string) => {
     const res = await fetchResidentwithId(residentId)
     setUser(res)
   }
-    const [open,setOpen]=useState(false)
+  const [open, setOpen] = useState(false)
   const [user, setUser] = useState<Resident | null>(null)
-
   const [progress, setProgress] = useState(10);
   useEffect(() => {
     const timer = setTimeout(() => setProgress(50), 500);
@@ -67,7 +43,7 @@ const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => 
   useEffect(() => {
     getResident(id)
   }, [id])
-console.log("user",user)
+  console.log("user", user)
   return (
     <div>
       <Breadcrumb>
@@ -85,14 +61,13 @@ console.log("user",user)
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-
       <div className=" mt-4 flex flex-col xl:flex-row gap-8">
         {/* Left*/}
         <div className="w-full xl:w-1/3 space-y-6">
           {/*User badges*/}
           <div className="border border-dashed p-4 rounded-l-lg flex-row space-y-2 ">
             <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold">Name : {"Mr.John Doe"}</h1>
+              <h1 className="text-xl font-semibold">Name : {user?.name}</h1>
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant={"outline"} size={"icon"}>
@@ -110,13 +85,12 @@ console.log("user",user)
                 </SheetContent>
               </Sheet>
             </div>
-
             <p className="text-foreground text-sm">
-              Date of Birth : {"13/03/1965"}
+              Date of Birth : {user?.dateOfBirth.toDateString()}
             </p>
-            <p className="text-foreground text-sm">Room Number : {"403"}</p>
-            <p className="text-foreground text-sm">GP : {"Dr.Kenedy"}</p>
-            <p className="text-foreground text-sm">Family : {"Dr.Kenedy"}</p>
+            <p className="text-foreground text-sm">Room Number : {user?.roomNumber}</p>
+            <p className="text-foreground text-sm">GP : {user?.gp}</p>
+            <p className="text-foreground text-sm">Family : {user?.nextOfKin}</p>
             <p className="text-foreground text-sm">Contact : {"07741068115"}</p>
             <p className="text-foreground text-sm">
               Bio:{" "}
@@ -157,7 +131,6 @@ console.log("user",user)
                 </SheetContent>
               </Sheet>
             </div>
-            {/* <AppoinmentCards data={appointments}></AppoinmentCards> */}
           </div>
         </div>
         {/* Left*/}
@@ -169,7 +142,7 @@ console.log("user",user)
               <DialogTrigger asChild>
                 <Button>Incidet Reoprt</Button>
               </DialogTrigger>
-              <CreateIncidentFrom user={user}   setOpen={setOpen} />
+              <CreateIncidentFrom user={user} setOpen={setOpen} />
             </Dialog>
 
             <Button>Food & Fluid</Button>
