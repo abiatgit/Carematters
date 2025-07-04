@@ -1,15 +1,26 @@
 
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
-import { EnrichedAppointment } from "@/app/(dashboard)/list/appoinments/action";
+// import { EnrichedAppointment } from "@/app/(dashboard)/list/appoinments/action";
 import { SkeletonDemo } from "../skelton";
 import { MapPin } from "lucide-react";
+import { Appoinment } from "@prisma/client";
 
-interface AppointmentCardsProps {
-  data: EnrichedAppointment[] | [];
-}
 
-const AppoinmentCards = ({ data }: AppointmentCardsProps) => {
+
+type EnrichedAppoinment = Appoinment & {
+  residentName: string |null
+  residentAvatar?: string | null
+  unitName: string |null
+};
+
+
+type Props = {
+  data: EnrichedAppoinment[];
+};
+
+const AppoinmentCards = ({ data }: Props) => {
+  console.log("appoinment data",data)
   return data.length == 0 ? (<div className="flex flex-col gap-5">
     <SkeletonDemo />
     <SkeletonDemo />

@@ -31,13 +31,23 @@ export type SafeUser = {
   role: Role;
 };
 
+type EnrichedAppoinment = Appoinment & {
+  residentName: string |null
+  residentAvatar?: string | null
+  unitName: string| null
+};
+
+
+
+
 export function MainListArea() {
 
-  const [appointments, setAppointments] = useState<Appoinment[]>([])
+  const [appointments, setAppointments] = useState<EnrichedAppoinment[]>([])
   const [incidentData, setInsidnetData] = useState<IncidetProp[]>([])
   const { houseId } = useGlobalStore()
   async function fetchAppoinmentClient(houseId: string | null) {
     const res = await fetchAppoinment(houseId);
+    console.log("fetchAppoinmentEEE",res)
     setAppointments(res!)
     return res;
   }
@@ -122,12 +132,7 @@ export function MainListArea() {
         </CardHeader>
         <CardContent className="px-2 sm:px-6 overflow-y-auto">
           <AppoinmentCards
-            data={appointments.map((appt) => ({
-              ...appt,
-              residentName: "", // Provide actual resident name if available
-              residentAvatar: "", // Provide actual avatar URL if available
-              unitName: "", // Provide actual unit name if available
-            }))}
+            data={appointments}
           />
         </CardContent>
       </Card>

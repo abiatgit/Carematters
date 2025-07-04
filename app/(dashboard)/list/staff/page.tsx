@@ -20,7 +20,6 @@ import {
   SelectValue,
   SelectLabel
 } from "@/components/ui/select";
-
 import Link from "next/link";
 import {
   Dialog,
@@ -32,10 +31,13 @@ import {
 } from "@/components/ui/dialog";
 import CreateStaffForm from "@/components/forms/Staff/CreateStaffForm";
 import { Badge } from "@/components/ui/badge";
-import { User } from "@prisma/client";
+import { Unit, User } from "@prisma/client";
 import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
 import { useGlobalStore } from "@/store/globalStore";
 import { SkeletonDemo } from "@/components/skelton";
+type ExtendedUser = User &{
+  unit:Unit;
+}
 
 export default function StaffPage() {
   const [search, setSearch] = useState("");
@@ -43,11 +45,13 @@ export default function StaffPage() {
   const [positionFilter, setPositionFilter] = useState("all");
   const [open, setOpen] = useState(false);
   const { houseId } = useGlobalStore();
-  const [allStaff, setAllStaff] = useState<User[]>([]);
+  const [allStaff, setAllStaff] = useState<ExtendedUser[]>([]);
 
   async function fetchStaffClient(houseId: string | null) {
     const res = await fetchStaff(houseId);
-    setAllStaff(res!)
+    console.log("fetchStaffClient", res);
+    const fixedStaff = (res ?? []).filter((staff) => staff.unit !== null) as ExtendedUser[];
+    setAllStaff(fixedStaff);
   }
   const filteredStaff = allStaff.filter((singlestaff) => {
     const matchesSearch = singlestaff.name
@@ -150,14 +154,14 @@ export default function StaffPage() {
                   <div className="w-15 h-15 rounded-full relative overflow-hidden ">
                     <img
                       alt=" "
-                      src={"https://upload.wikimedia.org/wikipedia/commons/c/c8/Richard_Attenborough_%283x4_cropped%29.jpg"}
+                      src={ staff.image || "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="}
                       className="object-cover w-full h-full"
                     />
                   </div>
                   <div>
                     <CardContent className="px-0">
                       <CardTitle>Name: {staff.name}</CardTitle>
-                      <h1>House: {staff.unitId}</h1>
+                      <h1>House: {staff.unit?.name}</h1>
                       <h1>Position: {staff.role}</h1>
                     </CardContent>
                   </div>

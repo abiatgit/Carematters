@@ -32,18 +32,20 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Resident} from "@prisma/client";
+import { Resident, Unit} from "@prisma/client";
 import { useGlobalStore } from "@/store/globalStore";
 import { deleteResidentwithId, fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { SkeletonDemo } from "@/components/skelton";
 
+ type ExtendedResident= Resident &{
+     unit:Unit
+ }
 
 const Page = () => {
   const [dialogResidentId, setDialogResidentId] = useState<string | null>(null);
-  const [ setDialogOpoen] = useState(false)
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [residents, setResident] = useState<Resident[]>([]);
+  const [residents, setResident] = useState<ExtendedResident[]>([]);
   const [unitFilter, setUnitFilter] = useState("all");
   const [genderFilter, setGenderFilter] = useState("all");
   const { houseId } = useGlobalStore();
@@ -78,7 +80,6 @@ const Page = () => {
   });
   const delteHandle = async (id: string) => {
     await deleteResidentwithId(id)
-    setDialogOpoen(false)
     if (houseId) {
       await fetchResidentsClient(houseId);
     }
@@ -157,7 +158,6 @@ const Page = () => {
                   <div className="w-15 h-15 rounded-full relative overflow-hidden ">
                     <img
                       alt=" "
-                      // Added w-full h-full to make image fill the container
                       className="w-full h-full object-cover"
                       src={
                         resident.photo ||
@@ -168,7 +168,7 @@ const Page = () => {
                   <div>
                     <CardContent className="px-0">
                       <CardTitle>Name: {resident.name}</CardTitle>
-                      <h1>House: {resident.unitId}</h1>
+                      <h1>House: {resident.unit?.name}</h1>
                     </CardContent>
                   </div>
                 </div>

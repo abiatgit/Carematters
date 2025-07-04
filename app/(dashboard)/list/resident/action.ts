@@ -7,6 +7,9 @@ export async function fetchResident(houseId: string | null) {
     const residents = await prisma.resident.findMany({
       where: {
         unitId: houseId
+      },
+      include:{
+        unit:true
       }
     })
     return residents
