@@ -1,7 +1,4 @@
-export const runtime = 'nodejs';
 
-
-// app/api/auth/[...nextauth]/auth.ts or auth.ts (wherever you're defining it)
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -11,7 +8,7 @@ import bcrypt from "bcryptjs";
 import { v4 as uuid } from "uuid";
 const adapter = PrismaAdapter(prisma);
 import { encode } from "next-auth/jwt";
-import { userSchema } from "@/lib/userSchema"; // Zod schema for validation
+import { userSchema } from "@/lib/userSchema";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter,
