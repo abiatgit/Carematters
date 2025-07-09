@@ -32,7 +32,7 @@ import {
 import CreateStaffForm from "@/components/forms/Staff/CreateStaffForm";
 import { Badge } from "@/components/ui/badge";
 import { Unit, User } from "@prisma/client";
-import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
+import { deleteStaffwithId, fetchStaff } from "@/app/(dashboard)/list/staff/action";
 import { useGlobalStore } from "@/store/globalStore";
 import { SkeletonDemo } from "@/components/skelton";
 type ExtendedUser = User &{
@@ -73,6 +73,12 @@ export default function StaffPage() {
       fetchStaffClient(houseId);
     }
   }, [houseId]);
+  const delteHandle = async (id: string) => {
+    await deleteStaffwithId({id})
+    if (houseId) {
+      await  fetchStaffClient(houseId);
+    }
+  }
 
   return (
     <div className="">
@@ -186,6 +192,7 @@ export default function StaffPage() {
                         <Badge
                           variant={"destructive"}
                           className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white"
+                          onClick={() => delteHandle(staff.id)}
                         >
                           Yes
                         </Badge>
