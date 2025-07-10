@@ -5,13 +5,14 @@ import { Badge } from "../ui/badge";
 import { SkeletonDemo } from "../skelton";
 import { MapPin } from "lucide-react";
 import { Appoinment } from "@prisma/client";
+import { Avatar } from "../ui/avatar";
 
 
 
 type EnrichedAppoinment = Appoinment & {
-  residentName: string |null
+  residentName: string | null
   residentAvatar?: string | null
-  unitName: string |null
+  unitName: string | null
 };
 
 
@@ -20,7 +21,7 @@ type Props = {
 };
 
 const AppoinmentCards = ({ data }: Props) => {
-  console.log("appoinment data",data)
+  console.log("appoinment data", data)
   return data.length == 0 ? (<div className="flex flex-col gap-5">
     <SkeletonDemo />
     <SkeletonDemo />
@@ -34,13 +35,21 @@ const AppoinmentCards = ({ data }: Props) => {
             className="flex flex-row  justify-between p-5  items-center"
           >
             <div className="flex">
-              <img
+              <Avatar className="w-10 h-10 overflow-hidden rounded-full">
+                <img
+                  src={item.residentAvatar || "https://github.com/shadcn.png"}
+                  alt="Resident"
+                  className="w-full h-full object-cover"
+                />
+              </Avatar>
+
+              {/* <img
                 alt="user"
                 className="rounded-2xl"
                 width="50"
                 height="50"
                 src={item.residentAvatar || "https://github.com/shadcn.png"}
-              />
+              /> */}
 
               <div className="mx-3">
                 <p className="text-sm font-medium leading-none">

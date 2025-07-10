@@ -78,15 +78,17 @@ export function MainListArea() {
 
   return (
     <div className="@xl/main:grid-cols-1 @5xl/main:grid-cols-2 grid grid-cols-1 gap-2">
-      <Card className="@container/card h-[500px] border border-dashed">
+<Card className="@container/card h-[500px] flex flex-col justify-between border border-dashed">
+
         <CardHeader>
           <CardTitle>Incident Reports</CardTitle>
         </CardHeader>
-        <CardContent className="px-2 sm:px-6 overflow-hidden">
+        <CardContent className="px-2 sm:px-6 overflow-y-auto flex-1">
+
           {paginatedData.length == 0 ? <div className="flex flex-col gap-5"><SkeletonDemo /><SkeletonDemo /><SkeletonDemo /></div> :
             <IncidentTable data={paginatedData} />}
         </CardContent>
-        <CardFooter>
+        <CardFooter className="-mb-0">
           <Pagination>
             <PaginationContent>
               <PaginationItem>
