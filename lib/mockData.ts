@@ -169,7 +169,7 @@ export const residents = [
     },
     {
       title: "Messages",
-      url: "/list/messages",
+      url: `/list/messages/123`,
       icon: Mail,
     },
     {

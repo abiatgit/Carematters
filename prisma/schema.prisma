@@ -26,6 +26,8 @@ model User {
   onboarded     Boolean         @default(false)
   gender        Gender?
   CareHome      CareHome[]
+  messagesFrom Message[] @relation("MessageFrom")
+  messagesTo   Message[] @relation("MessageTo")
 }
 
 model Account {
@@ -57,6 +59,17 @@ model Session {
   updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
 }
+model Message {
+  id         String   @id @default(uuid())
+  text       String
+  fromId     String   // sender
+  toId       String   // receiver
+  createdAt  DateTime @default(now())
+
+  from       User     @relation("MessageFrom", fields: [fromId], references: [id])
+  to         User     @relation("MessageTo", fields: [toId], references: [id])
+}
+
 
 model VerificationToken {
   identifier String
@@ -76,7 +89,6 @@ model Authenticator {
   credentialBackedUp   Boolean
   transports           String?
   user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   @@id([userId, credentialID])
 }
 
