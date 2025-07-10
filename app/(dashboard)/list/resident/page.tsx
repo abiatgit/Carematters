@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus } from "lucide-react";
+import { MessageCircle, Plus } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import CreateResidentForm from "@/components/forms/Residents/CreateResidentForm";
@@ -32,14 +32,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Resident, Unit} from "@prisma/client";
+import { Resident, Unit } from "@prisma/client";
 import { useGlobalStore } from "@/store/globalStore";
 import { deleteResidentwithId, fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { SkeletonDemo } from "@/components/skelton";
 
- type ExtendedResident= Resident &{
-     unit:Unit
- }
+type ExtendedResident = Resident & {
+  unit: Unit
+}
 
 const Page = () => {
   const [dialogResidentId, setDialogResidentId] = useState<string | null>(null);
@@ -174,35 +174,46 @@ const Page = () => {
                 </div>
               </Link>
               <CardFooter className="px-0 ">
-                <Dialog open={dialogResidentId === resident.id} onOpenChange={(open) => !open && setDialogResidentId(null)}>
+                <div className="flex gap-4">
+                  <Dialog open={dialogResidentId === resident.id} onOpenChange={(open) => !open && setDialogResidentId(null)}>
 
-                  <DialogTrigger asChild>
+                    <DialogTrigger asChild>
+                      <Badge
+                        className="w-20 border-red-700 bg-rose-100 hover:bg-red-300"
+                        variant="outline"
+                        onClick={() => setDialogResidentId(resident.id)}
+                      >
+                        Delete
+                      </Badge>
+                    </DialogTrigger>
+                    <DialogContent className="flex items-center justify-center">
+                      <DialogHeader>
+                        <DialogTitle>
+                          Are you absolutely sure to delete?
+                        </DialogTitle>
+                        <DialogDescription className="flex items-center justify-center mt-3">
+                          <Badge
+                            variant={"destructive"}
+                            className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white"
+                            onClick={() => delteHandle(resident.id)}
+
+                          >
+                            Yes
+                          </Badge>
+                        </DialogDescription>
+                      </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
+                  <Link href={`/list/messages/${resident?.id}`}>
                     <Badge
-                      className="w-20 border-red-700 bg-rose-100 hover:bg-red-300"
-                      variant="outline"
-                      onClick={() => setDialogResidentId(resident.id)}
+                      className="bg-green-100 w-20 border-green-700 text-black cursor-pointer hover:bg-green-200 hover:text-white"
                     >
-                      Delete
+                      <MessageCircle className="text-2xl" />
+                    Text NOK
                     </Badge>
-                  </DialogTrigger>
-                  <DialogContent className="flex items-center justify-center">
-                    <DialogHeader>
-                      <DialogTitle>
-                        Are you absolutely sure to delete?
-                      </DialogTitle>
-                      <DialogDescription className="flex items-center justify-center mt-3">
-                        <Badge
-                          variant={"destructive"}
-                          className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white"
-                          onClick={() => delteHandle(resident.id)}
+                  </Link>
+                </div>
 
-                        >
-                          Yes
-                        </Badge>
-                      </DialogDescription>
-                    </DialogHeader>
-                  </DialogContent>
-                </Dialog>
               </CardFooter>
             </Card>
           );

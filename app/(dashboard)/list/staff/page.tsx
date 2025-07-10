@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
+import { MessageCircle, Plus } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -35,8 +35,8 @@ import { Unit, User } from "@prisma/client";
 import { deleteStaffwithId, fetchStaff } from "@/app/(dashboard)/list/staff/action";
 import { useGlobalStore } from "@/store/globalStore";
 import { SkeletonDemo } from "@/components/skelton";
-type ExtendedUser = User &{
-  unit:Unit;
+type ExtendedUser = User & {
+  unit: Unit;
 }
 
 export default function StaffPage() {
@@ -65,7 +65,7 @@ export default function StaffPage() {
 
     return matchesSearch && matchesUnit && positionSearch;
   });
-  const onStaffCreated =()=>{
+  const onStaffCreated = () => {
     fetchStaffClient(houseId)
   }
   useEffect(() => {
@@ -74,9 +74,9 @@ export default function StaffPage() {
     }
   }, [houseId]);
   const delteHandle = async (id: string) => {
-    await deleteStaffwithId({id})
+    await deleteStaffwithId({ id })
     if (houseId) {
-      await  fetchStaffClient(houseId);
+      await fetchStaffClient(houseId);
     }
   }
 
@@ -145,14 +145,14 @@ export default function StaffPage() {
                 </DialogTitle>
                 <DialogDescription></DialogDescription>
               </DialogHeader>
-              <CreateStaffForm setOpen={setOpen}  onStaffCreated ={onStaffCreated}/>
+              <CreateStaffForm setOpen={setOpen} onStaffCreated={onStaffCreated} />
             </DialogContent>
           </Dialog>
         </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {allStaff.length===0? <div className="flex gap-6"><SkeletonDemo/> <SkeletonDemo/><SkeletonDemo/><SkeletonDemo/></div>: filteredStaff.map((staff) => {
+        {allStaff.length === 0 ? <div className="flex gap-6"><SkeletonDemo /> <SkeletonDemo /><SkeletonDemo /><SkeletonDemo /></div> : filteredStaff.map((staff) => {
           return (
             <Card className="px-6" key={staff.id}>
               <Link href={`/list/staff/${staff.id}`}>
@@ -160,7 +160,7 @@ export default function StaffPage() {
                   <div className="w-15 h-15 rounded-full relative overflow-hidden ">
                     <img
                       alt=" "
-                      src={ staff.image || "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="}
+                      src={staff.image || "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="}
                       className="object-cover w-full h-full"
                     />
                   </div>
@@ -173,34 +173,45 @@ export default function StaffPage() {
                   </div>
                 </div>
               </Link>
+
               <CardFooter className="px-0 ">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Badge
-                      className="w-20 border-red-700 bg-rose-100 hover:bg-red-300"
-                      variant="outline"
-                    >
-                      Delete
-                    </Badge>
-                  </DialogTrigger>
-                  <DialogContent className="flex items-center justify-center">
-                    <DialogHeader>
-                      <DialogTitle>
-                        Are you absolutely sure to delete?
-                      </DialogTitle>
-                      <DialogDescription className="flex items-center justify-center mt-3">
-                        <Badge
-                          variant={"destructive"}
-                          className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white"
-                          onClick={() => delteHandle(staff.id)}
-                        >
-                          Yes
-                        </Badge>
-                      </DialogDescription>
-                    </DialogHeader>
-                  </DialogContent>
-                </Dialog>
+                <div className="flex gap-3">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Badge
+                        className="w-20 border-red-700 bg-rose-100 hover:bg-red-300"
+                        variant="outline"
+                      >
+                        Delete
+                      </Badge>
+                    </DialogTrigger>
+                    <DialogContent className="flex items-center justify-center">
+                      <DialogHeader>
+                        <DialogTitle>
+                          Are you absolutely sure to delete?
+                        </DialogTitle>
+                        <DialogDescription className="flex items-center justify-center mt-3">
+                          <Badge
+                            variant={"destructive"}
+                            className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white"
+                            onClick={() => delteHandle(staff.id)}
+                          >
+                            Yes
+                          </Badge>
+                        </DialogDescription>
+                      </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
+                  <Link href={`/list/messages/${staff?.id}`}>
+                  <Badge
+                    className="bg-green-100 w-20 border-green-700 text-black cursor-pointer hover:bg-green-200 hover:text-white"
+                  >
+                    <MessageCircle className="text-2xl" />
+                    Message
+                  </Badge></Link>
+                </div>
               </CardFooter>
+
             </Card>
           );
         })}
