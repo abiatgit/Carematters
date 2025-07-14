@@ -5,7 +5,7 @@ import { createColumns } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import AppointmentForm from "@/components/forms/appointment/appointmentForm";
-import { fetchAppoinment, EnrichedAppointment } from "./action";
+import { fetchAppointmentsByUnit, EnrichedAppointment } from "./action";
 import { useGlobalStore } from "@/store/globalStore";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -29,14 +29,14 @@ export default function Page() {
   const [open, setOpen] = useState(false);
   const [appointments, setAppointments] = useState<EnrichedAppointment[]>([]);
   const [loading, setLoading] = useState(true);
-  const { careHome } = useGlobalStore();
+  const { houseId } = useGlobalStore();
 
   const fetchLiveAppointments = async () => {
-    if (!careHome?.id) return;
+    if (!houseId) return;
     
     setLoading(true);
     try {
-      const allAppointments = await fetchAppoinment(careHome.id);
+      const allAppointments = await fetchAppointmentsByUnit(houseId);
       // Filter to show only live appointments (future appointments)
       const now = new Date();
       const liveAppointments = allAppointments.filter(apt => {
@@ -53,7 +53,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchLiveAppointments();
-  }, [careHome]);
+  }, [houseId]);
 
   const refreshAppointments = () => {
     fetchLiveAppointments();
@@ -62,7 +62,7 @@ export default function Page() {
   return (
     <div>
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold">Live Appointments</h1>
+        <h1 className="text-2xl font-bold">Live Appointments - Selected House</h1>
         <div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -80,7 +80,7 @@ export default function Page() {
           <AppointmentSkeleton />
         ) : appointments.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-500">No live appointments found.</p>
+            <p className="text-gray-500">No live appointments found for the selected house.</p>
           </div>
         ) : (
           <DataTable 
