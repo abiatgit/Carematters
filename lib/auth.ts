@@ -10,12 +10,32 @@ const adapter = PrismaAdapter(prisma);
 import { encode } from "next-auth/jwt";
 import { userSchema } from "@/lib/userSchema";
 
+// Validate required environment variables
+if (!process.env.GOOGLE_CLIENT_ID) {
+  throw new Error("GOOGLE_CLIENT_ID environment variable is not set");
+}
+if (!process.env.GOOGLE_CLIENT_SECRET) {
+  throw new Error("GOOGLE_CLIENT_SECRET environment variable is not set");
+}
+if (!process.env.NEXTAUTH_SECRET) {
+  throw new Error("NEXTAUTH_SECRET environment variable is not set");
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter,
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
     }),
     CredentialsProvider({
       credentials: {
@@ -60,12 +80,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token;
     },
-      async session({ session, token }) {
-    if (token?.id && session.user) {
-      session.user.id = token.id as string; // Attach id to session.user
+    async session({ session, token }) {
+      if (token?.id && session.user) {
+        session.user.id = token.id as string; // Attach id to session.user
+      }
+      return session;
+    },
+    async signIn({ account }) {
+      if (account?.provider === "google") {
+        try {
+          // You can add additional validation here if needed
+          return true;
+        } catch (error) {
+          console.error("Google sign-in error:", error);
+          return false;
+        }
+      }
+      return true;
     }
-    return session;
-  }
   },
     jwt: {
     encode: async function (params) {
