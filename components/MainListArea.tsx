@@ -44,7 +44,6 @@ export function MainListArea() {
   }
   useEffect(() => {
     if (!houseId) return;
-    fetchAppoinmentClient(houseId)
     IncidentDataFetch(houseId)
   }, [houseId])
 

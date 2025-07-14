@@ -1,13 +1,12 @@
 import MessageClient from './MessageClient'
 
-interface PageProps {
-  params: Promise<{
-    id: string
-  }>
+type PageProps = {
+  params: Promise<{ id: string }>
 }
 
-export default async function MessagePage({ params }: PageProps) {
-  const { id } = await params;
+export default async function MessagePage(props: PageProps) {
+  const params = await props.params
+  const { id } = params
   
   return <MessageClient userId={id} />
 }
