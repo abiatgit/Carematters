@@ -13,8 +13,9 @@ const updateProfileSchema = z.object({
 export async function PUT(request: NextRequest) {
   try {
     const session = await auth();
+    const user = session?.user;
     
-    if (!session || !session.user?.email) {
+    if (!session || !user?.id) {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
         { status: 401 }
@@ -24,13 +25,25 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     const validatedData = updateProfileSchema.parse(body);
 
+    // Get current user data first
+    const currentUser = await prisma.user.findUnique({
+      where: { id: user.id },
+    });
+
+    if (!currentUser) {
+      return NextResponse.json(
+        { success: false, error: "User not found" },
+        { status: 404 }
+      );
+    }
+
     // Check if email is being changed and if it's already taken by another user
-    if (validatedData.email !== session.user.email) {
+    if (validatedData.email !== currentUser.email) {
       const existingUser = await prisma.user.findUnique({
         where: { email: validatedData.email },
       });
 
-      if (existingUser && existingUser.email !== session.user.email) {
+      if (existingUser && existingUser.id !== user.id) {
         return NextResponse.json(
           { success: false, error: "Email is already taken" },
           { status: 400 }
@@ -40,7 +53,7 @@ export async function PUT(request: NextRequest) {
 
     // Update the user profile
     const updatedUser = await prisma.user.update({
-      where: { email: session.user.email },
+      where: { id: user.id },
       data: {
         name: validatedData.name,
         email: validatedData.email,
@@ -90,16 +103,17 @@ export async function PUT(request: NextRequest) {
 export async function GET() {
   try {
     const session = await auth();
+    const user = session?.user;
     
-    if (!session || !session.user?.email) {
+    if (!session || !user?.id) {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
         { status: 401 }
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
+    const currentUser = await prisma.user.findUnique({
+      where: { id: user.id },
       select: {
         id: true,
         name: true,
@@ -111,7 +125,7 @@ export async function GET() {
       },
     });
 
-    if (!user) {
+    if (!currentUser) {
       return NextResponse.json(
         { success: false, error: "User not found" },
         { status: 404 }
@@ -120,7 +134,7 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      user,
+      user: currentUser,
     });
 
   } catch (error) {
