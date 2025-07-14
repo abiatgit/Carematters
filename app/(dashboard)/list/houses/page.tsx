@@ -1,10 +1,6 @@
 "use client"
 import {
   Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
 import { CreateHouse } from "@/components/forms/houses/createHouse";

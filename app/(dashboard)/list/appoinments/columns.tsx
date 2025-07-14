@@ -29,9 +29,6 @@ export type Appoinments = {
   unitId: string;
 };
 
-type ColumnsProps = {
-  onRefresh?: () => void;
-};
 
 export const createColumns = (onRefresh?: () => void): ColumnDef<Appoinments>[] => [
   {
@@ -99,7 +96,7 @@ export const createColumns = (onRefresh?: () => void): ColumnDef<Appoinments>[] 
           } else {
             toast.error("Failed to delete appointment");
           }
-        } catch (error) {
+        } catch {
           toast.error("Failed to delete appointment");
         }
       };

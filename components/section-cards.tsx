@@ -14,7 +14,7 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link"; 
 import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
-import { Appoinment, Resident, User } from "@prisma/client";
+import { Resident, User } from "@prisma/client";
 import { fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { useGlobalStore } from "@/store/globalStore";
 import { fetchUpcomingAppointmentsByUnit, EnrichedAppointment } from "@/app/(dashboard)/list/appoinments/action";
@@ -176,7 +176,7 @@ export function SectionCards() {
         <CardFooter className="flex justify-between items-start gap-1 text-sm">
           <div className="flex -space-x-3">
             {upcomingAppointments.length > 0 ? (
-              upcomingAppointments.slice(0, 3).map((appointment, index) => (
+              upcomingAppointments.slice(0, 3).map((appointment) => (
                 <Avatar key={appointment.id} className="border-2 border-white">
                   <AvatarImage 
                     src={appointment.residentAvatar || undefined} 
