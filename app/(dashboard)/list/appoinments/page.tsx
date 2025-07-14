@@ -31,19 +31,13 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const { houseId } = useGlobalStore();
 
-  const fetchLiveAppointments = async () => {
+  const fetchAllAppointments = async () => {
     if (!houseId) return;
     
     setLoading(true);
     try {
-      const allAppointments = await fetchAppointmentsByUnit(houseId);
-      // Filter to show only live appointments (future appointments)
-      const now = new Date();
-      const liveAppointments = allAppointments.filter(apt => {
-        const appointmentDateTime = new Date(apt.date);
-        return appointmentDateTime > now;
-      });
-      setAppointments(liveAppointments);
+      const allAppointments = await fetchAppointmentsByUnit(houseId, 100);
+      setAppointments(allAppointments);
     } catch (error) {
       console.error("Error fetching appointments:", error);
     } finally {
@@ -52,17 +46,17 @@ export default function Page() {
   };
 
   useEffect(() => {
-    fetchLiveAppointments();
+    fetchAllAppointments();
   }, [houseId]);
 
   const refreshAppointments = () => {
-    fetchLiveAppointments();
+    fetchAllAppointments();
   };
 
   return (
     <div>
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold">Live Appointments - Selected House</h1>
+        <h1 className="text-2xl font-bold">All Appointments - Selected House</h1>
         <div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -80,7 +74,7 @@ export default function Page() {
           <AppointmentSkeleton />
         ) : appointments.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-500">No live appointments found for the selected house.</p>
+            <p className="text-gray-500">No appointments found for the selected house.</p>
           </div>
         ) : (
           <DataTable 

@@ -233,7 +233,7 @@ export async function fetchAppointmentsByUnit(unitId: string | null, limit: numb
                 }
             },
             orderBy: {
-                date: 'asc'
+                date: 'desc'
             },
             take: limit
         });
