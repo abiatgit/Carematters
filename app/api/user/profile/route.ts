@@ -8,7 +8,7 @@ const updateProfileSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
   gender: z.enum(["male", "female", "other"]).optional(),
-  image: z.string().optional(),
+  image: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
 });
 
 export async function PUT(request: NextRequest) {
@@ -46,7 +46,7 @@ export async function PUT(request: NextRequest) {
         name: validatedData.name,
         email: validatedData.email,
         gender: validatedData.gender,
-        image: validatedData.image,
+        image: validatedData.image || null, // Handle empty string as null
         updatedAt: new Date(),
       },
       select: {

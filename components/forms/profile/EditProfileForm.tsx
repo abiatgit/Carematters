@@ -26,8 +26,8 @@ import {
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import { useGlobalStore } from "@/store/globalStore";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Camera, Upload } from "lucide-react";
-import React, { useState, useRef } from "react";
+import { Link } from "lucide-react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -36,7 +36,7 @@ const profileSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
   gender: z.enum(["male", "female", "other"]).optional(),
-  image: z.string().optional(),
+  image: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
 });
 
 interface EditProfileFormProps {
@@ -46,9 +46,7 @@ interface EditProfileFormProps {
 
 const EditProfileForm = ({ setOpen, onSuccess }: EditProfileFormProps) => {
   const { user, setUser } = useGlobalStore();
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const [previewImage, setPreviewImage] = useState<string | null>(user?.image || null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewImage, setPreviewImage] = useState<string>(user?.image || "");
 
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -60,50 +58,9 @@ const EditProfileForm = ({ setOpen, onSuccess }: EditProfileFormProps) => {
     },
   });
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    if (file.size > 5 * 1024 * 1024) { // 5MB limit
-      showErrorToast("Image size should be less than 5MB");
-      return;
-    }
-
-    if (!file.type.startsWith("image/")) {
-      showErrorToast("Please select a valid image file");
-      return;
-    }
-
-    setUploadingImage(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        const imageUrl = data.url;
-        setPreviewImage(imageUrl);
-        form.setValue("image", imageUrl);
-        showSuccessToast("Image uploaded successfully");
-      } else {
-        showErrorToast(data.error || "Failed to upload image");
-      }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      showErrorToast("Failed to upload image");
-    } finally {
-      setUploadingImage(false);
-    }
-  };
-
-  const triggerImageUpload = () => {
-    fileInputRef.current?.click();
+  const handleImageUrlChange = (value: string) => {
+    setPreviewImage(value);
+    form.setValue("image", value);
   };
 
   async function onSubmit(values: z.infer<typeof profileSchema>) {
@@ -149,50 +106,41 @@ const EditProfileForm = ({ setOpen, onSuccess }: EditProfileFormProps) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {/* Profile Image Section */}
-            <div className="flex flex-col items-center space-y-2">
-              <div className="relative">
-                <Avatar className="h-20 w-20 border-2 border-gray-200">
-                  <AvatarImage 
-                    src={previewImage || "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="} 
-                    alt="Profile picture" 
-                  />
-                  <AvatarFallback>
-                    {user?.name?.charAt(0)?.toUpperCase() || "U"}
-                  </AvatarFallback>
-                </Avatar>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full p-0"
-                  onClick={triggerImageUpload}
-                  disabled={uploadingImage}
-                >
-                  {uploadingImage ? (
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600"></div>
-                  ) : (
-                    <Camera className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
+            <div className="flex flex-col items-center space-y-4">
+              <Avatar className="h-20 w-20 border-2 border-gray-200">
+                <AvatarImage 
+                  src={previewImage || "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="} 
+                  alt="Profile picture" 
+                />
+                <AvatarFallback>
+                  {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                </AvatarFallback>
+              </Avatar>
+              
+              {/* Profile Image URL Field */}
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="flex items-center space-x-1">
+                      <Link className="h-4 w-4" />
+                      <span>Profile Picture URL</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="https://example.com/your-profile-picture.jpg" 
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleImageUrlChange(e.target.value);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={triggerImageUpload}
-                disabled={uploadingImage}
-                className="flex items-center space-x-1 text-sm"
-              >
-                <Upload className="h-4 w-4" />
-                <span>{uploadingImage ? "Uploading..." : "Change Photo"}</span>
-              </Button>
             </div>
 
             {/* Name Field */}
@@ -257,7 +205,7 @@ const EditProfileForm = ({ setOpen, onSuccess }: EditProfileFormProps) => {
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={uploadingImage}>
+              <Button type="submit">
                 Save Changes
               </Button>
             </DialogFooter>
