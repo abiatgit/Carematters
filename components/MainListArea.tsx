@@ -16,10 +16,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Appoinment, Role } from "@prisma/client";
+import { Role } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useGlobalStore } from "@/store/globalStore";
-import { fetchAppoinment } from "@/app/(dashboard)/list/appoinments/action";
 import AppoinmentCards from "./appoinmentsCard/AppoinmentCards";
 import { SkeletonDemo } from "./skelton";
 
@@ -31,26 +30,13 @@ export type SafeUser = {
   role: Role;
 };
 
-type EnrichedAppoinment = Appoinment & {
-  residentName: string |null
-  residentAvatar?: string | null
-  unitName: string| null
-};
-
 
 
 
 export function MainListArea() {
 
-  const [appointments, setAppointments] = useState<EnrichedAppoinment[]>([])
   const [incidentData, setInsidnetData] = useState<IncidetProp[]>([])
   const { houseId } = useGlobalStore()
-  async function fetchAppoinmentClient(houseId: string | null) {
-    const res = await fetchAppoinment(houseId);
-    console.log("fetchAppoinmentEEE",res)
-    setAppointments(res!)
-    return res;
-  }
   const IncidentDataFetch = async (houseId: string | null) => {
     if (!houseId) return []
     const data = await fetchIncidents(houseId)
@@ -133,9 +119,7 @@ export function MainListArea() {
           <CardTitle>Appointments</CardTitle>
         </CardHeader>
         <CardContent className="px-2 sm:px-6 overflow-y-auto">
-          <AppoinmentCards
-            data={appointments}
-          />
+          <AppoinmentCards />
         </CardContent>
       </Card>
     </div>
