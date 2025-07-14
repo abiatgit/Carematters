@@ -26,8 +26,8 @@ import {
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import { useGlobalStore } from "@/store/globalStore";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "lucide-react";
-import React, { useState } from "react";
+import { Link, Loader2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -39,6 +39,16 @@ const profileSchema = z.object({
   image: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
 });
 
+type UserData = {
+  id: string;
+  name: string | null;
+  email: string;
+  gender: "male" | "female" | "other" | null;
+  image: string | null;
+  role: string;
+  unitId: string | null;
+};
+
 interface EditProfileFormProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onSuccess?: () => void;
@@ -46,17 +56,58 @@ interface EditProfileFormProps {
 
 const EditProfileForm = ({ setOpen, onSuccess }: EditProfileFormProps) => {
   const { user, setUser } = useGlobalStore();
-  const [previewImage, setPreviewImage] = useState<string>(user?.image || "");
+  const [previewImage, setPreviewImage] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const [fetchedUserData, setFetchedUserData] = useState<UserData | null>(null);
 
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: user?.name || "",
-      email: user?.email || "",
-      gender: user?.gender || undefined,
-      image: user?.image || "",
+      name: "",
+      email: "",
+      gender: undefined,
+      image: "",
     },
   });
+
+  // Fetch current user data from database
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/user/profile", {
+          method: "GET",
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.user) {
+          const userData = data.user;
+          setFetchedUserData(userData);
+          
+          // Update form with fetched data
+          form.reset({
+            name: userData.name || "",
+            email: userData.email || "",
+            gender: userData.gender || undefined,
+            image: userData.image || "",
+          });
+
+          // Set preview image
+          setPreviewImage(userData.image || "");
+        } else {
+          showErrorToast(data.error || "Failed to fetch user data");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        showErrorToast("Failed to fetch user data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [form]);
 
   const handleImageUrlChange = (value: string) => {
     setPreviewImage(value);
@@ -76,10 +127,10 @@ const EditProfileForm = ({ setOpen, onSuccess }: EditProfileFormProps) => {
       const data = await response.json();
 
       if (data.success) {
-        // Update the global store with new user data
+        // Update the global store with fresh user data from response
         setUser({
           ...user,
-          ...values,
+          ...data.user,
         });
         showSuccessToast("Profile updated successfully");
         setOpen(false);
@@ -103,8 +154,14 @@ const EditProfileForm = ({ setOpen, onSuccess }: EditProfileFormProps) => {
       </DialogHeader>
       
       <div className="grid gap-4">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {loading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-6 w-6 animate-spin mr-2" />
+            <span>Loading profile data...</span>
+          </div>
+        ) : (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {/* Profile Image Section */}
             <div className="flex flex-col items-center space-y-4">
               <Avatar className="h-20 w-20 border-2 border-gray-200">
@@ -113,7 +170,7 @@ const EditProfileForm = ({ setOpen, onSuccess }: EditProfileFormProps) => {
                   alt="Profile picture" 
                 />
                 <AvatarFallback>
-                  {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                  {fetchedUserData?.name?.charAt(0)?.toUpperCase() || "U"}
                 </AvatarFallback>
               </Avatar>
               
@@ -209,8 +266,9 @@ const EditProfileForm = ({ setOpen, onSuccess }: EditProfileFormProps) => {
                 Save Changes
               </Button>
             </DialogFooter>
-          </form>
-        </Form>
+            </form>
+          </Form>
+        )}
       </div>
     </DialogContent>
   );
