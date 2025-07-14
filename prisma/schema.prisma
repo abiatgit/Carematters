@@ -26,6 +26,19 @@ model User {
   onboarded     Boolean         @default(false)
   gender        Gender?
   CareHome      CareHome[]
+ messagesSent     Message[] @relation("MessageFrom") 
+  messagesReceived Message[] @relation("MessageTo")  
+
+}
+model Message {
+  id        String   @id @default(uuid())
+  text      String
+  fromId    String // sender
+  toId      String // receiver
+  createdAt DateTime @default(now())
+
+  from User @relation("MessageFrom", fields: [fromId], references: [id])
+  to   User @relation("MessageTo", fields: [toId], references: [id])
 }
 
 model Account {
@@ -116,7 +129,7 @@ model Resident {
   gender      Gender
   gp          String?
   unitId      String
-  unit        Unit         @relation(fields: [unitId], references: [id],onDelete: Cascade)
+  unit        Unit         @relation(fields: [unitId], references: [id], onDelete: Cascade)
   appoinment  Appoinment[]
   incident    Incident[]
   medication  Medication[]
@@ -126,18 +139,18 @@ model Resident {
 }
 
 model Appoinment {
-  id         String    @id @default(uuid())
-  venue      String
-  date       DateTime
-  time       DateTime
-  scheduledWith       String
-  residentId String
-  resident   Resident  @relation(fields: [residentId], references: [id],onDelete: Cascade)
-  unitId     String
-  unit       Unit      @relation(fields: [unitId], references: [id],onDelete: Cascade)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  deletedAt  DateTime?
+  id            String    @id @default(uuid())
+  venue         String
+  date          DateTime
+  time          DateTime
+  scheduledWith String
+  residentId    String
+  resident      Resident  @relation(fields: [residentId], references: [id], onDelete: Cascade)
+  unitId        String
+  unit          Unit      @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
 }
 
 model Incident {
@@ -155,6 +168,8 @@ model Incident {
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
 }
+
+
 
 model Medication {
   id         String    @id @default(uuid())

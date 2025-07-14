@@ -113,16 +113,17 @@ const AppoinmentCards = ({ unitId, limit = 20 }: Props) => {
                     {item.unitName}
                   </p>
                 </div>
-              </div>
+            
 
-              {/* Right: Appointment Details */}
-              <div className="flex items-center space-x-6">
-                {/* Date & Time */}
-                <div className="text-right">
+              </div>
+              <div className="text-right flex-col items-center justify-center">
                   <p className="text-sm font-medium text-gray-900">{dateStr}</p>
                   <p className="text-xs text-gray-500">{timeStr}</p>
                 </div>
-
+              {/* Right: Appointment Details */}
+              <div className="flex items-center space-x-6">
+                {/* Date & Time */}
+               
                 {/* Scheduled With */}
                 <div className="text-right">
                   <p className="text-sm font-medium text-gray-900">

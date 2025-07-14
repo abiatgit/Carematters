@@ -24,8 +24,8 @@ const page = async () => {
           <h1 className="font-poppins scroll-m-20 text-center text-2xl text-gray-800 font-extrabold tracking-wide text-balance leading-loose">
             <span className="text-green-700 underline">CareMatters </span>
             <br></br>
-            &apos;&apos; Reimagine care management — the way it should be
-            &apos;&apos;
+            &apos; Reimagine care management — the way it should be
+            &apos;
           </h1>
         </div>
       </div>
