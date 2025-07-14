@@ -50,28 +50,27 @@ const Page = () => {
       {allhouses.map((house) => {
         return (
           <Card
-            className="flex items-center justify-center p-3 rounded-sm"
+            className="p-4 rounded-lg border hover:shadow-md transition-shadow"
             key={house?.id}
           >
-            <CardHeader className="flex items-center justify-center ">
-              <CardTitle className="text-xl">{house?.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <h1>Total Residents :{house?.residents?.length} </h1>
-              <h1 className="mt-3">Total Staff :{house?.staff?.length}</h1>
-            </CardContent>
-            <CardFooter>
-              <Badge className="w-20 border-red-700 bg-rose-100 hover:bg-red-300" variant="outline" >
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg">{house?.name}</h3>
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>Residents: {house?.residents?.length}</span>
+                <span>Staff: {house?.staff?.length}</span>
+              </div>
+              <Badge 
+                className="w-fit text-xs border-red-700 bg-rose-100 hover:bg-red-300 cursor-pointer" 
+                variant="outline"
+              >
                 Delete
               </Badge>
-            </CardFooter>
+            </div>
           </Card>
         );
       })}
-      <Card className="flex items-center justify-center p-3 rounded-sm">
-        <CardContent>
-          <CreateHouse onHouseCreated={refreshHouses} />
-        </CardContent>
+      <Card className="p-4 rounded-lg border hover:shadow-md transition-shadow flex items-center justify-center">
+        <CreateHouse onHouseCreated={refreshHouses} />
       </Card>
     </div>
   );

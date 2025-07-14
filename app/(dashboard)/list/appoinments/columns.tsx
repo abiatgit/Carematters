@@ -12,49 +12,69 @@ import {
   Pencil,
   Trash2,
 } from "lucide-react";
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown } from "lucide-react";
+import { deleteAppointment } from "./action";
+import { toast } from "sonner";
 
 export type Appoinments = {
   id: string;
-  where: string;
+  venue: string;
   date: Date;
   time: Date;
-  with: string;
-  avatar: string;
+  scheduledWith: string;
+  residentName: string | null;
+  residentAvatar: string | null;
+  unitName: string | null;
   residentId: string;
   unitId: string;
 };
 
-export const columns: ColumnDef<Appoinments>[] = [
+type ColumnsProps = {
+  onRefresh?: () => void;
+};
+
+export const createColumns = (onRefresh?: () => void): ColumnDef<Appoinments>[] => [
   {
-    accessorKey: "Photo",
+    accessorKey: "residentAvatar",
     header: "",
+    cell: ({ row }) => {
+      const avatar = row.original.residentAvatar;
+      return avatar ? (
+        <img src={avatar} alt="Resident" className="h-10 w-10 rounded-full" />
+      ) : (
+        <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+          <span className="text-sm font-medium">
+            {row.original.residentName?.charAt(0) || "?"}
+          </span>
+        </div>
+      );
+    },
   },
   {
-    accessorKey: "residentId",
+    accessorKey: "residentName",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-         Name
+         Resident Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
   },
   {
-    accessorKey: "unitId",
+    accessorKey: "unitName",
     header: "House",
   },
   {
-    accessorKey: "where",
-    header: "Place",
+    accessorKey: "venue",
+    header: "Venue",
   },
   {
-    accessorKey: "with",
-    header: "Person",
+    accessorKey: "scheduledWith",
+    header: "Scheduled With",
   },
   {
     accessorKey: "date",
@@ -67,19 +87,38 @@ export const columns: ColumnDef<Appoinments>[] = [
   },
   {
     id: "actions",
-    cell: ({}) => {
+    cell: ({ row }) => {
+      const appointment = row.original;
+      
+      const handleDelete = async () => {
+        try {
+          const result = await deleteAppointment(appointment.id);
+          if (result.success) {
+            toast.success("Appointment deleted successfully");
+            onRefresh?.();
+          } else {
+            toast.error("Failed to delete appointment");
+          }
+        } catch (error) {
+          toast.error("Failed to delete appointment");
+        }
+      };
+
       return (
-        <DropdownMenu  >
-          <DropdownMenuTrigger asChild >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0 m-4">
-              <MoreHorizontal className="h-4 w-4 " />
+              <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem>
               Edit <Pencil />
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-red-800">
+            <DropdownMenuItem 
+              className="text-red-800"
+              onClick={handleDelete}
+            >
               Delete
               <Trash2 />
             </DropdownMenuItem>
@@ -89,3 +128,5 @@ export const columns: ColumnDef<Appoinments>[] = [
     },
   },
 ];
+
+export const columns = createColumns();

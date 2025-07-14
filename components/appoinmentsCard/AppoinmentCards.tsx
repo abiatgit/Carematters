@@ -1,82 +1,153 @@
 
+"use client";
 import { Card } from "../ui/card";
-import { Badge } from "../ui/badge";
-// import { EnrichedAppointment } from "@/app/(dashboard)/list/appoinments/action";
+
 import { SkeletonDemo } from "../skelton";
-import { MapPin } from "lucide-react";
-import { Appoinment } from "@prisma/client";
-import { Avatar } from "../ui/avatar";
-
-
-
-type EnrichedAppoinment = Appoinment & {
-  residentName: string | null
-  residentAvatar?: string | null
-  unitName: string | null
-};
-
+import { MapPin, Calendar,  } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { fetchAppointmentsByUnit, EnrichedAppointment } from "@/app/(dashboard)/list/appoinments/action";
+import { useGlobalStore } from "@/store/globalStore";
+import { useEffect, useState } from "react";
 
 type Props = {
-  data: EnrichedAppoinment[];
+  unitId?: string | null;
+  limit?: number;
 };
 
-const AppoinmentCards = ({ data }: Props) => {
-  console.log("appoinment data", data)
-  return data.length == 0 ? (<div className="flex flex-col gap-5">
-    <SkeletonDemo />
-    <SkeletonDemo />
-    <SkeletonDemo />
-  </div>) :
-    (
-      <div className="flex flex-col gap-3 ">
-        {data?.map((item, index) => (
-          <Card
-            key={index}
-            className="flex flex-row  justify-between p-5  items-center"
-          >
-            <div className="flex">
-              <Avatar className="w-10 h-10 overflow-hidden rounded-full">
-                <img
-                  src={item.residentAvatar || "https://github.com/shadcn.png"}
-                  alt="Resident"
-                  className="w-full h-full object-cover"
-                />
-              </Avatar>
+const AppoinmentCards = ({ unitId, limit = 20 }: Props) => {
+  const { houseId } = useGlobalStore();
+  const [appointments, setAppointments] = useState<EnrichedAppointment[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  const selectedUnitId = unitId || houseId;
 
-              {/* <img
-                alt="user"
-                className="rounded-2xl"
-                width="50"
-                height="50"
-                src={item.residentAvatar || "https://github.com/shadcn.png"}
-              /> */}
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      if (!selectedUnitId) return;
+      
+      setLoading(true);
+      try {
+        const appointmentData = await fetchAppointmentsByUnit(selectedUnitId, limit);
+        setAppointments(appointmentData);
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-              <div className="mx-3">
-                <p className="text-sm font-medium leading-none">
-                  {item?.residentName}
-                </p>
-                <p className="text-sm text-muted-foreground ">{item?.unitName}</p>
-              </div>
-            </div>
+    fetchAppointments();
+  }, [selectedUnitId, limit]);
 
-            <div>
-              <div>
-                <p className="text-sm font-medium leading-none">{item.scheduledWith}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {item.time.toLocaleString()}
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <Badge variant="secondary" className="bg-gray-400 text-gray-800">{item.venue}</Badge>
-              <MapPin />
-            </div>
-          </Card>
-        ))}
+  const formatDateTime = (date: Date, time: Date) => {
+    const appointmentDate = new Date(date);
+    const appointmentTime = new Date(time);
+    
+    const dateStr = appointmentDate.toLocaleDateString("en-US", { 
+      weekday: 'short', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+    
+    const timeStr = appointmentTime.toLocaleTimeString("en-US", { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    });
+    
+    return { dateStr, timeStr };
+  };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-5">
+        <SkeletonDemo />
+        <SkeletonDemo />
+        <SkeletonDemo />
+        <SkeletonDemo />
+        <SkeletonDemo />
       </div>
     );
+  }
+
+  if (appointments.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <div className="text-gray-400 mb-2">
+          <Calendar size={48} />
+        </div>
+        <p className="text-lg font-medium text-gray-600">No appointments found</p>
+        <p className="text-sm text-gray-400">There are no appointments for this unit.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      {appointments.map((item, index) => {
+        const { dateStr, timeStr } = formatDateTime(item.date, item.time);
+        
+        return (
+          <Card
+            key={item.id || index}
+            className="p-4 hover:shadow-sm transition-all duration-200 border-l-4 border-l-green-700"
+          >
+            <div className="flex items-center justify-between">
+              {/* Left: Avatar and Resident Info */}
+              <div className="flex items-center space-x-3">
+                <Avatar className="w-10 h-10">
+                  <AvatarImage 
+                    src={item.residentAvatar || undefined} 
+                    alt={item.residentName || "Resident"} 
+                  />
+                  <AvatarFallback className="bg-blue-100 text-green-700 text-sm font-medium">
+                    {item.residentName?.split(' ').map(n => n[0]).join('') || 'R'}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div>
+                  <h4 className="font-medium text-gray-900 text-sm">
+                    {item.residentName}
+                  </h4>
+                  <p className="text-xs text-gray-500">
+                    {item.unitName}
+                  </p>
+                </div>
+              </div>
+
+              {/* Right: Appointment Details */}
+              <div className="flex items-center space-x-6">
+                {/* Date & Time */}
+                <div className="text-right">
+                  <p className="text-sm font-medium text-gray-900">{dateStr}</p>
+                  <p className="text-xs text-gray-500">{timeStr}</p>
+                </div>
+
+                {/* Scheduled With */}
+                <div className="text-right">
+                  <p className="text-sm font-medium text-gray-900">
+                    {item.scheduledWith}
+                  </p>
+                  <div className="flex items-center justify-end space-x-1 mt-1">
+                    <MapPin size={12} className="text-gray-400" />
+                    <span className="text-xs text-gray-500">{item.venue}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+        );
+      })}
+      
+      {appointments.length === limit && (
+        <div className="text-center py-3">
+          <p className="text-xs text-gray-400">
+            Showing first {limit} appointments
+          </p>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default AppoinmentCards;

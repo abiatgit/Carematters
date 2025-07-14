@@ -1,34 +1,94 @@
 "use client"
-import React, { useState } from "react";
-import { appointments } from "@/lib/mockData";
+import React, { useState, useEffect } from "react";
 import { DataTable } from "./data-table";
-import { columns } from "./columns";
+import { createColumns } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import AppointmentForm from "@/components/forms/appointment/appointmentForm";
-const getData = () => {
-  return appointments;
+import { fetchAppoinment, EnrichedAppointment } from "./action";
+import { useGlobalStore } from "@/store/globalStore";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const AppointmentSkeleton = () => {
+  return (
+    <div className="space-y-4">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <div key={i} className="flex items-center space-x-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 };
+
 export default function Page() {
-  const [open,setOpen]=useState(false)
-  const data = getData();
+  const [open, setOpen] = useState(false);
+  const [appointments, setAppointments] = useState<EnrichedAppointment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { careHome } = useGlobalStore();
+
+  const fetchLiveAppointments = async () => {
+    if (!careHome?.id) return;
+    
+    setLoading(true);
+    try {
+      const allAppointments = await fetchAppoinment(careHome.id);
+      // Filter to show only live appointments (future appointments)
+      const now = new Date();
+      const liveAppointments = allAppointments.filter(apt => {
+        const appointmentDateTime = new Date(apt.date);
+        return appointmentDateTime > now;
+      });
+      setAppointments(liveAppointments);
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLiveAppointments();
+  }, [careHome]);
+
+  const refreshAppointments = () => {
+    fetchLiveAppointments();
+  };
+
   return (
     <div>
       <div className="flex justify-between">
-        Appoinments
+        <h1 className="text-2xl font-bold">Live Appointments</h1>
         <div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button variant={"outline"} className="border-green-700">
-                New Appoinment
+                New Appointment
               </Button>
             </DialogTrigger>
-            
-            <AppointmentForm setOpen={setOpen}/>
+            <AppointmentForm setOpen={setOpen} onSuccess={refreshAppointments} />
           </Dialog>
         </div>
       </div>
-      <DataTable data={data} columns={columns}></DataTable>
+      
+      <div className="mt-6">
+        {loading ? (
+          <AppointmentSkeleton />
+        ) : appointments.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">No live appointments found.</p>
+          </div>
+        ) : (
+          <DataTable 
+            data={appointments} 
+            columns={createColumns(refreshAppointments)} 
+          />
+        )}
+      </div>
     </div>
   );
 }

@@ -17,7 +17,7 @@ import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
 import { Appoinment, Resident, User } from "@prisma/client";
 import { fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { useGlobalStore } from "@/store/globalStore";
-import { fetchAppoinment } from "@/app/(dashboard)/list/appoinments/action";
+import { fetchUpcomingAppointmentsByUnit, EnrichedAppointment } from "@/app/(dashboard)/list/appoinments/action";
 
 type MinimalCareHome = {
   id: string;
@@ -31,8 +31,8 @@ async function fetchStaffClient(houseId: string | null) {
   const res = await fetchStaff(houseId);
   return res;
 }
-async function fetchAppoinmentClient(houseId: string | null) {
-  const res = await fetchAppoinment(houseId);
+async function fetchUpcomingAppointmentsClient(houseId: string | null) {
+  const res = await fetchUpcomingAppointmentsByUnit(houseId);
   return res;
 }
 export function SectionCards() {
@@ -40,7 +40,7 @@ export function SectionCards() {
   const { houseId } = useGlobalStore();
   const [residents, setResidents] = useState<Resident[]>([]);
   const [staff, setStaff] = useState<User[]>([]);
-  const [appoinments, setAppoinment] = useState<Appoinment[]>([])
+  const [upcomingAppointments, setUpcomingAppointments] = useState<EnrichedAppointment[]>([])
   const [allhouses, setAllhouses] = useState<MinimalCareHome[]>([]);
   const { careHome } = useGlobalStore()
 
@@ -67,18 +67,18 @@ export function SectionCards() {
   useEffect(() => {
     if (!user || !houseId) return;
     async function fetchData() {
-      const [residentsData, staffData, appoinmentData] = await Promise.all([
+      const [residentsData, staffData, appointmentData] = await Promise.all([
         fetchResidentsClient(houseId),
         fetchStaffClient(houseId),
-        fetchAppoinmentClient(houseId)
+        fetchUpcomingAppointmentsClient(houseId)
       ]);
       setResidents(residentsData || []);
       setStaff(staffData || []);
-      setAppoinment(appoinmentData || [])
+      setUpcomingAppointments(appointmentData || [])
     }
     fetchData();
     fetchAllHouse(careHome)
-  }, [user, houseId, careHome]); {/* removed appoinment form array due to repeated rendering*/ }
+  }, [user, houseId, careHome]);
 
   return (
     <div className="@5xl/main:grid-cols-2 @7xl/main:grid-cols-4 grid grid-cols-1 gap-2 px-4 lg:px-6">
@@ -155,31 +155,46 @@ export function SectionCards() {
       <Card className="@container/card border border-dashed">
         <CardHeader className="flex justify-between items-start gap-1 text-sm">
           <div>
-            <CardDescription>Upcoming Appointments</CardDescription>
+            <CardDescription>Upcoming Appointments (Next 10 Days)</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-              {appoinments.length}
+              {upcomingAppointments.length}
             </CardTitle>
           </div>
           <div>
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
-              <TrendingUpIcon className="size-3" /> 2 in this week
+              <TrendingUpIcon className="size-3" /> 
+              {upcomingAppointments.filter(apt => {
+                const appointmentDate = new Date(apt.date);
+                const today = new Date();
+                const oneWeekFromNow = new Date();
+                oneWeekFromNow.setDate(today.getDate() + 7);
+                return appointmentDate >= today && appointmentDate <= oneWeekFromNow;
+              }).length} this week
             </Badge>
           </div>
         </CardHeader>
         <CardFooter className="flex justify-between items-start gap-1 text-sm">
           <div className="flex -space-x-3">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+            {upcomingAppointments.length > 0 ? (
+              upcomingAppointments.slice(0, 3).map((appointment, index) => (
+                <Avatar key={appointment.id} className="border-2 border-white">
+                  <AvatarImage 
+                    src={appointment.residentAvatar || undefined} 
+                    alt={appointment.residentName || "Resident"} 
+                  />
+                  <AvatarFallback>
+                    {appointment.residentName?.split(' ').map(n => n[0]).join('') || 'R'}
+                  </AvatarFallback>
+                </Avatar>
+              ))
+            ) : (
+              <div className="text-muted-foreground text-xs">No upcoming appointments</div>
+            )}
+            {upcomingAppointments.length > 3 && (
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-xs font-medium">
+                +{upcomingAppointments.length - 3}
+              </div>
+            )}
           </div>
           <div>
             <Button className="bg-green-700 hover:bg-green-600">

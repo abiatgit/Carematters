@@ -42,9 +42,10 @@ const appoinmentSchema = z.object({
 });
 interface AppointmentFormProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onSuccess?: () => void;
 }
 
-const AppointmentForm = ({setOpen}:AppointmentFormProps) => {
+const AppointmentForm = ({setOpen, onSuccess}:AppointmentFormProps) => {
   const {careHome}=useGlobalStore()
   const [unitList, setUnitList] = useState<Unit[] | null>(null);
   const [residents, setResident] = useState<Unit[] | null>(null);
@@ -85,12 +86,14 @@ useEffect(() => {
       body: JSON.stringify(values),
     });
     const data = await res.json();
-    setOpen(false)
-     if (data.success) {
-          showSuccessToast( "New appoinment created");
-        } else {
-          showErrorToast("Error crating appoinment")
-        }
+    
+    if (data.success) {
+      showSuccessToast("New appointment created");
+      setOpen(false);
+      onSuccess?.(); // Call the refresh function
+    } else {
+      showErrorToast("Error creating appointment");
+    }
   }
 
   return (
