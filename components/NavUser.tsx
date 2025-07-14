@@ -25,17 +25,27 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Dialog } from "@/components/ui/dialog";
 import { signOut } from "next-auth/react";
 import { useGlobalStore } from "@/store/globalStore";
+import EditProfileForm from "@/components/forms/profile/EditProfileForm";
+import { useState } from "react";
 
 
 
 export function NavUser() {
   const { isMobile } = useSidebar();
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
+  
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/" });
   };
-  const {user}=useGlobalStore()
+  
+  const { user } = useGlobalStore();
+
+  const handleEditProfile = () => {
+    setEditProfileOpen(true);
+  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -83,7 +93,7 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleEditProfile}>
                 <Pencil />
                 Edit Profile
               </DropdownMenuItem>
@@ -108,6 +118,17 @@ export function NavUser() {
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
+
+      {/* Edit Profile Dialog */}
+      <Dialog open={editProfileOpen} onOpenChange={setEditProfileOpen}>
+        <EditProfileForm 
+          setOpen={setEditProfileOpen}
+          onSuccess={() => {
+            // Optionally refresh user data or handle success
+            console.log("Profile updated successfully");
+          }}
+        />
+      </Dialog>
     </SidebarMenu>
   );
 }
