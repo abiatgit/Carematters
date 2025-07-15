@@ -30,12 +30,14 @@ import { signOut } from "next-auth/react";
 import { useGlobalStore } from "@/store/globalStore";
 import EditProfileForm from "@/components/forms/profile/EditProfileForm";
 import { useState } from "react";
+import EditOrganizationForm from "@/components/forms/organization/EditOrganizationForm";
 
 
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const [editProfileOpen, setEditProfileOpen] = useState(false);
+  const [editOrganizationOpen, setEditOrganizationOpen] = useState(false);
   
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/" });
@@ -45,6 +47,10 @@ export function NavUser() {
 
   const handleEditProfile = () => {
     setEditProfileOpen(true);
+  };
+
+  const handleEditOrganization = () => {
+    setEditOrganizationOpen(true);
   };
   return (
     <SidebarMenu>
@@ -99,7 +105,7 @@ export function NavUser() {
               </DropdownMenuItem>
 
               {user?.role === "MANAGER" && (
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleEditOrganization}>
                   <Pencil />
                   Edit Organization
                 </DropdownMenuItem>
@@ -129,6 +135,17 @@ export function NavUser() {
           onSuccess={() => {
             // Optionally refresh user data or handle success
             console.log("Profile updated successfully");
+          }}
+        />
+      </Dialog>
+
+      {/* Edit Organization Dialog */}
+      <Dialog open={editOrganizationOpen} onOpenChange={setEditOrganizationOpen}>
+        <EditOrganizationForm 
+          setOpen={setEditOrganizationOpen}
+          onSuccess={() => {
+            // Optionally refresh organization data or handle success
+            console.log("Organization updated successfully");
           }}
         />
       </Dialog>
