@@ -97,10 +97,13 @@ export function NavUser() {
                 <Pencil />
                 Edit Profile
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Pencil />
-                Edit Organization
-              </DropdownMenuItem>
+
+              {user?.role === "MANAGER" && (
+                <DropdownMenuItem>
+                  <Pencil />
+                  Edit Organization
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem>
                 <CreditCard />
                 Billing
