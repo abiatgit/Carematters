@@ -10,16 +10,7 @@ const adapter = PrismaAdapter(prisma);
 import { encode } from "next-auth/jwt";
 import { userSchema } from "@/lib/userSchema";
 
-// Validate required environment variables
-if (!process.env.GOOGLE_CLIENT_ID) {
-  throw new Error("GOOGLE_CLIENT_ID environment variable is not set");
-}
-if (!process.env.GOOGLE_CLIENT_SECRET) {
-  throw new Error("GOOGLE_CLIENT_SECRET environment variable is not set");
-}
-if (!process.env.NEXTAUTH_SECRET) {
-  throw new Error("NEXTAUTH_SECRET environment variable is not set");
-}
+// Environment variables will be validated by NextAuth providers at runtime
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter,
