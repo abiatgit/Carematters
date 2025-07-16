@@ -29,7 +29,7 @@ export default function Page() {
   const [open, setOpen] = useState(false);
   const [appointments, setAppointments] = useState<EnrichedAppointment[]>([]);
   const [loading, setLoading] = useState(true);
-  const { houseId, careHome } = useGlobalStore();
+  const { houseId, careHome, user } = useGlobalStore();
 
   const fetchAllAppointments = async () => {
     if (!houseId) return;
@@ -58,14 +58,16 @@ export default function Page() {
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">All Appointments - Selected House</h1>
         <div>
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button variant={"outline"} className="border-green-700">
-                New Appointment
-              </Button>
-            </DialogTrigger>
-            <AppointmentForm setOpen={setOpen} onSuccess={refreshAppointments} />
-          </Dialog>
+          {(user?.role === "MANAGER" || user?.role === "TEAM_LEAD") && (
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button variant={"outline"} className="border-green-700">
+                  New Appointment
+                </Button>
+              </DialogTrigger>
+              <AppointmentForm setOpen={setOpen} onSuccess={refreshAppointments} />
+            </Dialog>
+          )}
         </div>
       </div>
       
