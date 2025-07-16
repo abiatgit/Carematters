@@ -48,15 +48,15 @@ const Page = () => {
   const [residents, setResident] = useState<ExtendedResident[]>([]);
   const [unitFilter, setUnitFilter] = useState("all");
   const [genderFilter, setGenderFilter] = useState("all");
-  const { houseId } = useGlobalStore();
+  const { houseId, careHome, user } = useGlobalStore();
   async function fetchResidentsClient(houseId: string | null) {
-    const res = await fetchResident(houseId)
+    const res = await fetchResident(houseId, careHome?.id)
     setResident(res!)
 
   }
   const refreshResidentCard = async () => {
     if (houseId) {
-      const res = await fetchResident(houseId);
+      const res = await fetchResident(houseId, careHome?.id);
       setResident(res!);
     }
   }
@@ -65,7 +65,7 @@ const Page = () => {
     if (houseId) {
       fetchResidentsClient(houseId);
     }
-  }, [houseId]);
+  }, [houseId, careHome]);
 
 
   const filteredResident = residents.filter((singleResident) => {
@@ -135,18 +135,20 @@ const Page = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild onClick={() => setOpen(true)}>
-              <Button
-                variant="default"
-                className="flex items-center gap-2 bg-green-700 hover:bg-green-500"
-              >
-                <Plus size={16} className="" />
-                Add Resident
-              </Button>
-            </SheetTrigger>
-            <CreateResidentForm setOpen={setOpen} onResidentCreated={refreshResidentCard} />
-          </Sheet>
+          {(user?.role === "MANAGER" || user?.role === "TEAM_LEAD") && (
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild onClick={() => setOpen(true)}>
+                <Button
+                  variant="default"
+                  className="flex items-center gap-2 bg-green-700 hover:bg-green-500"
+                >
+                  <Plus size={16} className="" />
+                  Add Resident
+                </Button>
+              </SheetTrigger>
+              <CreateResidentForm setOpen={setOpen} onResidentCreated={refreshResidentCard} />
+            </Sheet>
+          )}
         </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

@@ -26,10 +26,15 @@ export function HouseSwitcher({
   
   React.useEffect(() => {
     if (houses.length > 0) {
-      setSelectedHouse(houses[0].name);
-      setHouseId(houses[0].id);
+      if (isManager) {
+        setSelectedHouse("All Houses");
+        setHouseId("all");
+      } else {
+        setSelectedHouse(houses[0].name);
+        setHouseId(houses[0].id);
+      }
     }
-  }, [houses, setHouseId]);
+  }, [houses, setHouseId, isManager]);
 
   return (
     <SidebarMenu>

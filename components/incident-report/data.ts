@@ -2,18 +2,34 @@
 import { prisma } from "@/lib/db";
 
 
-export const fetchIncidents = async (unitId: string | null) => {
+export const fetchIncidents = async (unitId: string | null, careHomeId?: string | null) => {
   if (!unitId) return []
   try {
-    const data = await prisma.incident.findMany({
-      where: {
-        unitId: unitId
-      },
-      include:{
-        resident:true,
-        unit:true
-      }
-    })
+    let data;
+    
+    if (unitId === "all" && careHomeId) {
+      data = await prisma.incident.findMany({
+        where: {
+          unit: {
+            careHomeId: careHomeId
+          }
+        },
+        include:{
+          resident:true,
+          unit:true
+        }
+      })
+    } else {
+      data = await prisma.incident.findMany({
+        where: {
+          unitId: unitId
+        },
+        include:{
+          resident:true,
+          unit:true
+        }
+      })
+    }
 
     return data
   }

@@ -23,16 +23,16 @@ type MinimalCareHome = {
   id: string;
   name?: string;
 } | null;
-async function fetchResidentsClient(houseId: string | null) {
-  const res = await fetchResident(houseId);
+async function fetchResidentsClient(houseId: string | null, careHomeId?: string | null) {
+  const res = await fetchResident(houseId, careHomeId);
   return res;
 }
-async function fetchStaffClient(houseId: string | null) {
-  const res = await fetchStaff(houseId);
+async function fetchStaffClient(houseId: string | null, careHomeId?: string | null) {
+  const res = await fetchStaff(houseId, careHomeId);
   return res;
 }
-async function fetchUpcomingAppointmentsClient(houseId: string | null) {
-  const res = await fetchUpcomingAppointmentsByUnit(houseId);
+async function fetchUpcomingAppointmentsClient(houseId: string | null, careHomeId?: string | null) {
+  const res = await fetchUpcomingAppointmentsByUnit(houseId, careHomeId);
   return res;
 }
 export function SectionCards() {
@@ -68,9 +68,9 @@ export function SectionCards() {
     if (!user || !houseId) return;
     async function fetchData() {
       const [residentsData, staffData, appointmentData] = await Promise.all([
-        fetchResidentsClient(houseId),
-        fetchStaffClient(houseId),
-        fetchUpcomingAppointmentsClient(houseId)
+        fetchResidentsClient(houseId, careHome?.id),
+        fetchStaffClient(houseId, careHome?.id),
+        fetchUpcomingAppointmentsClient(houseId, careHome?.id)
       ]);
       setResidents(residentsData || []);
       setStaff(staffData || []);

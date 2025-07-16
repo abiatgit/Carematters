@@ -15,7 +15,7 @@ type Props = {
 };
 
 const AppoinmentCards = ({ unitId, limit = 20 }: Props) => {
-  const { houseId } = useGlobalStore();
+  const { houseId, careHome } = useGlobalStore();
   const [appointments, setAppointments] = useState<EnrichedAppointment[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -27,7 +27,7 @@ const AppoinmentCards = ({ unitId, limit = 20 }: Props) => {
       
       setLoading(true);
       try {
-        const appointmentData = await fetchAppointmentsByUnit(selectedUnitId, limit);
+        const appointmentData = await fetchAppointmentsByUnit(selectedUnitId, limit, careHome?.id);
         setAppointments(appointmentData);
       } catch (error) {
         console.error("Error fetching appointments:", error);
@@ -37,7 +37,7 @@ const AppoinmentCards = ({ unitId, limit = 20 }: Props) => {
     };
 
     fetchAppointments();
-  }, [selectedUnitId, limit]);
+  }, [selectedUnitId, limit, careHome]);
 
   const formatDateTime = (date: Date, time: Date) => {
     const appointmentDate = new Date(date);

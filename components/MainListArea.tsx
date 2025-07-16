@@ -38,18 +38,18 @@ export function MainListArea() {
 
   const [incidentData, setInsidnetData] = useState<IncidetProp[]>([])
   const [loading, setLoading] = useState(false)
-  const { houseId } = useGlobalStore()
+  const { houseId, careHome } = useGlobalStore()
   const IncidentDataFetch = async (houseId: string | null) => {
     if (!houseId) return []
     setLoading(true)
-    const data = await fetchIncidents(houseId)
+    const data = await fetchIncidents(houseId, careHome?.id)
     setInsidnetData(data || [])
     setLoading(false)
   }
   useEffect(() => {
     if (!houseId) return;
     IncidentDataFetch(houseId)
-  }, [houseId])
+  }, [houseId, careHome])
 
   const [currentPage, setCurrentPage] = useState(1);
 

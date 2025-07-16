@@ -44,11 +44,11 @@ export default function StaffPage() {
   const [unitFilter, setUnitFilter] = useState("all");
   const [positionFilter, setPositionFilter] = useState("all");
   const [open, setOpen] = useState(false);
-  const { houseId } = useGlobalStore();
+  const { houseId, careHome, user } = useGlobalStore();
   const [allStaff, setAllStaff] = useState<ExtendedUser[]>([]);
 
   async function fetchStaffClient(houseId: string | null) {
-    const res = await fetchStaff(houseId);
+    const res = await fetchStaff(houseId, careHome?.id);
     console.log("fetchStaffClient", res);
     const fixedStaff = (res ?? []).filter((staff) => staff.unit !== null) as ExtendedUser[];
     setAllStaff(fixedStaff);
@@ -72,7 +72,7 @@ export default function StaffPage() {
     if (houseId) {
       fetchStaffClient(houseId);
     }
-  }, [houseId]);
+  }, [houseId, careHome]);
   const delteHandle = async (id: string) => {
     await deleteStaffwithId({ id })
     if (houseId) {
@@ -128,26 +128,28 @@ export default function StaffPage() {
               <SelectItem value="Betheny">Betheny</SelectItem>
             </SelectContent>
           </Select>
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button
-                variant="default"
-                className="flex items-center gap-2 bg-green-700 hover:bg-green-500"
-              >
-                <Plus size={16} className="" />
-                Add Staff
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle className="font-bold">
-                  Create new staff
-                </DialogTitle>
-                <DialogDescription></DialogDescription>
-              </DialogHeader>
-              <CreateStaffForm setOpen={setOpen} onStaffCreated={onStaffCreated} />
-            </DialogContent>
-          </Dialog>
+          {user?.role === "MANAGER" && (
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="default"
+                  className="flex items-center gap-2 bg-green-700 hover:bg-green-500"
+                >
+                  <Plus size={16} className="" />
+                  Add Staff
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="font-bold">
+                    Create new staff
+                  </DialogTitle>
+                  <DialogDescription></DialogDescription>
+                </DialogHeader>
+                <CreateStaffForm setOpen={setOpen} onStaffCreated={onStaffCreated} />
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
       </div>
 
