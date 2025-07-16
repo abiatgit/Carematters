@@ -60,7 +60,7 @@ const Page = () => {
       } else {
         toast.error(result.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete house");
     }
   };
@@ -87,7 +87,7 @@ const Page = () => {
                     <Badge 
                       className="w-fit text-xs border-red-700 bg-rose-100 hover:bg-red-300 cursor-pointer" 
                       variant="outline"
-                      onClick={() => setDeleteDialogId(house?.id!)}
+                      onClick={() => setDeleteDialogId(house?.id || '')}
                     >
                       Delete
                     </Badge>
@@ -96,7 +96,7 @@ const Page = () => {
                     <DialogHeader>
                       <DialogTitle>Delete House</DialogTitle>
                       <DialogDescription>
-                        Are you sure you want to delete "{house?.name}"? This action cannot be undone.
+                        Are you sure you want to delete &quot;{house?.name}&quot;? This action cannot be undone.
                         {house?.residents && house.residents.length > 0 && (
                           <div className="mt-2 text-red-600">
                             This house has {house.residents.length} resident(s). Please move them first.
@@ -120,7 +120,7 @@ const Page = () => {
                       <Badge 
                         variant="destructive" 
                         className="cursor-pointer px-4 py-2 bg-red-600 hover:bg-red-700"
-                        onClick={() => handleDeleteHouse(house?.id!)}
+                        onClick={() => handleDeleteHouse(house?.id || '')}
                       >
                         Delete
                       </Badge>
