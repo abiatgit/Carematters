@@ -44,11 +44,11 @@ export default function StaffPage() {
   const [unitFilter, setUnitFilter] = useState("all");
   const [positionFilter, setPositionFilter] = useState("all");
   const [open, setOpen] = useState(false);
-  const { houseId } = useGlobalStore();
+  const { houseId, careHome } = useGlobalStore();
   const [allStaff, setAllStaff] = useState<ExtendedUser[]>([]);
 
   async function fetchStaffClient(houseId: string | null) {
-    const res = await fetchStaff(houseId);
+    const res = await fetchStaff(houseId, careHome?.id);
     console.log("fetchStaffClient", res);
     const fixedStaff = (res ?? []).filter((staff) => staff.unit !== null) as ExtendedUser[];
     setAllStaff(fixedStaff);
@@ -72,7 +72,7 @@ export default function StaffPage() {
     if (houseId) {
       fetchStaffClient(houseId);
     }
-  }, [houseId]);
+  }, [houseId, careHome]);
   const delteHandle = async (id: string) => {
     await deleteStaffwithId({ id })
     if (houseId) {

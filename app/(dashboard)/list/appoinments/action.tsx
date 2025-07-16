@@ -244,35 +244,67 @@ export async function fetchUpcomingAppointmentsByUnit(unitId: string | null, car
     }
 }
 
-export async function fetchAppointmentsByUnit(unitId: string | null, limit: number = 20) {
+export async function fetchAppointmentsByUnit(unitId: string | null, limit: number = 20, careHomeId?: string | null) {
     if (!unitId) return [];
     
     try {
-        const appointments = await prisma.appoinment.findMany({
-            where: {
-                unitId: unitId
-            },
-            include: {
-                resident: {
-                    select: {
-                        id: true,
-                        name: true,
-                        photo: true,
-                        roomNumber: true
+        let appointments;
+        
+        if (unitId === "all" && careHomeId) {
+            appointments = await prisma.appoinment.findMany({
+                where: {
+                    unit: {
+                        careHomeId: careHomeId
                     }
                 },
-                unit: {
-                    select: {
-                        id: true,
-                        name: true
+                include: {
+                    resident: {
+                        select: {
+                            id: true,
+                            name: true,
+                            photo: true,
+                            roomNumber: true
+                        }
+                    },
+                    unit: {
+                        select: {
+                            id: true,
+                            name: true
+                        }
                     }
-                }
-            },
-            orderBy: {
-                date: 'desc'
-            },
-            take: limit
-        });
+                },
+                orderBy: {
+                    date: 'desc'
+                },
+                take: limit
+            });
+        } else {
+            appointments = await prisma.appoinment.findMany({
+                where: {
+                    unitId: unitId
+                },
+                include: {
+                    resident: {
+                        select: {
+                            id: true,
+                            name: true,
+                            photo: true,
+                            roomNumber: true
+                        }
+                    },
+                    unit: {
+                        select: {
+                            id: true,
+                            name: true
+                        }
+                    }
+                },
+                orderBy: {
+                    date: 'desc'
+                },
+                take: limit
+            });
+        }
         
         const enrichedAppointments: EnrichedAppointment[] = appointments.map((apt) => ({
             ...apt,

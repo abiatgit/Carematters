@@ -48,15 +48,15 @@ const Page = () => {
   const [residents, setResident] = useState<ExtendedResident[]>([]);
   const [unitFilter, setUnitFilter] = useState("all");
   const [genderFilter, setGenderFilter] = useState("all");
-  const { houseId } = useGlobalStore();
+  const { houseId, careHome } = useGlobalStore();
   async function fetchResidentsClient(houseId: string | null) {
-    const res = await fetchResident(houseId)
+    const res = await fetchResident(houseId, careHome?.id)
     setResident(res!)
 
   }
   const refreshResidentCard = async () => {
     if (houseId) {
-      const res = await fetchResident(houseId);
+      const res = await fetchResident(houseId, careHome?.id);
       setResident(res!);
     }
   }
@@ -65,7 +65,7 @@ const Page = () => {
     if (houseId) {
       fetchResidentsClient(houseId);
     }
-  }, [houseId]);
+  }, [houseId, careHome]);
 
 
   const filteredResident = residents.filter((singleResident) => {

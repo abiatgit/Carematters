@@ -29,14 +29,14 @@ export default function Page() {
   const [open, setOpen] = useState(false);
   const [appointments, setAppointments] = useState<EnrichedAppointment[]>([]);
   const [loading, setLoading] = useState(true);
-  const { houseId } = useGlobalStore();
+  const { houseId, careHome } = useGlobalStore();
 
   const fetchAllAppointments = async () => {
     if (!houseId) return;
     
     setLoading(true);
     try {
-      const allAppointments = await fetchAppointmentsByUnit(houseId, 100);
+      const allAppointments = await fetchAppointmentsByUnit(houseId, 100, careHome?.id);
       setAppointments(allAppointments);
     } catch (error) {
       console.error("Error fetching appointments:", error);
@@ -47,7 +47,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchAllAppointments();
-  }, [houseId]);
+  }, [houseId, careHome]);
 
   const refreshAppointments = () => {
     fetchAllAppointments();
