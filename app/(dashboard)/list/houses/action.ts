@@ -44,3 +44,41 @@ export async function fetchHousewithresident(careHomeId: string) {
 
   return data;
 }
+
+export async function deleteHouse(houseId: string) {
+  try {
+    // First check if house has residents or staff
+    const house = await prisma.unit.findUnique({
+      where: { id: houseId },
+      include: {
+        residents: true,
+        staff: true,
+      },
+    });
+
+    if (!house) {
+      throw new Error("House not found");
+    }
+
+    if (house.residents.length > 0) {
+      throw new Error("Cannot delete house with residents. Please move residents first.");
+    }
+
+    if (house.staff.length > 0) {
+      throw new Error("Cannot delete house with staff assigned. Please reassign staff first.");
+    }
+
+    // Delete the house
+    await prisma.unit.delete({
+      where: { id: houseId },
+    });
+
+    return { success: true, message: "House deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting house:", error);
+    return { 
+      success: false, 
+      message: error instanceof Error ? error.message : "Failed to delete house" 
+    };
+  }
+}
