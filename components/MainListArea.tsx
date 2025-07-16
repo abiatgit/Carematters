@@ -36,16 +36,16 @@ export type SafeUser = {
 export function MainListArea() {
 
   const [incidentData, setInsidnetData] = useState<IncidetProp[]>([])
-  const { houseId } = useGlobalStore()
+  const { houseId, careHome } = useGlobalStore()
   const IncidentDataFetch = async (houseId: string | null) => {
     if (!houseId) return []
-    const data = await fetchIncidents(houseId)
+    const data = await fetchIncidents(houseId, careHome?.id)
     setInsidnetData(data || [])
   }
   useEffect(() => {
     if (!houseId) return;
     IncidentDataFetch(houseId)
-  }, [houseId])
+  }, [houseId, careHome])
 
   const [currentPage, setCurrentPage] = useState(1);
 

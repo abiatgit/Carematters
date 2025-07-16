@@ -19,9 +19,11 @@ export function HouseSwitcher({
 }: {
   houses: Unit[]
 }) {
-  const { setHouseId } = useGlobalStore();
+  const { setHouseId, user } = useGlobalStore();
   const { careHome } = useGlobalStore()
   const [selectedHouse, setSelectedHouse] = React.useState<string>("");
+  const isManager = user?.role === "MANAGER";
+  
   React.useEffect(() => {
     if (houses.length > 0) {
       setSelectedHouse(houses[0].name);
@@ -53,6 +55,19 @@ export function HouseSwitcher({
             className="w-[--radix-dropdown-menu-trigger-width]"
             align="end"
           >
+            {isManager && (
+              <DropdownMenuItem
+                onSelect={() => {
+                  setSelectedHouse("All Houses");
+                  setHouseId("all");
+                }}
+              >
+                All Houses
+                {"All Houses" === selectedHouse && (
+                  <Check className="ml-auto" />
+                )}
+              </DropdownMenuItem>
+            )}
             {houses.map((house, index) => {
               return (
                 <DropdownMenuItem

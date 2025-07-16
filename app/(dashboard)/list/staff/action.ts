@@ -2,7 +2,21 @@
 import { prisma } from "@/lib/db";
 
 
-export async function fetchStaff(houseId: string | null) {
+export async function fetchStaff(houseId: string | null, careHomeId?: string | null) {
+  if (houseId === "all" && careHomeId) {
+    const staff = await prisma.user.findMany({
+      where: {
+        unit: {
+          careHomeId: careHomeId
+        }
+      },
+      include: {
+        unit: true
+      }
+    })
+    return staff
+  }
+  
   if (houseId) {
     const staff = await prisma.user.findMany({
       where: {
