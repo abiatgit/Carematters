@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { useGlobalStore } from "@/store/globalStore";
 import AppoinmentCards from "./appoinmentsCard/AppoinmentCards";
 import { SkeletonDemo } from "./skelton";
+import { FileText } from "lucide-react";
 
 const ITEMS_PER_PAGE = 6;
 export type SafeUser = {
@@ -36,11 +37,14 @@ export type SafeUser = {
 export function MainListArea() {
 
   const [incidentData, setInsidnetData] = useState<IncidetProp[]>([])
+  const [loading, setLoading] = useState(false)
   const { houseId } = useGlobalStore()
   const IncidentDataFetch = async (houseId: string | null) => {
     if (!houseId) return []
+    setLoading(true)
     const data = await fetchIncidents(houseId)
     setInsidnetData(data || [])
+    setLoading(false)
   }
   useEffect(() => {
     if (!houseId) return;
@@ -70,8 +74,23 @@ export function MainListArea() {
         </CardHeader>
         <CardContent className="px-2 sm:px-6 overflow-y-auto flex-1">
 
-          {paginatedData.length == 0 ? <div className="flex flex-col gap-5"><SkeletonDemo /><SkeletonDemo /><SkeletonDemo /></div> :
-            <IncidentTable data={paginatedData} />}
+          {loading ? (
+            <div className="space-y-4">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <SkeletonDemo key={i} />
+              ))}
+            </div>
+          ) : incidentData.length == 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="text-gray-400 mb-2">
+                <FileText size={48} />
+              </div>
+              <p className="text-lg font-medium text-gray-600">No incidents found</p>
+              <p className="text-sm text-gray-400">There are no incident reports for this unit.</p>
+            </div>
+          ) : (
+            <IncidentTable data={paginatedData} />
+          )}
         </CardContent>
         <CardFooter className="-mb-0">
           <Pagination>
