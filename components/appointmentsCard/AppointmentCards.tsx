@@ -5,7 +5,7 @@ import { Card } from "../ui/card";
 import { SkeletonDemo } from "../skelton";
 import { MapPin, Calendar,  } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { fetchAppointmentsByUnit, EnrichedAppointment } from "@/app/(dashboard)/list/appoinments/action";
+import { fetchAppointmentsByUnit, EnrichedAppointment } from "@/app/(dashboard)/list/appointments/action";
 import { useGlobalStore } from "@/store/globalStore";
 import { useEffect, useState } from "react";
 
@@ -14,7 +14,7 @@ type Props = {
   limit?: number;
 };
 
-const AppoinmentCards = ({ unitId, limit = 20 }: Props) => {
+const AppointmentCards = ({ unitId, limit = 20 }: Props) => {
   const { houseId, careHome } = useGlobalStore();
   const [appointments, setAppointments] = useState<EnrichedAppointment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -151,4 +151,4 @@ const AppoinmentCards = ({ unitId, limit = 20 }: Props) => {
   );
 };
 
-export default AppoinmentCards;
+export default AppointmentCards;

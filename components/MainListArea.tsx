@@ -19,7 +19,7 @@ import {
 import { Role } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useGlobalStore } from "@/store/globalStore";
-import AppoinmentCards from "./appoinmentsCard/AppoinmentCards";
+import AppointmentCards from "./appointmentsCard/AppointmentCards";
 import { SkeletonDemo } from "./skelton";
 import { FileText } from "lucide-react";
 
@@ -137,7 +137,7 @@ export function MainListArea() {
           <CardTitle>Appointments</CardTitle>
         </CardHeader>
         <CardContent className="px-2 sm:px-6 overflow-y-auto">
-          <AppoinmentCards />
+          <AppointmentCards />
         </CardContent>
       </Card>
     </div>

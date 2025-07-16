@@ -1,17 +1,17 @@
 "use server";
 import { prisma } from "@/lib/db";
-import { Appoinment } from "@prisma/client";
+import { Appointment } from "@prisma/client";
 
-export interface EnrichedAppointment extends Appoinment {
+export interface EnrichedAppointment extends Appointment {
     residentName: string | null;
     residentAvatar: string | null;
     unitName: string | null;
 }
 
-export async function fetchAppoinment(careHomeId: string | null) {
+export async function fetchAppointment(careHomeId: string | null) {
     if (!careHomeId) return []
     try {
-        const appoinments = await prisma.appoinment.findMany({
+        const appointments = await prisma.appointment.findMany({
             where: {
                 unit: {
                     careHomeId: careHomeId
@@ -32,7 +32,7 @@ export async function fetchAppoinment(careHomeId: string | null) {
                 }
             }
         })
-        const enrichedAppointment: EnrichedAppointment[] = appoinments.map((apt) => ({
+        const enrichedAppointment: EnrichedAppointment[] = appointments.map((apt) => ({
             ...apt,
             residentName: apt.resident.name || null,
             residentAvatar: apt.resident.photo || null,
@@ -47,21 +47,21 @@ export async function fetchAppoinment(careHomeId: string | null) {
         return [];
     }
 }
-export async function fetchAppoinmentBasic(residentId: string | null) {
+export async function fetchAppointmentBasic(residentId: string | null) {
     if (residentId) {
-        const appoinments = await prisma.appoinment.findMany({
+        const appointments = await prisma.appointment.findMany({
             where: {
             residentId: residentId
             }
         });
-        return appoinments;
+        return appointments;
     }
     return [];
 }
 
 export async function deleteAppointment(appointmentId: string) {
     try {
-        await prisma.appoinment.delete({
+        await prisma.appointment.delete({
             where: {
                 id: appointmentId
             }
@@ -90,7 +90,7 @@ export async function fetchUpcomingAppointments(careHomeId: string | null) {
         });
         
         // First, let's fetch all appointments to see what we have
-        const allAppointments = await prisma.appoinment.findMany({
+        const allAppointments = await prisma.appointment.findMany({
             where: {
                 unit: {
                     careHomeId: careHomeId
@@ -165,7 +165,7 @@ export async function fetchUpcomingAppointmentsByUnit(unitId: string | null, car
         let appointments;
         
         if (unitId === "all" && careHomeId) {
-            appointments = await prisma.appoinment.findMany({
+            appointments = await prisma.appointment.findMany({
                 where: {
                     unit: {
                         careHomeId: careHomeId
@@ -197,7 +197,7 @@ export async function fetchUpcomingAppointmentsByUnit(unitId: string | null, car
                 take: 10
             });
         } else {
-            appointments = await prisma.appoinment.findMany({
+            appointments = await prisma.appointment.findMany({
                 where: {
                     unitId: unitId,
                     date: {
@@ -251,7 +251,7 @@ export async function fetchAppointmentsByUnit(unitId: string | null, limit: numb
         let appointments;
         
         if (unitId === "all" && careHomeId) {
-            appointments = await prisma.appoinment.findMany({
+            appointments = await prisma.appointment.findMany({
                 where: {
                     unit: {
                         careHomeId: careHomeId
@@ -279,7 +279,7 @@ export async function fetchAppointmentsByUnit(unitId: string | null, limit: numb
                 take: limit
             });
         } else {
-            appointments = await prisma.appoinment.findMany({
+            appointments = await prisma.appointment.findMany({
                 where: {
                     unitId: unitId
                 },

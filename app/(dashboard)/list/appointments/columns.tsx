@@ -16,7 +16,7 @@ import { ArrowUpDown } from "lucide-react";
 import { deleteAppointment } from "./action";
 import { toast } from "sonner";
 
-export type Appoinments = {
+export type Appointments = {
   id: string;
   venue: string;
   date: Date;
@@ -30,7 +30,7 @@ export type Appoinments = {
 };
 
 
-export const createColumns = (onRefresh?: () => void): ColumnDef<Appoinments>[] => [
+export const createColumns = (onRefresh?: () => void): ColumnDef<Appointments>[] => [
   {
     accessorKey: "residentAvatar",
     header: "",

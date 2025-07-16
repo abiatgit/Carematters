@@ -113,7 +113,7 @@ const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => 
           {/*User info*/}
           <div className="border border-dashed p-4 rounded-l-lg">
             <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold">Up Comming Appoinments</h1>
+              <h1 className="text-xl font-semibold">Up Coming Appointments</h1>
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant={"outline"} size={"icon"}>

@@ -17,7 +17,7 @@ import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
 import { Resident, User } from "@prisma/client";
 import { fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { useGlobalStore } from "@/store/globalStore";
-import { fetchUpcomingAppointmentsByUnit, EnrichedAppointment } from "@/app/(dashboard)/list/appoinments/action";
+import { fetchUpcomingAppointmentsByUnit, EnrichedAppointment } from "@/app/(dashboard)/list/appointments/action";
 
 type MinimalCareHome = {
   id: string;
@@ -198,7 +198,7 @@ export function SectionCards() {
           </div>
           <div>
             <Button className="bg-green-700 hover:bg-green-600">
-              <Link href={"/list/appoinments"}>See All</Link>
+              <Link href={"/list/appointments"}>See All</Link>
             </Button>
           </div>
         </CardFooter>

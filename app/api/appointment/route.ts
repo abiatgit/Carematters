@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   const date = new Date(body.date);
   const { venue, unitId, residentId, scheduledWith } = body;
   
-  const res = await prisma.appoinment.create({
+  const res = await prisma.appointment.create({
     data: {
       venue: venue,
       date: date,

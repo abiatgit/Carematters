@@ -32,7 +32,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { fetchAllHouse } from "./action";
 
-const appoinmentSchema = z.object({
+const appointmentSchema = z.object({
   venue: z.string().min(1, "Venue is required"),
   date: z.string().min(1, "Date is required"),
   time: z.string().min(1, "Time is required"),
@@ -69,8 +69,8 @@ useEffect(() => {
   fetchUnit(careHome?.id);
 },[]);
 
-  const form = useForm<z.infer<typeof appoinmentSchema>>({
-    resolver: zodResolver(appoinmentSchema),
+  const form = useForm<z.infer<typeof appointmentSchema>>({
+    resolver: zodResolver(appointmentSchema),
     defaultValues: {
       venue: "",
       date: "",
@@ -80,8 +80,8 @@ useEffect(() => {
       residentId: "",
     },
   });
-  async function onSubmit(values: z.infer<typeof appoinmentSchema>) {
-    const res = await fetch("/api/appoinment", {
+  async function onSubmit(values: z.infer<typeof appointmentSchema>) {
+    const res = await fetch("/api/appointment", {
       method: "POST",
       body: JSON.stringify(values),
     });
@@ -100,7 +100,7 @@ useEffect(() => {
     <div>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle> Appoinment</DialogTitle>
+          <DialogTitle> Appointment</DialogTitle>
           <DialogDescription>
             </DialogDescription>
         </DialogHeader>

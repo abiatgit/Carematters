@@ -220,7 +220,6 @@ export const residents = [
       mobile: 7011123457,
       role: "supportWorker",
       photo: "https://randomuser.me/api/portraits/men/11.jpg",
-      gende: "MALE",
       unitId: "Comgal",
     },
     {
@@ -231,7 +230,6 @@ export const residents = [
       mobile: 7011123458,
       role: "supportWorker",
       photo: "https://randomuser.me/api/portraits/women/12.jpg",
-      gende: "FEMALE",
       unitId: "Bethany",
     },
     {
@@ -242,7 +240,6 @@ export const residents = [
       mobile: 7011123459,
       role: "teamLead",
       photo: "https://randomuser.me/api/portraits/men/13.jpg",
-      gende: "MALE",
       unitId: "Betheny",
     },
     {
@@ -253,7 +250,6 @@ export const residents = [
       mobile: 7011123460,
       role: "supportWorker",
       photo: "https://randomuser.me/api/portraits/women/14.jpg",
-      gende: "FEMALE",
       unitId: "Comgal",
     },
     {
@@ -264,7 +260,6 @@ export const residents = [
       mobile: 7011123461,
       role: "supportWorker",
       photo: "https://randomuser.me/api/portraits/men/15.jpg",
-      gende: "MALE",
       unitId: "Ceridwen",
     },
     {
@@ -275,7 +270,6 @@ export const residents = [
       mobile: 7011123462,
       role: "teamLead",
       photo: "https://randomuser.me/api/portraits/women/16.jpg",
-      gende: "FEMALE",
       unitId: "Betheny",
     },
     {
@@ -286,7 +280,6 @@ export const residents = [
       mobile: 7011123463,
       role: "supportWorker",
       photo: "https://randomuser.me/api/portraits/men/17.jpg",
-      gende: "MALE",
       unitId: "Ceridwen",
     },
     {
@@ -297,7 +290,6 @@ export const residents = [
       mobile: 7011123464,
       role: "supportWorker",
       photo: "https://randomuser.me/api/portraits/women/18.jpg",
-      gende: "FEMALE",
       unitId: "Comgal",
     }]
     export const appointments = [

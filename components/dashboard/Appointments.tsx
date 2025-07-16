@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { fetchAppoinment, EnrichedAppointment } from "@/app/(dashboard)/list/appoinments/action";
+import { fetchAppointment, EnrichedAppointment } from "@/app/(dashboard)/list/appointments/action";
 import { useGlobalStore } from "@/store/globalStore";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -17,7 +17,7 @@ const Appointments = () => {
       setLoading(true);
       try {
         console.log("Fetching all appointments for careHome:", careHome.id);
-        const allAppointments = await fetchAppoinment(careHome.id);
+        const allAppointments = await fetchAppointment(careHome.id);
         console.log("All appointments fetched:", allAppointments);
         
         // Filter for next 10 days
