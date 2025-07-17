@@ -1,7 +1,7 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Rabbit, CheckCircle, Shield, Users, Brain, TrendingUp, Zap, Eye, Heart } from "lucide-react";
+import { Rabbit, CheckCircle, Shield, Brain, TrendingUp, Zap, Eye, Heart } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
