@@ -45,7 +45,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       }
     }
     fetchData()
-  }, [])
+  }, [setCareHome, setUser])
 
   const getHouse = async () => {
     try {
