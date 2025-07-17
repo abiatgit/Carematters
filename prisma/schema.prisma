@@ -8,37 +8,36 @@ datasource db {
 }
 
 model User {
-  id            String          @id @default(cuid())
-  name          String?
-  email         String          @unique
-  password      String?
-  emailVerified DateTime?
-  role          Role            @default(MANAGER)
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  Authenticator Authenticator[]
-  unitId        String?
-  unit          Unit?           @relation(fields: [unitId], references: [id])
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  deletedAt     DateTime?
-  onboarded     Boolean         @default(false)
-  gender        Gender?
-  CareHome      CareHome[]
- messagesSent     Message[] @relation("MessageFrom") 
-  messagesReceived Message[] @relation("MessageTo")  
-
+  id               String          @id @default(cuid())
+  name             String?
+  email            String          @unique
+  password         String?
+  emailVerified    DateTime?
+  role             Role            @default(MANAGER)
+  image            String?
+  unitId           String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  deletedAt        DateTime?
+  onboarded        Boolean         @default(false)
+  gender           Gender?
+  accounts         Account[]
+  Authenticator    Authenticator[]
+  CareHome         CareHome[]
+  messagesSent     Message[]       @relation("MessageFrom")
+  messagesReceived Message[]       @relation("MessageTo")
+  sessions         Session[]
+  unit             Unit?           @relation(fields: [unitId], references: [id])
 }
+
 model Message {
   id        String   @id @default(uuid())
   text      String
-  fromId    String // sender
-  toId      String // receiver
+  fromId    String
+  toId      String
   createdAt DateTime @default(now())
-
-  from User @relation("MessageFrom", fields: [fromId], references: [id])
-  to   User @relation("MessageTo", fields: [toId], references: [id])
+  from      User     @relation("MessageFrom", fields: [fromId], references: [id])
+  to        User     @relation("MessageTo", fields: [toId], references: [id])
 }
 
 model Account {
@@ -55,8 +54,7 @@ model Account {
   session_state     String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
 }
@@ -65,10 +63,10 @@ model Session {
   sessionToken String    @unique
   userId       String
   expires      DateTime
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -97,60 +95,59 @@ model CareHome {
   id        String    @id @default(uuid())
   name      String
   address   String
-  postcode  String
   createdBy String
-  manager   User      @relation(fields: [createdBy], references: [id])
   createdAt DateTime  @default(now())
   deletedAt DateTime?
   logo      String?
-
-  units Unit[]
+  postcode  String
+  manager   User      @relation(fields: [createdBy], references: [id])
+  units     Unit[]
 }
 
 model Unit {
-  id         String       @id @default(uuid())
-  name       String
-  careHomeId String
-  careHome   CareHome     @relation(fields: [careHomeId], references: [id])
-  staff      User[]
-  residents  Resident[]
+  id          String        @id @default(uuid())
+  name        String
+  careHomeId  String
+  deletedAt   DateTime?
   appointment Appointment[]
-  incident   Incident[]
-  deletedAt  DateTime?
+  incident    Incident[]
+  residents   Resident[]
+  careHome    CareHome      @relation(fields: [careHomeId], references: [id])
+  staff       User[]
 }
 
 model Resident {
-  id          String       @id @default(uuid())
+  id          String        @id @default(uuid())
   name        String
   dateOfBirth DateTime
   roomNumber  Int
   nextOfKin   String
   photo       String?
   gender      Gender
-  gp          String?
   unitId      String
-  unit        Unit         @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  appointment  Appointment[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  deletedAt   DateTime?
+  gp          String?
+  appointment Appointment[]
   incident    Incident[]
   medication  Medication[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  deletedAt   DateTime?
+  unit        Unit          @relation(fields: [unitId], references: [id], onDelete: Cascade)
 }
 
 model Appointment {
   id            String    @id @default(uuid())
-  venue         String
   date          DateTime
   time          DateTime
-  scheduledWith String
   residentId    String
-  resident      Resident  @relation(fields: [residentId], references: [id], onDelete: Cascade)
   unitId        String
-  unit          Unit      @relation(fields: [unitId], references: [id], onDelete: Cascade)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   deletedAt     DateTime?
+  venue         String
+  scheduledWith String
+  resident      Resident  @relation(fields: [residentId], references: [id], onDelete: Cascade)
+  unit          Unit      @relation(fields: [unitId], references: [id], onDelete: Cascade)
 }
 
 model Incident {
@@ -161,25 +158,23 @@ model Incident {
   date        DateTime
   time        DateTime
   residentId  String
-  resident    Resident  @relation(fields: [residentId], references: [id])
   unitId      String
-  unit        Unit      @relation(fields: [unitId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
+  resident    Resident  @relation(fields: [residentId], references: [id])
+  unit        Unit      @relation(fields: [unitId], references: [id])
 }
-
-
 
 model Medication {
   id         String    @id @default(uuid())
   title      String
   time       DateTime
   residentId String
-  resident   Resident  @relation(fields: [residentId], references: [id])
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   deletedAt  DateTime?
+  resident   Resident  @relation(fields: [residentId], references: [id])
 }
 
 enum Status {
