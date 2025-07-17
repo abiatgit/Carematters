@@ -19,7 +19,6 @@ type GlobalState = {
 export const useGlobalStore = create<GlobalState>()(
     (set) => ({
       user: null,
-      house: null,
       careHome: null,
       houseId: null,
       setHouseId: (houseId: string) => set({ houseId }),
