@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -35,6 +35,7 @@ import { Unit, User } from "@prisma/client";
 import { deleteStaffwithId, fetchStaff } from "@/app/(dashboard)/list/staff/action";
 import { useGlobalStore } from "@/store/globalStore";
 import { SkeletonDemo } from "@/components/skelton";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 type ExtendedUser = User & {
   unit: Unit;
 }
@@ -45,14 +46,16 @@ export default function StaffPage() {
   const [positionFilter, setPositionFilter] = useState("all");
   const [open, setOpen] = useState(false);
   const { houseId, careHome, user } = useGlobalStore();
-  const [allStaff, setAllStaff] = useState<ExtendedUser[]>([]);
+  const queryClient = useQueryClient();
 
-  async function fetchStaffClient(houseId: string | null) {
-    const res = await fetchStaff(houseId, careHome?.id);
-    console.log("fetchStaffClient", res);
-    const fixedStaff = (res ?? []).filter((staff) => staff.unit !== null) as ExtendedUser[];
-    setAllStaff(fixedStaff);
-  }
+  const { data: allStaff = [], isLoading } = useQuery({
+    queryKey: ['staff', houseId],
+    queryFn: async () => {
+      const res = await fetchStaff(houseId, careHome?.id);
+      return (res ?? []).filter((staff) => staff.unit !== null) as ExtendedUser[];
+    },
+    enabled: !!houseId,
+  });
   const filteredStaff = allStaff.filter((singlestaff) => {
     const matchesSearch = singlestaff.name
       ?.toLowerCase()
@@ -66,18 +69,11 @@ export default function StaffPage() {
     return matchesSearch && matchesUnit && positionSearch;
   });
   const onStaffCreated = () => {
-    fetchStaffClient(houseId)
-  }
-  useEffect(() => {
-    if (houseId) {
-      fetchStaffClient(houseId);
-    }
-  }, [houseId, careHome]);
+    queryClient.invalidateQueries({ queryKey: ['staff', houseId] });
+  };
   const delteHandle = async (id: string) => {
     await deleteStaffwithId({ id })
-    if (houseId) {
-      await fetchStaffClient(houseId);
-    }
+    queryClient.invalidateQueries({ queryKey: ['staff', houseId] });
   }
 
   return (
@@ -154,7 +150,7 @@ export default function StaffPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {allStaff.length === 0 ? <div className="flex gap-6"><SkeletonDemo /> <SkeletonDemo /><SkeletonDemo /><SkeletonDemo /></div> : filteredStaff.map((staff) => {
+        {isLoading ? <div className="flex gap-6"><SkeletonDemo /> <SkeletonDemo /><SkeletonDemo /><SkeletonDemo /></div> : filteredStaff.map((staff) => {
           return (
             <Card className="px-6" key={staff.id}>
               <Link href={`/list/staff/${staff.id}`}>

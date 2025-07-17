@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MessageCircle, Plus } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import CreateResidentForm from "@/components/forms/Residents/CreateResidentForm";
 import Link from "next/link";
@@ -36,6 +36,7 @@ import { Resident, Unit } from "@prisma/client";
 import { useGlobalStore } from "@/store/globalStore";
 import { deleteResidentwithId, fetchResident } from "@/app/(dashboard)/list/resident/action";
 import { SkeletonDemo } from "@/components/skelton";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 type ExtendedResident = Resident & {
   unit: Unit
@@ -45,27 +46,23 @@ const Page = () => {
   const [dialogResidentId, setDialogResidentId] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [residents, setResident] = useState<ExtendedResident[]>([]);
   const [unitFilter, setUnitFilter] = useState("all");
   const [genderFilter, setGenderFilter] = useState("all");
   const { houseId, careHome, user } = useGlobalStore();
-  async function fetchResidentsClient(houseId: string | null) {
-    const res = await fetchResident(houseId, careHome?.id)
-    setResident(res!)
+  const queryClient = useQueryClient();
 
-  }
-  const refreshResidentCard = async () => {
-    if (houseId) {
-      const res = await fetchResident(houseId, careHome?.id);
-      setResident(res!);
-    }
-  }
+  const { data: residents = [], isLoading } = useQuery({
+    queryKey: ['residents', houseId],
+    queryFn: async (): Promise<ExtendedResident[]> => {
+      const result = await fetchResident(houseId, careHome?.id);
+      return result || [];
+    },
+    enabled: !!houseId,
+  });
 
-  useEffect(() => {
-    if (houseId) {
-      fetchResidentsClient(houseId);
-    }
-  }, [houseId, careHome]);
+  const refreshResidentCard = () => {
+    queryClient.invalidateQueries({ queryKey: ['residents', houseId] });
+  };
 
 
   const filteredResident = residents.filter((singleResident) => {
@@ -80,9 +77,7 @@ const Page = () => {
   });
   const delteHandle = async (id: string) => {
     await deleteResidentwithId(id)
-    if (houseId) {
-      await fetchResidentsClient(houseId);
-    }
+    refreshResidentCard();
   }
   return (
     <div>
@@ -152,7 +147,7 @@ const Page = () => {
         </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {residents.length === 0 ? <div className="flex gap-6"><SkeletonDemo /><SkeletonDemo /><SkeletonDemo /><SkeletonDemo /></div> : filteredResident.map((resident) => {
+        {isLoading ? <div className="flex gap-6"><SkeletonDemo /><SkeletonDemo /><SkeletonDemo /><SkeletonDemo /></div> : filteredResident.map((resident) => {
           return (
             <Card className="px-6" key={resident.id}>
               <Link href={`/list/resident/${resident.id}`}>

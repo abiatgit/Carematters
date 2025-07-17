@@ -1,13 +1,14 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { DataTable } from "./data-table";
 import { createColumns } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import AppointmentForm from "@/components/forms/appointment/appointmentForm";
-import { fetchAppointmentsByUnit, EnrichedAppointment } from "./action";
+import { fetchAppointmentsByUnit } from "./action";
 import { useGlobalStore } from "@/store/globalStore";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const AppointmentSkeleton = () => {
   return (
@@ -27,30 +28,17 @@ const AppointmentSkeleton = () => {
 
 export default function Page() {
   const [open, setOpen] = useState(false);
-  const [appointments, setAppointments] = useState<EnrichedAppointment[]>([]);
-  const [loading, setLoading] = useState(true);
   const { houseId, careHome, user } = useGlobalStore();
+  const queryClient = useQueryClient();
 
-  const fetchAllAppointments = async () => {
-    if (!houseId) return;
-    
-    setLoading(true);
-    try {
-      const allAppointments = await fetchAppointmentsByUnit(houseId, 100, careHome?.id);
-      setAppointments(allAppointments);
-    } catch (error) {
-      console.error("Error fetching appointments:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchAllAppointments();
-  }, [houseId, careHome]);
+  const { data: appointments = [], isLoading } = useQuery({
+    queryKey: ['appointments', houseId],
+    queryFn: () => fetchAppointmentsByUnit(houseId!, 100, careHome?.id),
+    enabled: !!houseId,
+  });
 
   const refreshAppointments = () => {
-    fetchAllAppointments();
+    queryClient.invalidateQueries({ queryKey: ['appointments', houseId] });
   };
 
   return (
@@ -72,7 +60,7 @@ export default function Page() {
       </div>
       
       <div className="mt-6">
-        {loading ? (
+        {isLoading ? (
           <AppointmentSkeleton />
         ) : appointments.length === 0 ? (
           <div className="text-center py-8">
