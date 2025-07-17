@@ -33,7 +33,7 @@ export default function Page() {
 
   const { data: appointments = [], isLoading } = useQuery({
     queryKey: ['appointments', houseId],
-    queryFn: () => fetchAppointmentsByUnit(houseId!, 100, careHome?.id),
+    queryFn: () => fetchAppointmentsByUnit(houseId, 100, careHome?.id),
     enabled: !!houseId,
   });
 

@@ -163,13 +163,13 @@ export const residents = [
     },
     
     {
-      title: "Appoinments",
-      url: "/list/appoinments",
+      title: "Appointments",
+      url: "/list/appointments",
       icon:NotebookPen,
     },
     {
       title: "Messages",
-      url: "/list/messages",
+      url: "/list/messages/1234",
       icon: Mail,
     },
     {
