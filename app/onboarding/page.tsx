@@ -22,7 +22,7 @@ const page = async () => {
       <div className=" md:col-span-2 flex items-center justify-center h-ful">
         <div className="mt-9 p-9 flex items-center justify-center">
           <h1 className="font-poppins scroll-m-20 text-center text-2xl text-gray-800 font-extrabold tracking-wide text-balance leading-loose">
-            <span className="text-green-700 underline">CareMatters </span>
+            <span className="text-green-700 underline">CareO </span>
             <br></br>
             &apos; Reimagine care management — the way it should be
             &apos;

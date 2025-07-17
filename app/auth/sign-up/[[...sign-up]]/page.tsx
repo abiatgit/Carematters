@@ -18,7 +18,7 @@ export default async function LoginPage() {
             <div className="bg-green-700 text-primary-foreground flex size-6 items-center justify-center rounded-md">
               <Rabbit className="size-4" />
             </div>
-            CareMatters
+            CareO
           </Link>
         <SignupForm />
       </div>
