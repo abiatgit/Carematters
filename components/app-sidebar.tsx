@@ -59,7 +59,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   useEffect(() => {
     getHouse();
   }, [user]);
-  const role: "TeamLeader" | "Manager" = "Manager";
+  const role = user?.role || "SUPPORT_WORKER";
   return (
     <Sidebar {...props} collapsible="icon">
       <SidebarHeader>
@@ -72,8 +72,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenu>
               {items.map((item) => {
                 if (
-                  (item.title === "Staff" && role !== "Manager") ||
-                  (item.title === "Houses" && role !== "Manager")
+                  (item.title === "Staff" && role !== "MANAGER") ||
+                  (item.title === "Houses" && role !== "MANAGER")
                 ) {
                   return;
                 }
