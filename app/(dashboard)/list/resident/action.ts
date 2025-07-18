@@ -54,7 +54,7 @@ export async function fetchResidentwithId(Id: string | null) {
 export async function updateResidentWithId(Id: string, data: {
   name?: string;
   dateOfBirth?: Date;
-  roomNumber?: string;
+  roomNumber?: number;
   gp?: string;
   nextOfKin?: string;
   contact?: string;

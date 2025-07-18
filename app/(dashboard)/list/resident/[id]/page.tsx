@@ -197,8 +197,10 @@ const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => 
                       <Label htmlFor="roomNumber">Room Number</Label>
                       <Input
                         id="roomNumber"
+                        type="number"
+                        min="1"
                         value={editingUser?.roomNumber || ""}
-                        onChange={(e) => handleInputChange("roomNumber", e.target.value)}
+                        onChange={(e) => handleInputChange("roomNumber", parseInt(e.target.value) || 1)}
                       />
                     </div>
                     
