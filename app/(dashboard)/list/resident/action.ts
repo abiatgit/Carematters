@@ -50,6 +50,35 @@ export async function fetchResidentwithId(Id: string | null) {
   }
 
 }
+
+export async function updateResidentWithId(Id: string, data: {
+  name?: string;
+  dateOfBirth?: Date;
+  roomNumber?: string;
+  gp?: string;
+  nextOfKin?: string;
+  contact?: string;
+  bio?: string;
+}) {
+  if (!Id) return null;
+
+  try {
+    const updatedResident = await prisma.resident.update({
+      where: {
+        id: Id
+      },
+      data: {
+        ...data,
+        updatedAt: new Date()
+      }
+    });
+    return updatedResident;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+}
+
 export async function deleteResidentwithId(Id: string | null) {
   if (!Id) return null
 

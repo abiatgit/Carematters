@@ -129,6 +129,8 @@ model Resident {
   updatedAt   DateTime      @updatedAt
   deletedAt   DateTime?
   gp          String?
+  bio         String?
+  contact     String?
   appointment Appointment[]
   incident    Incident[]
   medication  Medication[]

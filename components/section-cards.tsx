@@ -154,7 +154,7 @@ export function SectionCards() {
       <Card className="@container/card border border-dashed">
         <CardHeader className="flex justify-between items-start gap-1 text-sm">
           <div>
-            <CardDescription>Upcoming Appointments(Next 10 Days)</CardDescription>
+            <CardDescription>Upcoming Appointments</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
               {upcomingAppointments.length}
             </CardTitle>

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Select,
@@ -43,6 +44,7 @@ export const createResidentSchema = z.object({
   gp: z.string().optional(),
   nextOfKin: z.string().min(1, { message: "Next of kin is required" }),
   photo: z.string().url().optional(),
+  bio: z.string().optional(),
 });
 
 interface CreateFormProp {
@@ -120,6 +122,7 @@ const CreateResidentForm = ({
       gp: "",
       nextOfKin: "",
       photo: "",
+      bio: "",
     },
   });
 
@@ -327,6 +330,24 @@ const CreateResidentForm = ({
                 <FormLabel>Photo URL (Optional)</FormLabel>
                 <FormControl>
                   <Input placeholder="https://..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="bio"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Bio (Optional)</FormLabel>
+                <FormControl>
+                  <Textarea 
+                    placeholder="Brief description about the resident..."
+                    rows={3}
+                    {...field} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
