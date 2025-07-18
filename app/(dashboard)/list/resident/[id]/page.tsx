@@ -24,7 +24,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CreateIncidentFrom } from "@/components/forms/incidentreport/CreateIncident";
 import { IncidetnChart } from "@/components/incidentChart/incidentChart";
 import { fetchResidentwithId, updateResidentWithId } from "../action";
-import { Resident } from "@prisma/client";
+import { Resident, Appointment } from "@prisma/client";
 import { fetchAppointmentBasic } from "../../appointments/action";
 import { Card } from "@/components/ui/card";
 import { Calendar, MapPin } from "lucide-react";
@@ -44,7 +44,7 @@ const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => 
   const [open, setOpen] = useState(false)
   const [user, setUser] = useState<Resident | null>(null)
   const [progress, setProgress] = useState(10);
-  const [appointments, setAppointments] = useState<any[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loadingAppointments, setLoadingAppointments] = useState(false);
   const [editingUser, setEditingUser] = useState<Resident | null>(null);
   const [editSheetOpen, setEditSheetOpen] = useState(false);
@@ -124,7 +124,7 @@ const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => 
     }
   };
 
-  const handleInputChange = (field: keyof Resident, value: any) => {
+  const handleInputChange = (field: keyof Resident, value: string | Date | number) => {
     if (editingUser) {
       setEditingUser({
         ...editingUser,
@@ -169,7 +169,7 @@ const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => 
                   <SheetHeader>
                     <SheetTitle>Edit Resident Information</SheetTitle>
                     <SheetDescription>
-                      Update the resident's information below.
+                      Update the resident&apos;s information below.
                     </SheetDescription>
                   </SheetHeader>
                   
