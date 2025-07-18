@@ -30,7 +30,7 @@ type ExtendedCareHome = {
 } | null;
 
 const Page = () => {
-  const { careHome, user } = useGlobalStore()
+  const { careHome, user, triggerHousesRefresh } = useGlobalStore()
   const [allhouses, setAllhouses] = useState<ExtendedCareHome[]>([]);
   const [deleteDialogId, setDeleteDialogId] = useState<string | null>(null);
 
@@ -55,6 +55,7 @@ const Page = () => {
       
       if (result.success) {
         toast.success(result.message);
+        triggerHousesRefresh(); // Trigger global refresh for sidebar
         refreshHouses(); // Refresh the houses list
         setDeleteDialogId(null); // Close the dialog
       } else {

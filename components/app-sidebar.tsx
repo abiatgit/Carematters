@@ -1,4 +1,4 @@
-import {  useEffect, useState } from "react";
+import { useEffect } from "react";
 import { items } from "@/lib/mockData";
 import { HouseSwitcher } from "./HouseSwitcher";
 import {
@@ -16,13 +16,10 @@ import {
 import { NavUser } from "./NavUser";
 import Link from "next/link";
 import { fetchHouse } from "@/app/(dashboard)/list/houses/action";
-import { Unit } from "@prisma/client";
 import { useGlobalStore } from "@/store/globalStore";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user, setUser } = useGlobalStore()
-  const { setCareHome } = useGlobalStore()
-  const [houseList, setHouseList] = useState<Unit[]>([])
+  const { user, setUser, setCareHome, houseList, setHouseList, housesRefreshTrigger } = useGlobalStore()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,16 +46,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const getHouse = async () => {
     try {
-
       const res = await fetchHouse(user);
       setHouseList(res)
     } catch (er) {
       console.log("errossssr", er);
     }
   };
+  
   useEffect(() => {
     getHouse();
-  }, [user]);
+  }, [user, housesRefreshTrigger, setHouseList]);
   const role = user?.role || "SUPPORT_WORKER";
   return (
     <Sidebar {...props} collapsible="icon">

@@ -34,7 +34,7 @@ interface CreateHouseProp {
 export function CreateHouse({ onHouseCreated }: CreateHouseProp) {
 
   const [open, setOpen] = useState(false);
-  const { careHome } = useGlobalStore()
+  const { careHome, triggerHousesRefresh } = useGlobalStore()
 const handleSubmit = async (value: z.infer<typeof createHouseSchema>) => {
   const { name } = value;
   const payload = { name, careHomeId: careHome?.id };
@@ -50,7 +50,8 @@ const handleSubmit = async (value: z.infer<typeof createHouseSchema>) => {
   setOpen(false);
   if (data.success) {
     showSuccessToast("New house created");
-    onHouseCreated?.();
+    triggerHousesRefresh(); // Trigger global refresh for sidebar
+    onHouseCreated?.(); // Local refresh for houses page
   } else {
     showErrorToast("Error creating new house");
   }

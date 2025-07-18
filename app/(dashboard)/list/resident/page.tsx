@@ -7,7 +7,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import { Card, CardFooter, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -93,7 +93,7 @@ const Page = () => {
         </BreadcrumbList>
       </Breadcrumb>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-        <h1 className="text-xl font-semibold">Resident List</h1>
+        <h1 className="text-xl font-semibold">Residents List</h1>
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
           <Input
             type="text"
@@ -146,67 +146,68 @@ const Page = () => {
           )}
         </div>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {isLoading ? <div className="flex gap-6"><SkeletonDemo /><SkeletonDemo /><SkeletonDemo /><SkeletonDemo /></div> : filteredResident.map((resident) => {
           return (
-            <Card className="px-6" key={resident.id}>
+            <Card className="p-3 hover:shadow-md transition-shadow" key={resident.id}>
               <Link href={`/list/resident/${resident.id}`}>
-                <div className="flex gap-5 items-center">
-                  <div className="w-15 h-15 rounded-full relative overflow-hidden ">
+                <div className="flex gap-3 items-center mb-3">
+                  <div className="w-12 h-12 rounded-full relative overflow-hidden flex-shrink-0 border-2 border-gray-200">
                     <img
-                      alt=" "
+                      alt={`${resident.name} photo`}
                       className="w-full h-full object-cover"
                       src={
                         resident.photo ||
                         "https://img.freepik.com/premium-photo/young-man-isolated-blue_1368-124991.jpg?semt=ais_hybrid&w=740"
                       }
+                      onError={(e) => {
+                        e.currentTarget.src = "https://img.freepik.com/premium-photo/young-man-isolated-blue_1368-124991.jpg?semt=ais_hybrid&w=740";
+                      }}
                     />
                   </div>
-                  <div>
-                    <CardContent className="px-0">
-                      <CardTitle>Name: {resident.name}</CardTitle>
-                      <h1>House: {resident.unit?.name}</h1>
-                    </CardContent>
+                  <div className="flex-1 min-w-0">
+                    <CardTitle className="text-sm font-semibold truncate">{resident.name}</CardTitle>
+                    <p className="text-xs text-gray-600 truncate">House: {resident.unit?.name}</p>
                   </div>
                 </div>
               </Link>
-              <CardFooter className="px-0 ">
-                <div className="flex gap-4">
-                  <Dialog open={dialogResidentId === resident.id} onOpenChange={(open) => !open && setDialogResidentId(null)}>
-
-                    <DialogTrigger asChild>
-                      <Badge
-                        className="w-20 border-red-700 bg-rose-100 hover:bg-red-300"
-                        variant="outline"
-                        onClick={() => setDialogResidentId(resident.id)}
-                      >
-                        Delete
-                      </Badge>
-                    </DialogTrigger>
-                    <DialogContent className="flex items-center justify-center">
-                      <DialogHeader>
-                        <DialogTitle>
-                          Are you absolutely sure to delete?
-                        </DialogTitle>
-                        <DialogDescription className="flex items-center justify-center mt-3">
-                          <Badge
-                            variant={"destructive"}
-                            className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white"
-                            onClick={() => delteHandle(resident.id)}
-
-                          >
-                            Yes
-                          </Badge>
-                        </DialogDescription>
-                      </DialogHeader>
-                    </DialogContent>
-                  </Dialog>
-                  <Link href={`/list/messages/${resident?.id}`}>
+              <CardFooter className="px-0 pt-0">
+                <div className="flex gap-2 w-full">
+                  {(user?.role === "MANAGER" || user?.role === "TEAM_LEAD") && (
+                    <Dialog open={dialogResidentId === resident.id} onOpenChange={(open) => !open && setDialogResidentId(null)}>
+                      <DialogTrigger asChild>
+                        <Badge
+                          className="flex-1 justify-center py-1 text-xs border-red-700 bg-rose-100 hover:bg-red-300 cursor-pointer"
+                          variant="outline"
+                          onClick={() => setDialogResidentId(resident.id)}
+                        >
+                          Delete
+                        </Badge>
+                      </DialogTrigger>
+                      <DialogContent className="flex items-center justify-center">
+                        <DialogHeader>
+                          <DialogTitle>
+                            Are you absolutely sure to delete?
+                          </DialogTitle>
+                          <DialogDescription className="flex items-center justify-center mt-3">
+                            <Badge
+                              variant={"destructive"}
+                              className="bg-red-300 w-20 border-red-700 text-black cursor-pointer hover:bg-red-600 hover:text-white"
+                              onClick={() => delteHandle(resident.id)}
+                            >
+                              Yes
+                            </Badge>
+                          </DialogDescription>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                  <Link href={`/list/messages/${resident?.id}`} className="flex-1">
                     <Badge
-                      className="bg-green-100 w-20 border-green-700 text-black cursor-pointer hover:bg-green-200 hover:text-white"
+                      className="w-full justify-center py-1 text-xs bg-green-100 border-green-700 text-black cursor-pointer hover:bg-green-200 hover:text-white"
                     >
-                      <MessageCircle className="text-2xl" />
-                    Text NOK
+                      <MessageCircle className="w-3 h-3 mr-1" />
+                      Text NOK
                     </Badge>
                   </Link>
                 </div>

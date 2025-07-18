@@ -16,7 +16,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { columns } from "./columns";
-import { Avatar } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { CircleSmall, FileText, Share, Download, Mail, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -315,14 +314,28 @@ CareMatters Management System`
           {data.map((item, index) => (
             <TableRow key={index}>
               <TableCell className="font-medium">
-              <Avatar className="w-10 h-10 overflow-hidden rounded-full">
-  <img
-    src={item?.resident?.photo || "default-image-url.jpg"}
-    alt="Resident"
-    className="w-full h-full object-cover"
-  />
-</Avatar>
-
+                <div className="relative">
+                  {item?.resident?.photo ? (
+                    <img 
+                      src={item.resident.photo} 
+                      alt="Resident"
+                      className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                        if (fallback) fallback.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className="w-10 h-10 rounded-full bg-blue-100 border-2 border-gray-200 flex items-center justify-center"
+                    style={{ display: item?.resident?.photo ? 'none' : 'flex' }}
+                  >
+                    <span className="text-sm font-medium text-green-700">
+                      {item?.resident?.name?.charAt(0).toUpperCase() || 'R'}
+                    </span>
+                  </div>
+                </div>
               </TableCell>
               <TableCell className="font-medium">{item.resident?.name}</TableCell>
               <TableCell className="font-medium">

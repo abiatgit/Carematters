@@ -11,7 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link"; 
 import { fetchStaff } from "@/app/(dashboard)/list/staff/action";
 import { Resident, User } from "@prisma/client";
@@ -155,7 +154,7 @@ export function SectionCards() {
       <Card className="@container/card border border-dashed">
         <CardHeader className="flex justify-between items-start gap-1 text-sm">
           <div>
-            <CardDescription>Upcoming Appointments (Next 10 Days)</CardDescription>
+            <CardDescription>Upcoming Appointments(Next 10 Days)</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
               {upcomingAppointments.length}
             </CardTitle>
@@ -177,21 +176,34 @@ export function SectionCards() {
           <div className="flex -space-x-3">
             {upcomingAppointments.length > 0 ? (
               upcomingAppointments.slice(0, 3).map((appointment) => (
-                <Avatar key={appointment.id} className="border-2 border-white">
-                  <AvatarImage 
-                    src={appointment.residentAvatar || undefined} 
-                    alt={appointment.residentName || "Resident"} 
-                  />
-                  <AvatarFallback>
-                    {appointment.residentName?.split(' ').map(n => n[0]).join('') || 'R'}
-                  </AvatarFallback>
-                </Avatar>
+                <div key={appointment.id} className="relative">
+                  {appointment.residentAvatar ? (
+                    <img 
+                      src={appointment.residentAvatar} 
+                      alt={appointment.residentName || "Resident"}
+                      className="w-10 h-10 rounded-full border-2 border-white object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                        if (fallback) fallback.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className="w-10 h-10 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center"
+                    style={{ display: appointment.residentAvatar ? 'none' : 'flex' }}
+                  >
+                    <span className="text-xs font-medium text-green-700">
+                      {appointment.residentName?.split(' ').map(n => n[0]).join('') || 'R'}
+                    </span>
+                  </div>
+                </div>
               ))
             ) : (
               <div className="text-muted-foreground text-xs">No upcoming appointments</div>
             )}
             {upcomingAppointments.length > 3 && (
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-xs font-medium">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 border-2 border-white text-xs font-medium">
                 +{upcomingAppointments.length - 3}
               </div>
             )}

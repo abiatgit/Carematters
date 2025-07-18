@@ -85,11 +85,64 @@ const Appointments = () => {
     return `${dateStr}, ${timeStr}`;
   };
 
+  // Get first 3 unique resident photos
+  const getFirstThreePhotos = () => {
+    const uniqueResidents = appointments.reduce((acc, appointment) => {
+      if (!acc.find(resident => resident.residentId === appointment.residentId)) {
+        acc.push({
+          residentId: appointment.residentId,
+          residentName: appointment.residentName,
+          residentAvatar: appointment.residentAvatar
+        });
+      }
+      return acc;
+    }, [] as Array<{residentId: string, residentName: string | null, residentAvatar: string | null}>);
+    
+    return uniqueResidents.slice(0, 3);
+  };
+
+  const firstThreePhotos = getFirstThreePhotos();
+
   return (
     <Card className="sm:col-span-2 transition hover:shadow-xl">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold">
-          🗓️ Upcoming Appointments (Next 10 Days)
+        <CardTitle className="text-xl font-semibold flex items-center justify-between">
+          <span>🗓️ Upcoming Appointments (Next 10 Days)</span>
+          {!loading && appointments.length > 0 && (
+            <div className="flex -space-x-2">
+              {firstThreePhotos.map((resident) => (
+                <div key={resident.residentId} className="relative">
+                  {resident.residentAvatar ? (
+                    <img 
+                      src={resident.residentAvatar} 
+                      alt={resident.residentName || "Resident"}
+                      className="w-8 h-8 rounded-full border-2 border-white object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                        if (fallback) fallback.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className="w-8 h-8 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center"
+                    style={{ display: resident.residentAvatar ? 'none' : 'flex' }}
+                  >
+                    <span className="text-xs font-medium text-green-700">
+                      {resident.residentName?.charAt(0).toUpperCase() || 'R'}
+                    </span>
+                  </div>
+                </div>
+              ))}
+              {firstThreePhotos.length < appointments.length && (
+                <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center">
+                  <span className="text-xs font-medium text-gray-600">
+                    +{appointments.length - firstThreePhotos.length}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3 text-sm text-muted-foreground">
@@ -97,7 +150,10 @@ const Appointments = () => {
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
               <div key={i} className="flex justify-between items-center">
-                <Skeleton className="h-4 w-[200px]" />
+                <div className="flex items-center space-x-2">
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                  <Skeleton className="h-4 w-[180px]" />
+                </div>
                 <Skeleton className="h-4 w-[120px]" />
               </div>
             ))}
@@ -109,9 +165,33 @@ const Appointments = () => {
         ) : (
           appointments.map((appointment) => (
             <div key={appointment.id} className="flex justify-between items-center">
-              <span>
-                {appointment.scheduledWith} - {appointment.residentName}
-              </span>
+              <div className="flex items-center space-x-2">
+                <div className="relative">
+                  {appointment.residentAvatar ? (
+                    <img 
+                      src={appointment.residentAvatar} 
+                      alt={appointment.residentName || "Resident"}
+                      className="w-6 h-6 rounded-full border border-gray-200 object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                        if (fallback) fallback.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className="w-6 h-6 rounded-full bg-blue-100 border border-gray-200 flex items-center justify-center"
+                    style={{ display: appointment.residentAvatar ? 'none' : 'flex' }}
+                  >
+                    <span className="text-xs font-medium text-green-700">
+                      {appointment.residentName?.charAt(0).toUpperCase() || 'R'}
+                    </span>
+                  </div>
+                </div>
+                <span>
+                  {appointment.scheduledWith} - {appointment.residentName}
+                </span>
+              </div>
               <span className="text-xs text-gray-500">
                 {formatDateTime(appointment.date, appointment.time)}
               </span>

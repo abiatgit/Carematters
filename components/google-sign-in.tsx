@@ -1,21 +1,24 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { signIn } from "@/lib/auth"
+import { signIn } from "next-auth/react";
 import { Google } from "./ui/google";
+
 const GoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
+    await signIn("google");
+  };
   
   return (
-    <form
-      action={async () => {
-        "use server";
-          await signIn("google")
-      }}
+    <Button 
+      className="w-full" 
+      variant="outline"
+      onClick={handleGoogleSignIn}
     >
-      <Button className="w-full" variant="outline">
-        <Google/>
-        Continue with google
-      </Button>
-    </form>
+      <Google/>
+      Continue with google
+    </Button>
   );
 };
 
-export {  GoogleSignIn };
+export { GoogleSignIn };

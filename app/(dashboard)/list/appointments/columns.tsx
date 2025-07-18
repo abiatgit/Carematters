@@ -36,13 +36,27 @@ export const createColumns = (onRefresh?: () => void): ColumnDef<Appointments>[]
     header: "",
     cell: ({ row }) => {
       const avatar = row.original.residentAvatar;
-      return avatar ? (
-        <img src={avatar} alt="Resident" className="h-10 w-10 rounded-full" />
-      ) : (
-        <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-          <span className="text-sm font-medium">
-            {row.original.residentName?.charAt(0) || "?"}
-          </span>
+      const residentName = row.original.residentName;
+      
+      return (
+        <div className="flex items-center justify-center">
+          {avatar ? (
+            <img 
+              src={avatar} 
+              alt={`${residentName} photo`}
+              className="h-10 w-10 rounded-full object-cover border-2 border-gray-200"
+              onError={(e) => {
+                // Fallback to default image if photo fails to load
+                e.currentTarget.src = "https://img.freepik.com/premium-photo/young-man-isolated-blue_1368-124991.jpg?semt=ais_hybrid&w=740";
+              }}
+            />
+          ) : (
+            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center border-2 border-gray-300">
+              <span className="text-sm font-medium text-gray-600">
+                {residentName?.charAt(0).toUpperCase() || "?"}
+              </span>
+            </div>
+          )}
         </div>
       );
     },

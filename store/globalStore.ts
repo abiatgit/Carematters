@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User, Unit } from "@prisma/client";
 import { create } from "zustand";
 
 type CareHome = {
@@ -11,9 +11,13 @@ type GlobalState = {
   houseId: string | null;
   user: User | null;
   careHome: CareHome | null;
+  houseList: Unit[];
+  housesRefreshTrigger: number;
   setHouseId: (houseId: string) => void;
   setUser: (user: User) => void;
   setCareHome: (careHome: CareHome) => void;
+  setHouseList: (houseList: Unit[]) => void;
+  triggerHousesRefresh: () => void;
   resetState: () => void;
 };
 export const useGlobalStore = create<GlobalState>()(
@@ -21,10 +25,14 @@ export const useGlobalStore = create<GlobalState>()(
       user: null,
       careHome: null,
       houseId: null,
+      houseList: [],
+      housesRefreshTrigger: 0,
       setHouseId: (houseId: string) => set({ houseId }),
       setUser: (user) => set({ user }),
       setCareHome: (careHome) => set({ careHome }),
-      resetState: () => set({ user: null, careHome: null }),
+      setHouseList: (houseList) => set({ houseList }),
+      triggerHousesRefresh: () => set((state) => ({ housesRefreshTrigger: state.housesRefreshTrigger + 1 })),
+      resetState: () => set({ user: null, careHome: null, houseList: [], housesRefreshTrigger: 0 }),
     })
     
 )
