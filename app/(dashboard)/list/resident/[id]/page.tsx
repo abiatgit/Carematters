@@ -102,10 +102,10 @@ const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => 
         name: editingUser.name,
         dateOfBirth: editingUser.dateOfBirth,
         roomNumber: editingUser.roomNumber,
-        gp: editingUser.gp,
+        gp: editingUser.gp || undefined,
         nextOfKin: editingUser.nextOfKin,
-        contact: editingUser.contact,
-        bio: editingUser.bio
+        contact: editingUser.contact || undefined,
+        bio: editingUser.bio || undefined
       });
       
       if (updatedResident) {
