@@ -173,7 +173,7 @@ const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => 
                     </SheetDescription>
                   </SheetHeader>
                   
-                  <div className="space-y-4 mt-6">
+                  <div className="space-y-4 mt-6 mx-4">
                     <div className="space-y-2">
                       <Label htmlFor="name">Name</Label>
                       <Input
