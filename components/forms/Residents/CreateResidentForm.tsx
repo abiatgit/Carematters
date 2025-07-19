@@ -157,16 +157,17 @@ const CreateResidentForm = ({
   }
 
   return (
-    <SheetContent className="p-5">
-      <SheetHeader>
+    <SheetContent className="w-[400px] sm:w-[540px] flex flex-col">
+      <SheetHeader className="flex-shrink-0">
         <SheetTitle>Create a New Resident</SheetTitle>
         <SheetDescription>
           Fill in the details below to create a new resident profile.
         </SheetDescription>
       </SheetHeader>
       
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+      <div className="flex-1 overflow-y-auto">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-6 mx-4 pb-4">
           <FormField
             control={form.control}
             name="firstName"
@@ -354,7 +355,7 @@ const CreateResidentForm = ({
             )}
           />
 
-          <div className="flex gap-2 pt-4">
+          <div className="flex justify-end gap-2 pt-4">
             <Button 
               type="button" 
               variant="outline" 
@@ -369,8 +370,9 @@ const CreateResidentForm = ({
               Create Resident
             </Button>
           </div>
-        </form>
-      </Form>
+          </form>
+        </Form>
+      </div>
     </SheetContent>
   );
 };
