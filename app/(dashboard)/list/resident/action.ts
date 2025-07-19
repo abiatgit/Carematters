@@ -39,6 +39,9 @@ export async function fetchResidentwithId(Id: string | null) {
       const residents = await prisma.resident.findUnique({
         where: {
           id: Id
+        },
+        include: {
+          unit: true
         }
       })
       return residents

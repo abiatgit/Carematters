@@ -24,8 +24,13 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CreateIncidentFrom } from "@/components/forms/incidentreport/CreateIncident";
 import { IncidetnChart } from "@/components/incidentChart/incidentChart";
 import { fetchResidentwithId, updateResidentWithId } from "../action";
-import { Resident, Appointment } from "@prisma/client";
+import { Resident, Appointment, Unit } from "@prisma/client";
+
+type ResidentWithUnit = Resident & {
+  unit?: Unit;
+};
 import { fetchAppointmentBasic } from "../../appointments/action";
+import AppointmentSheetForm from "@/components/forms/appointment/AppointmentSheetForm";
 import { Card } from "@/components/ui/card";
 import { Calendar, MapPin } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -42,11 +47,12 @@ const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => 
     setUser(res)
   }
   const [open, setOpen] = useState(false)
-  const [user, setUser] = useState<Resident | null>(null)
+  const [user, setUser] = useState<ResidentWithUnit | null>(null)
   const [progress, setProgress] = useState(10);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loadingAppointments, setLoadingAppointments] = useState(false);
-  const [editingUser, setEditingUser] = useState<Resident | null>(null);
+  const [appointmentSheetOpen, setAppointmentSheetOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<ResidentWithUnit | null>(null);
   const [editSheetOpen, setEditSheetOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   useEffect(() => {
@@ -62,6 +68,12 @@ const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => 
       console.error("Error fetching appointments:", error);
     } finally {
       setLoadingAppointments(false);
+    }
+  };
+
+  const refreshAppointments = () => {
+    if (user?.id) {
+      getAppointments(user.id);
     }
   };
 
@@ -286,20 +298,20 @@ const SingelResidentPage = ({ params }: { params: Promise<{ id: string }> }) => 
           <div className="border border-dashed p-4 rounded-l-lg">
             <div className="flex items-center justify-between mb-4">
               <h1 className="text-xl font-semibold">Up Coming Appointments</h1>
-              <Sheet>
+              <Sheet open={appointmentSheetOpen} onOpenChange={setAppointmentSheetOpen}>
                 <SheetTrigger asChild>
                   <Button variant={"outline"} size={"icon"}>
                     <Plus></Plus>
                   </Button>
                 </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>Add New Appointment</SheetTitle>
-                    <SheetDescription>
-                      Create a new appointment for this resident.
-                    </SheetDescription>
-                  </SheetHeader>
-                </SheetContent>
+                <AppointmentSheetForm 
+                  setOpen={setAppointmentSheetOpen}
+                  onSuccess={refreshAppointments}
+                  preselectedResidentId={user?.id}
+                  preselectedUnitId={user?.unitId}
+                  residentName={user?.name}
+                  unitName={user?.unit?.name}
+                />
               </Sheet>
             </div>
             
